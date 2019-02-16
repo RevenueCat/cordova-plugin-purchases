@@ -15,7 +15,10 @@
     "url": "https://github.com/revenuecat/cordova-plugin-purchases"
   },
   "keywords": [
-    "cordova"
+    "cordova",
+    "ecosystem:cordova",
+    "cordova-ios",
+    "cordova-android"
   ],
   "scripts": {
     "fetch:ios:sdk": "./scripts/download-purchases-framework.sh 2.0.0",
@@ -24,13 +27,6 @@
   },
   "author": "RevenueCat, Inc.",
   "license": "MIT",
-  "engines": {
-    "cordovaDependencies": {
-      "3.0.0": {
-        "cordova": ">100"
-      }
-    }
-  },
   "devDependencies": {
     "eslint": "^5.13.0",
     "eslint-config-airbnb-base": "^13.1.0",

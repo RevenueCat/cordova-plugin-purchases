@@ -90,7 +90,6 @@
                                                  self.products[p.productIdentifier] = p;
                                                  [productObjects addObject:p.dictionary];
                                              }
-                                             // tODO test
                                              CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:productObjects];
                                              [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                                          }];
@@ -109,10 +108,7 @@
                           withCompletionBlock:^(SKPaymentTransaction *_Nullable transaction, RCPurchaserInfo *_Nullable purchaserInfo, NSError *_Nullable error) {
                               CDVPluginResult *pluginResult = nil;
                               if (error) {
-                                  NSMutableDictionary *payload = [NSMutableDictionary dictionaryWithDictionary:@{@"error": [self payloadForError:error]}];
-
-                                  payload[@"productIdentifier"] = transaction.payment.productIdentifier;
-                                  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:payload];
+                                  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:[self payloadForError:error]];
                               } else {
                                   pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:@{@"productIdentifier": transaction.payment.productIdentifier, @"purchaserInfo": purchaserInfo.dictionary
                                   }];

@@ -1,39 +1,21 @@
-// eslint-disable-next-line import/no-unresolved
-import exec from "cordova/exec";
-
 const PLUGIN_NAME = "PurchasesPlugin";
-
-let purchaserInfoUpdateListeners = [];
-
-const updatedPurchaserInfoListener = purchaserInfo => {
-  // TODO test
-  purchaserInfoUpdateListeners.forEach(listener => listener(purchaserInfo));
-};
-
 class Purchases {
-  static setup(apiKey, appUserID, callback) {
-    exec(callback, null, PLUGIN_NAME, "setupPurchases", [apiKey, appUserID]);
-    exec(
-      updatedPurchaserInfoListener,
-      null,
-      PLUGIN_NAME,
-      "setUpdatedPurchaserInfoListener",
-      []
-    );
+  static setup(apiKey, appUserID) {
+    cordova.exec(null, null, PLUGIN_NAME, "setupPurchases", [apiKey, appUserID]);
   }
 
   static setAllowSharingStoreAccount(allowSharing) {
-    exec(null, null, PLUGIN_NAME, "setAllowSharingStoreAccount", [
+    cordova.exec(null, null, PLUGIN_NAME, "setAllowSharingStoreAccount", [
       allowSharing
     ]);
   }
 
   static addAttributionData(data, network) {
-    exec(null, null, PLUGIN_NAME, "addAttributionData", [data, network]);
+    cordova.exec(null, null, PLUGIN_NAME, "addAttributionData", [data, network]);
   }
 
   static getEntitlements(callback, errorcallback) {
-    exec(callback, errorcallback, PLUGIN_NAME, "getEntitlements", []);
+    cordova.exec(callback, errorcallback, PLUGIN_NAME, "getEntitlements", []);
   }
 
   static getProducts(
@@ -42,7 +24,7 @@ class Purchases {
     errorcallback,
     type = "subs"
   ) {
-    exec(callback, errorcallback, PLUGIN_NAME, "getProductInfo", [
+    cordova.exec(callback, errorcallback, PLUGIN_NAME, "getProductInfo", [
       productIdentifiers,
       type
     ]);
@@ -81,17 +63,15 @@ class Purchases {
     oldSkus = [],
     type = "subs"
   ) {
-    exec(
+    cordova.exec(
       callback,
-      (productID, error) => {
-        const { code, domain, message } = error;
+      ({ code, domain, message }) => {
         const userCancelledDomainCodes = {
           1: "Play Billing",
           2: "SKErrorDomain"
         };
         // TODO send product identifier?
         errorcallback({
-          productID,
           code,
           domain,
           message,
@@ -105,27 +85,27 @@ class Purchases {
   }
 
   static restoreTransactions(callback, errorcallback) {
-    exec(callback, errorcallback, PLUGIN_NAME, "restoreTransactions", []);
+    cordova.exec(callback, errorcallback, PLUGIN_NAME, "restoreTransactions", []);
   }
 
   static getAppUserID(callback) {
-    exec(callback, null, PLUGIN_NAME, "getAppUserID", []);
+    cordova.exec(callback, null, PLUGIN_NAME, "getAppUserID", []);
   }
 
   static createAlias(newAppUserID, callback, errorcallback) {
-    exec(callback, errorcallback, PLUGIN_NAME, "createAlias", [newAppUserID]);
+    cordova.exec(callback, errorcallback, PLUGIN_NAME, "createAlias", [newAppUserID]);
   }
 
   static identify(newAppUserID, callback, errorcallback) {
-    exec(callback, errorcallback, PLUGIN_NAME, "identify", [newAppUserID]);
+    cordova.exec(callback, errorcallback, PLUGIN_NAME, "identify", [newAppUserID]);
   }
 
   static reset(callback, errorcallback) {
-    exec(callback, errorcallback, PLUGIN_NAME, "reset", []);
+    cordova.exec(callback, errorcallback, PLUGIN_NAME, "reset", []);
   }
 
   static getPurchaserInfo(callback, errorcallback) {
-    exec(callback, errorcallback, PLUGIN_NAME, "getPurchaserInfo", []);
+    cordova.exec(callback, errorcallback, PLUGIN_NAME, "getPurchaserInfo", []);
   }
 
   /** @callback PurchaserInfoListener
@@ -133,31 +113,30 @@ class Purchases {
     */
 
   /** Sets a function to be called on updated purchaser info
-        @param {PurchaserInfoListener} purchaserInfoUpdateListener PurchaserInfo update listener
+        @param {PurchaserInfoListener} updatedPurchaserInfoListener PurchaserInfo update listener
     */
-  static addPurchaserInfoUpdateListener(purchaserInfoUpdateListener) {
-    if (typeof purchaserInfoUpdateListener !== "function") {
-      throw new Error("addPurchaserInfoUpdateListener needs a function");
-    }
-    purchaserInfoUpdateListeners.push(purchaserInfoUpdateListener);
+  static setUpdatedPurchaserInfoListener(updatedPurchaserInfoListener) {
+    cordova.exec(
+      updatedPurchaserInfoListener,
+      null,
+      PLUGIN_NAME,
+      "setUpdatedPurchaserInfoListener",
+      []
+    );
   }
 
-  /** Removes a given PurchaserInfoUpdateListener
-        @param {PurchaserInfoListener} listenerToRemove PurchaserInfoListener reference of the listener to remove
-        @returns {Boolean} True if listener was removed, false otherwise
-    */
-  static removePurchaserInfoUpdateListener(listenerToRemove) {
-    if (purchaserInfoUpdateListeners.includes(listenerToRemove)) {
-      purchaserInfoUpdateListeners = purchaserInfoUpdateListeners.filter(
-        listener => listenerToRemove !== listener
-      );
-      return true;
-    }
-    return false;
+  static removeUpdatedPurchaserInfoListener() {
+    cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "removeUpdatedPurchaserInfoListener",
+      []
+    );
   }
 
   static setDebugLogsEnabled(enabled) {
-    exec(null, null, PLUGIN_NAME, "setDebugLogsEnabled", [enabled]);
+    cordova.exec(null, null, PLUGIN_NAME, "setDebugLogsEnabled", [enabled]);
   }
 }
 

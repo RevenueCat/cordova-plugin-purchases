@@ -28,7 +28,7 @@ import java.util.Map;
 
 import androidx.annotation.NonNull;
 
-public class PurchasesPlugin extends AnnotatedCordovaPlugin implements UpdatedPurchaserInfoListener {
+public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     private List<CallbackContext> callbackContextUpdatedPurchaserInfoListener = new ArrayList<>();
 
@@ -38,10 +38,9 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin implements UpdatedPu
         Purchases.getSharedInstance().close();
     }
 
-    @PluginAction(thread = ExecutionThread.MAIN, actionName = "setupPurchases")
+    @PluginAction(thread = ExecutionThread.MAIN, actionName = "setupPurchases", isAutofinish = true)
     private void setupPurchases(String apiKey, String appUserID, CallbackContext callbackContext) {
         Purchases.configure(this.cordova.getActivity(), apiKey, appUserID);
-        Purchases.getSharedInstance().setUpdatedPurchaserInfoListener(this);
     }
 
     @PluginAction(thread = ExecutionThread.MAIN, actionName = "setAllowSharingStoreAccount")
@@ -60,7 +59,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin implements UpdatedPu
         }
     }
 
-    @PluginAction(thread = ExecutionThread.MAIN, actionName = "addAttributionData", isAutofinish = false)
+    @PluginAction(thread = ExecutionThread.MAIN, actionName = "getEntitlements", isAutofinish = false)
     private void getEntitlements(CallbackContext callbackContext) {
         checkPurchases();
 
@@ -166,16 +165,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin implements UpdatedPu
 
                     @Override
                     public void onError(@NonNull PurchasesError error) {
-                        JSONObject errorJSON = mapError(error);
-                        try {
-                            if (purchasesError.getDomain() == Purchases.ErrorDomains.PLAY_BILLING
-                                    && purchasesError.getCode() == 1) {
-                                errorJSON.put("userCancelled", true);
-                            }
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                        callbackContext.error(errorJSON);
+                        callbackContext.error(mapError(error));
                     }
                 });
     }
@@ -209,27 +199,29 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin implements UpdatedPu
         Purchases.getSharedInstance().createAlias(newAppUserID, getReceivePurchaserInfoListener(callbackContext));
     }
 
-    @Override
-    public void onReceived(PurchaserInfo purchaserInfo) {
-        PluginResult result = new PluginResult(PluginResult.Status.OK, mapPurchaserIfo(purchaserInfo));
-        for (CallbackContext callbackContext : callbackContextUpdatedPurchaserInfoListener) {
-            result.setKeepCallback(true);
-            callbackContext.sendPluginResult(result);
-        }
-    }
-
     @PluginAction(thread = ExecutionThread.MAIN, actionName = "setUpdatedPurchaserInfoListener", isAutofinish = false)
     private void setUpdatedPurchaserInfoListener(CallbackContext callbackContext) {
-        callbackContextUpdatedPurchaserInfoListener.add(callbackContext);
-        PluginResult pluginResult = new PluginResult(PluginResult.Status.NO_RESULT);
-        pluginResult.setKeepCallback(true); // Keep callback
-        callbackContext.sendPluginResult(pluginResult);
+        Purchases.getSharedInstance().setUpdatedPurchaserInfoListener(purchaserInfo -> {
+            PluginResult result = new PluginResult(PluginResult.Status.OK, mapPurchaserIfo(purchaserInfo));
+            result.setKeepCallback(true); // Keep callback
+            callbackContext.sendPluginResult(result);
+        });
+    }
+
+    @PluginAction(thread = ExecutionThread.MAIN, actionName = "removeUpdatedPurchaserInfoListener", isAutofinish = true)
+    private void removeUpdatedPurchaserInfoListener(CallbackContext callbackContext) {
+        Purchases.getSharedInstance().setUpdatedPurchaserInfoListener(null);
     }
 
     @PluginAction(thread = ExecutionThread.MAIN, actionName = "getPurchaserInfo", isAutofinish = false)
     private void getPurchaserInfo(CallbackContext callbackContext) {
         checkPurchases();
         Purchases.getSharedInstance().getPurchaserInfo(getReceivePurchaserInfoListener(callbackContext));
+    }
+
+    @PluginAction(thread = ExecutionThread.MAIN, actionName = "setDebugLogsEnabled", isAutofinish = true)
+    private void setDebugLogsEnabled(boolean enabled, CallbackContext callbackContext) {
+        Purchases.setDebugLogsEnabled(enabled);
     }
 
     private ReceivePurchaserInfoListener getReceivePurchaserInfoListener(CallbackContext callbackContext) {

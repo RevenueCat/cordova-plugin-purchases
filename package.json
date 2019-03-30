@@ -22,6 +22,8 @@
   ],
   "scripts": {
     "fetch:ios:sdk": "./scripts/download-purchases-framework.sh 2.0.0",
+    "preinstall:linux:win32": "echo 'Slipping ios framework install'",
+    "preinstall:darwin": "npm run fetch:ios:sdk",
     "preinstall": "echo not-running-script",
     "lint": "eslint **/*.js"
   },
@@ -34,5 +36,8 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-prettier": "^3.0.1",
     "prettier": "1.16.4"
+  },
+  "dependencies": {
+    "run-script-os": "^1.0.5"
   }
 }

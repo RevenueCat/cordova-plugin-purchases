@@ -23,10 +23,10 @@
   "scripts": {
     "fetch:ios:sdk": "./scripts/download-purchases-framework.sh 2.0.0",
 
-    "preinstall:win32": "echo 'Not installing'",
-    "preinstall:linux": "echo 'Not installing'",
-    "preinstall:darwin": "npm run fetch:ios:sdk",
-    "preinstall": "run-script-os",
+    "postinstall:win32": "echo 'Not installing'",
+    "postinstall:linux": "echo 'Not installing'",
+    "postinstall:darwin": "npm run fetch:ios:sdk",
+    "postinstall": "run-script-os",
 
     "install": "run-script-os",
     "install:win32": "echo 'install'",

@@ -22,8 +22,17 @@
   ],
   "scripts": {
     "fetch:ios:sdk": "./scripts/download-purchases-framework.sh 2.0.0",
+
+    "preinstall:win32": "echo 'Not installing'",
+    "preinstall:linux": "echo 'Not installing'",
     "preinstall:darwin": "npm run fetch:ios:sdk",
     "preinstall": "run-script-os",
+
+    "install": "run-script-os",
+    "install:win32": "echo 'install'",
+    "install:linux": "echo 'install'",
+    "install:darwin": "echo 'install'",
+
     "lint": "eslint **/*.js"
   },
   "author": "RevenueCat, Inc.",

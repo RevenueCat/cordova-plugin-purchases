@@ -21,8 +21,6 @@
     "cordova-android"
   ],
   "scripts": {
-    "fetch:ios:sdk": "node scripts/framework-check.js",
-    "preinstall": "npm run fetch:ios:sdk",
     "lint": "eslint **/*.js"
   },
   "author": "RevenueCat, Inc.",
@@ -34,6 +32,5 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-prettier": "^3.0.1",
     "prettier": "1.16.4"
-  },
-  "dependencies": {}
+  }
 }

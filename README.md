@@ -85,7 +85,7 @@ When it comes time to make a purchase, _Purchases_ has a simple method, `makePur
 
 ```javascript
 Purchases.makePurchase("product_id", 
-  (productIdentifier, purchaserInfo) {
+  (productIdentifier, purchaserInfo) => {
     if (purchaserInfo.activeEntitlements.includes("my_entitlement_identifier")) {
       // Unlock that great "pro" content
     }

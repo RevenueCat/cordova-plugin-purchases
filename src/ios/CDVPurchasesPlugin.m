@@ -19,9 +19,10 @@
 - (void)setupPurchases:(CDVInvokedUrlCommand *)command {
     NSString *apiKey = command.arguments[0];
     NSString *appUserID = command.arguments[1];
+    BOOL observerMode = (BOOL) command.arguments[2];
 
     self.products = [NSMutableDictionary new];
-    [RCPurchases configureWithAPIKey:apiKey appUserID:appUserID];
+    [RCPurchases configureWithAPIKey:apiKey appUserID:appUserID observerMode:observerMode];
     RCPurchases.sharedPurchases.delegate = self;
 
     self.updatedPurchaserInfoCallbackID = command.callbackId;
@@ -31,6 +32,8 @@
 }
 
 - (void)setAllowSharingStoreAccount:(CDVInvokedUrlCommand *)command {
+    NSAssert(RCPurchases.sharedPurchases, @"You must call setup first.");
+
     BOOL allowSharingStoreAccount = (BOOL) command.arguments[0];
 
     RCPurchases.sharedPurchases.allowSharingAppStoreAccount = allowSharingStoreAccount;
@@ -40,12 +43,11 @@
 }
 
 - (void)addAttributionData:(CDVInvokedUrlCommand *)command {
-    NSAssert(RCPurchases.sharedPurchases, @"You must call setup first.");
-
     NSDictionary *data = command.arguments[0];
     NSInteger network = [command.arguments[1] integerValue];
+    NSString *networkUserId = command.arguments[2];
 
-    [RCPurchases.sharedPurchases addAttributionData:data fromNetwork:(RCAttributionNetwork) network];
+    [RCPurchases addAttributionData:data fromNetwork:(RCAttributionNetwork)network forNetworkUserId:networkUserId];
 
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
@@ -92,7 +94,7 @@
                                                  self.products[p.productIdentifier] = p;
                                                  [productObjects addObject:p.dictionary];
                                              }
-                                             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:productObjects];
+                                             CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsArray:productObjects];
                                              [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
                                          }];
 }
@@ -102,29 +104,40 @@
 
     NSString *productIdentifier = command.arguments[0];
 
-    if (self.products[productIdentifier] == nil) {
-        NSLog(@"Purchases cannot find product. Did you call getProductInfo first?");
-        return;
-    }
-    [RCPurchases.sharedPurchases makePurchase:self.products[productIdentifier]
-                          withCompletionBlock:^(SKPaymentTransaction *_Nullable transaction, RCPurchaserInfo *_Nullable purchaserInfo, NSError *_Nullable error, BOOL userCancelled) {
-                              CDVPluginResult *pluginResult = nil;
-                              if (error) {
-                                  pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
-                                                               messageAsDictionary:@{
-                                                                       @"error": [self payloadForError:error],
-                                                                       @"userCancelled": @(userCancelled)
+    
+    void (^completionBlock)(SKPaymentTransaction * _Nullable, RCPurchaserInfo * _Nullable, NSError * _Nullable, BOOL) = ^(SKPaymentTransaction *_Nullable transaction, RCPurchaserInfo *_Nullable purchaserInfo, NSError *_Nullable error, BOOL userCancelled) {
+        CDVPluginResult *pluginResult = nil;
+        if (error) {
+            pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR
+                                         messageAsDictionary:@{
+                                                               @"error": [self payloadForError:error],
+                                                               @"userCancelled": @(userCancelled)
                                                                }];
-                              } else {
-                                  pluginResult = [
-                                          CDVPluginResult resultWithStatus:CDVCommandStatus_OK
-                                                       messageAsDictionary:@{
-                                                               @"productIdentifier": transaction.payment.productIdentifier,
-                                                               @"purchaserInfo": purchaserInfo.dictionary
-                                                       }];
-                              }
-                              [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-                          }];
+        } else {
+            pluginResult = [
+                            CDVPluginResult resultWithStatus:CDVCommandStatus_OK
+                            messageAsDictionary:@{
+                                                  @"productIdentifier": transaction.payment.productIdentifier,
+                                                  @"purchaserInfo": purchaserInfo.dictionary
+                                                  }];
+        }
+        [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+    };
+    if (self.products[productIdentifier] == nil) {
+        [RCPurchases.sharedPurchases productsWithIdentifiers:[NSArray arrayWithObjects:productIdentifier, nil]
+                                             completionBlock:^(NSArray<SKProduct *> * _Nonnull products) {
+                                                 NSMutableArray *productObjects = [NSMutableArray new];
+                                                 for (SKProduct *p in products) {
+                                                     self.products[p.productIdentifier] = p;
+                                                     [productObjects addObject:p.dictionary];
+                                                 }
+                                                 [RCPurchases.sharedPurchases makePurchase:self.products[productIdentifier]
+                                                                       withCompletionBlock:completionBlock];
+                                             }];
+    } else {
+        [RCPurchases.sharedPurchases makePurchase:self.products[productIdentifier]
+                              withCompletionBlock:completionBlock];
+    }
 }
 
 - (void)restoreTransactions:(CDVInvokedUrlCommand *)command {

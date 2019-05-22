@@ -17,14 +17,14 @@
 @implementation CDVPurchasesPlugin
 
 - (void)setupPurchases:(CDVInvokedUrlCommand *)command {
-    NSString *apiKey = command.arguments[0];
-    NSString *appUserID = command.arguments[1];
-    BOOL observerMode = (BOOL) command.arguments[2];
-
+    NSString *apiKey = [command argumentAtIndex:0];
+    NSString *appUserID = [command argumentAtIndex:1];
+    BOOL observerMode = [[command argumentAtIndex:2] boolValue];
+    
     self.products = [NSMutableDictionary new];
     [RCPurchases configureWithAPIKey:apiKey appUserID:appUserID observerMode:observerMode];
     RCPurchases.sharedPurchases.delegate = self;
-
+    
     self.updatedPurchaserInfoCallbackID = command.callbackId;
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_NO_RESULT];
     [pluginResult setKeepCallbackAsBool:YES];
@@ -33,34 +33,33 @@
 
 - (void)setAllowSharingStoreAccount:(CDVInvokedUrlCommand *)command {
     NSAssert(RCPurchases.sharedPurchases, @"You must call setup first.");
-
-    BOOL allowSharingStoreAccount = (BOOL) command.arguments[0];
-
+    
+    BOOL allowSharingStoreAccount = [[command argumentAtIndex:0] boolValue];
+    
     RCPurchases.sharedPurchases.allowSharingAppStoreAccount = allowSharingStoreAccount;
-
+    
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)addAttributionData:(CDVInvokedUrlCommand *)command {
-    NSDictionary *data = command.arguments[0];
-    NSInteger network = [command.arguments[1] integerValue];
-    NSString *networkUserId = command.arguments[2];
-
+    NSDictionary *data = [command argumentAtIndex:0];
+    NSInteger network = [[command argumentAtIndex:1] integerValue];
+    NSString *networkUserId = [command argumentAtIndex:2];
+    
     [RCPurchases addAttributionData:data fromNetwork:(RCAttributionNetwork)network forNetworkUserId:networkUserId];
-
+    
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void)getEntitlements:(CDVInvokedUrlCommand *)command {
     NSAssert(RCPurchases.sharedPurchases, @"You must call setup first.");
-
-
+    
+    
     [RCPurchases.sharedPurchases entitlementsWithCompletionBlock:^(RCEntitlements *_Nullable entitlements, NSError *_Nullable error) {
         CDVPluginResult *pluginResult = nil;
         if (error) {
-            // TODO: test
             pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsDictionary:[self payloadForError:error]];
         } else {
             NSMutableDictionary *result = [NSMutableDictionary new];
@@ -68,7 +67,7 @@
                 RCEntitlement *entitlement = entitlements[entId];
                 result[entId] = entitlement.dictionary;
             }
-
+            
             for (RCEntitlement *entitlement in entitlements.allValues) {
                 for (RCOffering *offering in entitlement.offerings.allValues) {
                     SKProduct *product = offering.activeProduct;
@@ -84,8 +83,8 @@
 }
 
 - (void)getProductInfo:(CDVInvokedUrlCommand *)command {
-    NSArray *products = command.arguments[0];
-
+    NSArray *products = [command argumentAtIndex:0];
+    
     NSAssert(RCPurchases.sharedPurchases, @"You must call setup first.");
     [RCPurchases.sharedPurchases productsWithIdentifiers:products
                                          completionBlock:^(NSArray<SKProduct *> *_Nonnull products) {
@@ -101,9 +100,9 @@
 
 - (void)makePurchase:(CDVInvokedUrlCommand *)command {
     NSAssert(RCPurchases.sharedPurchases, @"You must call setup first.");
-
-    NSString *productIdentifier = command.arguments[0];
-
+    
+    NSString *productIdentifier = [command argumentAtIndex:0];
+    
     
     void (^completionBlock)(SKPaymentTransaction * _Nullable, RCPurchaserInfo * _Nullable, NSError * _Nullable, BOOL) = ^(SKPaymentTransaction *_Nullable transaction, RCPurchaserInfo *_Nullable purchaserInfo, NSError *_Nullable error, BOOL userCancelled) {
         CDVPluginResult *pluginResult = nil;
@@ -160,7 +159,7 @@
 }
 
 - (void)createAlias:(CDVInvokedUrlCommand *)command {
-    NSString *newAppUserID = command.arguments[0];
+    NSString *newAppUserID = [command argumentAtIndex:0];
     NSAssert(RCPurchases.sharedPurchases, @"You must call setup first.");
     [RCPurchases.sharedPurchases createAlias:newAppUserID completionBlock:^(RCPurchaserInfo *_Nullable purchaserInfo, NSError *_Nullable error) {
         CDVPluginResult *pluginResult = nil;
@@ -174,7 +173,7 @@
 }
 
 - (void)identify:(CDVInvokedUrlCommand *)command {
-    NSString *appUserID = command.arguments[0];
+    NSString *appUserID = [command argumentAtIndex:0];
     NSAssert(RCPurchases.sharedPurchases, @"You must call setup first.");
     [RCPurchases.sharedPurchases identify:appUserID completionBlock:^(RCPurchaserInfo *_Nullable purchaserInfo, NSError *_Nullable error) {
         CDVPluginResult *pluginResult = nil;
@@ -201,7 +200,7 @@
 }
 
 - (void)setDebugLogsEnabled:(CDVInvokedUrlCommand *)command {
-    RCPurchases.debugLogsEnabled = (BOOL) command.arguments[0];
+    RCPurchases.debugLogsEnabled = [[command argumentAtIndex:0] boolValue];
 }
 
 - (void)getPurchaserInfo:(CDVInvokedUrlCommand *)command {
@@ -217,6 +216,10 @@
     }];
 }
 
+- (void)syncPurchases:(CDVInvokedUrlCommand *)command {
+    
+}
+
 #pragma mark Delegate Methods
 
 - (void)purchases:(RCPurchases *)purchases didReceiveUpdatedPurchaserInfo:(RCPurchaserInfo *)purchaserInfo {
@@ -229,12 +232,14 @@
 
 - (NSDictionary *)payloadForError:(NSError *)error {
     NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithDictionary:@{
-            @"message": error.localizedDescription,
-            @"code": @(error.code)
-    }];
+                                                                                @"message": error.localizedDescription,
+                                                                                @"code": @(error.code),
+                                                                                @"readable_error_code": @(error.code)
+                                                                                }];
     if (error.userInfo[NSUnderlyingErrorKey]) {
         dict[@"underlyingErrorMessage"] = ((NSError *)error.userInfo[NSUnderlyingErrorKey]).localizedDescription;
     }
+    
     return dict;
 }
 

@@ -10,6 +10,7 @@
 ### iOS only
 - addAttribution will automatically add the rc_idfa and rc_idfv parameters if the AdSupport and UIKit frameworks are included, respectively.
 - Apple Search Ad attribution can be automatically collected by setting the automaticAttributionCollection boolean to true before the SDK is configured.
+- Other bugfixes
 
 ## 0.0.8
 

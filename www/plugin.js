@@ -129,7 +129,7 @@ class Purchases {
     productIdentifier,
     callback,
     errorcallback,
-    oldSku = "",
+    oldSku,
     type = "subs"
   ) {
     if (Array.isArray(oldSku)) {

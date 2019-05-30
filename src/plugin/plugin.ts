@@ -12,7 +12,7 @@ export enum ATTRIBUTION_NETWORKS {
   ADJUST = 1,
   APPSFLYER = 2,
   BRANCH = 3,
-  TENJIN = 4
+  TENJIN = 4,
 }
 
 class Purchases {
@@ -21,12 +21,12 @@ class Purchases {
    * @readonly
    * @enum {Number}
    */
-  static ATTRIBUTION_NETWORKS = {
+  public static ATTRIBUTION_NETWORKS = {
     APPLE_SEARCH_ADS: 0,
     ADJUST: 1,
     APPSFLYER: 2,
     BRANCH: 3,
-    TENJIN: 4
+    TENJIN: 4,
   };
 
   /**
@@ -35,7 +35,7 @@ class Purchases {
    * @param {String?} appUserID A unique id for identifying the user
    * @param {Boolean} observerMode An optional boolean. Set this to TRUE if you have your own IAP implementation and want to use only RevenueCat's backend. Default is FALSE.
    */
-  static setup(
+  public static setup(
     apiKey: string,
     appUserID: string | null,
     observerMode: boolean = false
@@ -56,7 +56,7 @@ class Purchases {
    * If a user tries to purchase a product that is active on the current app store account, we will treat it as a restore and alias
    * the new ID with the previous id.
    */
-  static setAllowSharingStoreAccount(allowSharing: boolean) {
+  public static setAllowSharingStoreAccount(allowSharing: boolean) {
     window.cordova.exec(
       null,
       null,
@@ -72,7 +72,7 @@ class Purchases {
    * @param {ATTRIBUTION_NETWORKS} network Which network, see Purchases.ATTRIBUTION_NETWORKS
    * @param {String?} networkUserId An optional unique id for identifying the user. Needs to be a string.
    */
-  static addAttributionData(
+  public static addAttributionData(
     data: { [key: string]: any },
     network: ATTRIBUTION_NETWORKS,
     networkUserId?: string
@@ -80,7 +80,7 @@ class Purchases {
     window.cordova.exec(null, null, PLUGIN_NAME, "addAttributionData", [
       data,
       network,
-      networkUserId
+      networkUserId,
     ]);
   }
 
@@ -96,7 +96,7 @@ class Purchases {
    * @param {EntitlementsSuccessCallback} callback Callback triggered after a successful getEntitlements call. It will receive an structure of entitlements.
    * @param {ErrorCallback} errorcallback Callback triggered after an error or when retrieving entitlements.
    */
-  static getEntitlements(callback: any, errorcallback: any) {
+  public static getEntitlements(callback: any, errorcallback: any) {
     window.cordova.exec(
       callback,
       errorcallback,
@@ -120,7 +120,7 @@ class Purchases {
    * @param {ErrorCallback} errorcallback Callback triggered after an error or when retrieving products
    * @param {String} type Optional type of products to fetch, can be inapp or subs. Subs by default
    */
-  static getProducts(
+  public static getProducts(
     productIdentifiers: string[],
     callback: any,
     errorcallback: any,
@@ -162,7 +162,7 @@ class Purchases {
    * @param {String?} oldSku Optional sku you wish to upgrade from.
    * @param {String} type Optional type of product, can be inapp or subs. Subs by default
    */
-  static makePurchase(
+  public static makePurchase(
     productIdentifier: string,
     callback: any,
     errorcallback: any,
@@ -175,7 +175,7 @@ class Purchases {
     window.cordova.exec(callback, errorcallback, PLUGIN_NAME, "makePurchase", [
       productIdentifier,
       oldSku,
-      type
+      type,
     ]);
   }
 
@@ -185,7 +185,7 @@ class Purchases {
    * @param {ErrorCallback} errorcallback Callback that will be triggered whenever there is any problem restoring the user transactions. This gets normally triggered if there
    * is an error retrieving the new purchaser info for the new user or the user cancelled the restore
    */
-  static restoreTransactions(callback: any, errorcallback: any) {
+  public static restoreTransactions(callback: any, errorcallback: any) {
     window.cordova.exec(
       callback,
       errorcallback,
@@ -206,7 +206,7 @@ class Purchases {
    * Get the appUserID that is currently in placed in the SDK
    * @param {StringCallback} callback Callback that will receive the current appUserID
    */
-  static getAppUserID(callback: any) {
+  public static getAppUserID(callback: any) {
     window.cordova.exec(callback, null, PLUGIN_NAME, "getAppUserID", []);
   }
 
@@ -217,9 +217,13 @@ class Purchases {
    * @param {ErrorCallback} errorcallback Callback that will be triggered whenever there is any problem creating the alias. This gets normally triggered if there
    * is an error retrieving the new purchaser info for the new user or there is an error creating the alias.
    */
-  static createAlias(newAppUserID: string, callback: any, errorcallback: any) {
+  public static createAlias(
+    newAppUserID: string,
+    callback: any,
+    errorcallback: any
+  ) {
     window.cordova.exec(callback, errorcallback, PLUGIN_NAME, "createAlias", [
-      newAppUserID
+      newAppUserID,
     ]);
   }
 
@@ -230,9 +234,13 @@ class Purchases {
    * @param {ErrorCallback} errorcallback Callback that will be triggered whenever there is any problem identifying the new user. This gets normally triggered if there
    * is an error retrieving the new purchaser info for the new user.
    */
-  static identify(newAppUserID: string, callback: any, errorcallback: any) {
+  public static identify(
+    newAppUserID: string,
+    callback: any,
+    errorcallback: any
+  ) {
     window.cordova.exec(callback, errorcallback, PLUGIN_NAME, "identify", [
-      newAppUserID
+      newAppUserID,
     ]);
   }
 
@@ -242,7 +250,7 @@ class Purchases {
    * @param {ErrorCallback} errorcallback Callback that will be triggered whenever there is any problem resetting the SDK. This gets normally triggered if there
    * is an error retrieving the new purchaser info for the new user.
    */
-  static reset(callback: any, errorcallback: any) {
+  public static reset(callback: any, errorcallback: any) {
     window.cordova.exec(callback, errorcallback, PLUGIN_NAME, "reset", []);
   }
 
@@ -252,7 +260,7 @@ class Purchases {
    * @param {PurchaserInfoCallback} callback Callback that will receive the purchaser info
    * @param {ErrorCallback} errorcallback Callback that will be triggered whenever there is any problem retrieving the purchaser info
    */
-  static getPurchaserInfo(callback: any, errorcallback: any) {
+  public static getPurchaserInfo(callback: any, errorcallback: any) {
     window.cordova.exec(
       callback,
       errorcallback,
@@ -266,9 +274,9 @@ class Purchases {
    * Enables/Disables debugs logs
    * @param {Boolean} enabled Enable or not debug logs
    */
-  static setDebugLogsEnabled(enabled: boolean) {
+  public static setDebugLogsEnabled(enabled: boolean) {
     window.cordova.exec(null, null, PLUGIN_NAME, "setDebugLogsEnabled", [
-      enabled
+      enabled,
     ]);
   }
 
@@ -278,7 +286,7 @@ class Purchases {
    *
    * @warning This function should only be called if you're not calling makePurchase.
    */
-  static syncPurchases() {
+  public static syncPurchases() {
     window.cordova.exec(null, null, PLUGIN_NAME, "syncPurchases", []);
   }
 
@@ -297,10 +305,16 @@ class Purchases {
    */
 }
 
-if (!window.plugins) window.plugins = {};
+if (!window.plugins) {
+  window.plugins = {};
+}
 
-if (!window.plugins.Purchases) window.plugins.Purchases = new Purchases();
+if (!window.plugins.Purchases) {
+  window.plugins.Purchases = new Purchases();
+}
 
-if (typeof module !== "undefined" && module.exports) module.exports = Purchases;
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = Purchases;
+}
 
 export default Purchases;

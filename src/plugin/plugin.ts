@@ -15,7 +15,7 @@ export enum ATTRIBUTION_NETWORKS {
   TENJIN = 4
 }
 
-export class Purchases {
+class Purchases {
   /**
    * Enum for attribution networks
    * @readonly
@@ -302,3 +302,5 @@ if (!window.plugins) window.plugins = {};
 if (!window.plugins.Purchases) window.plugins.Purchases = new Purchases();
 
 if (typeof module !== "undefined" && module.exports) module.exports = Purchases;
+
+export default Purchases;

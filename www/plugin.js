@@ -42,7 +42,7 @@ var Purchases = /** @class */ (function () {
         window.cordova.exec(null, null, PLUGIN_NAME, "addAttributionData", [
             data,
             network,
-            networkUserId
+            networkUserId,
         ]);
     };
     /**
@@ -109,7 +109,7 @@ var Purchases = /** @class */ (function () {
         window.cordova.exec(callback, errorcallback, PLUGIN_NAME, "makePurchase", [
             productIdentifier,
             oldSku,
-            type
+            type,
         ]);
     };
     /**
@@ -143,7 +143,7 @@ var Purchases = /** @class */ (function () {
      */
     Purchases.createAlias = function (newAppUserID, callback, errorcallback) {
         window.cordova.exec(callback, errorcallback, PLUGIN_NAME, "createAlias", [
-            newAppUserID
+            newAppUserID,
         ]);
     };
     /**
@@ -155,7 +155,7 @@ var Purchases = /** @class */ (function () {
      */
     Purchases.identify = function (newAppUserID, callback, errorcallback) {
         window.cordova.exec(callback, errorcallback, PLUGIN_NAME, "identify", [
-            newAppUserID
+            newAppUserID,
         ]);
     };
     /**
@@ -182,7 +182,7 @@ var Purchases = /** @class */ (function () {
      */
     Purchases.setDebugLogsEnabled = function (enabled) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setDebugLogsEnabled", [
-            enabled
+            enabled,
         ]);
     };
     /**
@@ -195,6 +195,14 @@ var Purchases = /** @class */ (function () {
         window.cordova.exec(null, null, PLUGIN_NAME, "syncPurchases", []);
     };
     /**
+     * Enable automatic collection of Apple Search Ad attribution. Disabled by default
+     *
+     * @param {Boolean} enabled Enable or not automatic collection
+     */
+    Purchases.setAutomaticAttributionCollection = function (enabled) {
+        window.cordova.exec(null, null, PLUGIN_NAME, "syncPurchases", [enabled]);
+    };
+    /**
      * Enum for attribution networks
      * @readonly
      * @enum {Number}
@@ -204,14 +212,17 @@ var Purchases = /** @class */ (function () {
         ADJUST: 1,
         APPSFLYER: 2,
         BRANCH: 3,
-        TENJIN: 4
+        TENJIN: 4,
     };
     return Purchases;
 }());
-exports.Purchases = Purchases;
-if (!window.plugins)
+if (!window.plugins) {
     window.plugins = {};
-if (!window.plugins.Purchases)
+}
+if (!window.plugins.Purchases) {
     window.plugins.Purchases = new Purchases();
-if (typeof module !== "undefined" && module.exports)
+}
+if (typeof module !== "undefined" && module.exports) {
     module.exports = Purchases;
+}
+exports.default = Purchases;

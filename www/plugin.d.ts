@@ -11,7 +11,7 @@ export declare enum ATTRIBUTION_NETWORKS {
     BRANCH = 3,
     TENJIN = 4
 }
-export declare class Purchases {
+declare class Purchases {
     /**
      * Enum for attribution networks
      * @readonly
@@ -158,4 +158,11 @@ export declare class Purchases {
      * @warning This function should only be called if you're not calling makePurchase.
      */
     static syncPurchases(): void;
+    /**
+     * Enable automatic collection of Apple Search Ad attribution. Disabled by default
+     *
+     * @param {Boolean} enabled Enable or not automatic collection
+     */
+    static setAutomaticAttributionCollection(enabled: boolean): void;
 }
+export default Purchases;

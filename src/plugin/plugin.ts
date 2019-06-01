@@ -291,6 +291,15 @@ class Purchases {
   }
 
   /**
+   * Enable automatic collection of Apple Search Ad attribution. Disabled by default
+   *
+   * @param {Boolean} enabled Enable or not automatic collection
+   */
+  public static setAutomaticAttributionCollection(enabled: boolean) {
+    window.cordova.exec(null, null, PLUGIN_NAME, "syncPurchases", [enabled]);
+  }
+
+  /**
    * Success callback used when calling a method that returns back a purchaser info object
    *
    * @callback PurchaserInfoCallback

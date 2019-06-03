@@ -296,7 +296,7 @@ class Purchases {
    * @param {Boolean} enabled Enable or not automatic collection
    */
   public static setAutomaticAttributionCollection(enabled: boolean) {
-    window.cordova.exec(null, null, PLUGIN_NAME, "syncPurchases", [enabled]);
+    window.cordova.exec(null, null, PLUGIN_NAME, "setAutomaticAttributionCollection", [enabled]);
   }
 
   /**

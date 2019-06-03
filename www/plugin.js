@@ -200,7 +200,7 @@ var Purchases = /** @class */ (function () {
      * @param {Boolean} enabled Enable or not automatic collection
      */
     Purchases.setAutomaticAttributionCollection = function (enabled) {
-        window.cordova.exec(null, null, PLUGIN_NAME, "syncPurchases", [enabled]);
+        window.cordova.exec(null, null, PLUGIN_NAME, "setAutomaticAttributionCollection", [enabled]);
     };
     /**
      * Enum for attribution networks

@@ -24,19 +24,6 @@ Cordova Purchases is a cross platform solution for managing in-app subscriptions
 cordova plugin add cordova-plugin-purchases --save
 ```
 
-#### Additional iOS Setup
-
-##### Add Strip Frameworks Phase
-
-The App Store, in it's infinite wisdom, still rejects fat frameworks, so we need to strip our framework before it is deployed. To do this, add the following script phase to your build.
-
-1. In Xcode, in project manager, select your app target.
-2. Open the `Build Phases` tab
-3. Add a new `Run Script`, name it `Strip Frameworks`
-4. Add the following command `"${PROJECT_DIR}/../../node_modules/cordova-plugin-purchases/src/ios/strip-frameworks.sh"` (quotes included)
-
-![](https://media.giphy.com/media/39zTmnsW1CIrJNk5AM/giphy.gif)
-
 ## Getting Started
 
 For more detailed information, you can view our complete documentation at [docs.revenuecat.com](https://docs.revenuecat.com/docs).

@@ -33,6 +33,6 @@
         <source-file src="src/ios/RCPurchaserInfo+CDVPurchasesPlugin.m" />
         <header-file src="src/ios/SKProduct+CDVPurchasesPlugin.h" />
         <source-file src="src/ios/SKProduct+CDVPurchasesPlugin.m" />
-        <framework src="Purchases" type="podspec" spec="2.3.0" />
+        <framework src="Purchases" type="podspec" spec="~> 2.3.0" />
     </platform>
 </plugin>

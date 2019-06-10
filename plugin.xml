@@ -33,13 +33,6 @@
         <source-file src="src/ios/RCPurchaserInfo+CDVPurchasesPlugin.m" />
         <header-file src="src/ios/SKProduct+CDVPurchasesPlugin.h" />
         <source-file src="src/ios/SKProduct+CDVPurchasesPlugin.m" />
-        <podspec>
-            <config>
-                <source url="https://github.com/CocoaPods/Specs.git"/>
-            </config>
-            <pods>
-                <pod name="Purchases" spec="~> 2.3.0" />
-            </pods>
-        </podspec>
+        <framework src="Purchases" type="podspec" spec="2.3.0" />
     </platform>
 </plugin>

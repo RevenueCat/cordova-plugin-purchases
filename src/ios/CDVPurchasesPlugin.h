@@ -20,6 +20,6 @@
 - (void)setDebugLogsEnabled:(CDVInvokedUrlCommand *)command;
 - (void)getPurchaserInfo:(CDVInvokedUrlCommand *)command;
 - (void)syncPurchases:(CDVInvokedUrlCommand *)command;
-- (void)setAutomaticAttributionCollection:(CDVInvokedUrlCommand *)command;
+- (void)setAutomaticAppleSearchAdsAttributionCollection:(CDVInvokedUrlCommand *)command;
 
 @end

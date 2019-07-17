@@ -220,8 +220,8 @@
     
 }
 
-- (void)setAutomaticAttributionCollection:(CDVInvokedUrlCommand *)command {
-    [RCPurchases setAutomaticAttributionCollection:[[command argumentAtIndex:0] boolValue]];
+- (void)setAutomaticAppleSearchAdsAttributionCollection:(CDVInvokedUrlCommand *)command {
+    RCPurchases.automaticAppleSearchAdsAttributionCollection = [[command argumentAtIndex:0] boolValue];
 }
 
 #pragma mark Delegate Methods

@@ -257,8 +257,8 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         Purchases.setDebugLogsEnabled(enabled);
     }
 
-    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAutomaticAttributionCollection")
-    private void setAutomaticAttributionCollection(boolean enabled, CallbackContext callbackContext) {
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAutomaticAppleSearchAdsAttributionCollection")
+    private void setAutomaticAppleSearchAdsAttributionCollection(boolean enabled, CallbackContext callbackContext) {
         // NOOP
     }
 

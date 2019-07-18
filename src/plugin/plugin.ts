@@ -303,9 +303,6 @@ class Purchases {
    * @param {Boolean} enabled Enable or not automatic collection
    */
   public static setAutomaticAttributionCollection(enabled: boolean) {
-    console.warn(
-      "WARNING! This function is deprecated. Use setAutomaticAppleSearchAdsAttributionCollection instead."
-    );
     window.cordova.exec(
       null,
       null,

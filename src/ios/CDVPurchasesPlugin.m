@@ -1,11 +1,15 @@
+//
+//  Created by RevenueCat.
+//  Copyright © 2019 RevenueCat. All rights reserved.
+//
 
 #import "CDVPurchasesPlugin.h"
 
 @import StoreKit;
 
-#import "RCPurchaserInfo+CDVPurchasesPlugin.h"
-#import "RCEntitlement+CDVPurchasesPlugin.h"
-#import "SKProduct+CDVPurchasesPlugin.h"
+#import "RCPurchaserInfo+HybridAdditions.h"
+#import "RCEntitlement+HybridAdditions.h"
+#import "SKProduct+HybridAdditions.h"
 
 @interface CDVPurchasesPlugin () <RCPurchasesDelegate>
 

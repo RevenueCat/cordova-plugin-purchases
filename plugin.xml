@@ -18,6 +18,8 @@
         </config-file>
         <framework src="com.revenuecat.purchases:purchases:2.3.0" />
         <source-file src="src/android/PurchasesPlugin.java" target-dir="src/com/revenuecat/purchases"/>
+        <source-file src="src/android/PurchasesPeriod.java" target-dir="src/com/revenuecat/purchases"/>
+        <source-file src="src/android/PurchasesMath.java" target-dir="src/com/revenuecat/purchases"/>
     </platform>
     <platform name="ios">
         <config-file target="config.xml" parent="/*">
@@ -27,12 +29,12 @@
         </config-file>
         <header-file src="src/ios/CDVPurchasesPlugin.h" />
         <source-file src="src/ios/CDVPurchasesPlugin.m" />
-        <header-file src="src/ios/RCEntitlement+CDVPurchasesPlugin.h" />
-        <source-file src="src/ios/RCEntitlement+CDVPurchasesPlugin.m" />
-        <header-file src="src/ios/RCPurchaserInfo+CDVPurchasesPlugin.h" />
-        <source-file src="src/ios/RCPurchaserInfo+CDVPurchasesPlugin.m" />
-        <header-file src="src/ios/SKProduct+CDVPurchasesPlugin.h" />
-        <source-file src="src/ios/SKProduct+CDVPurchasesPlugin.m" />
+        <header-file src="src/ios/Common/RCEntitlement+HybridAdditions.h" />
+        <source-file src="src/ios/Common/RCEntitlement+HybridAdditions.m" />
+        <header-file src="src/ios/Common/RCPurchaserInfo+HybridAdditions.h" />
+        <source-file src="src/ios/Common/RCPurchaserInfo+HybridAdditions.m" />
+        <header-file src="src/ios/Common/SKProduct+HybridAdditions.h" />
+        <source-file src="src/ios/Common/SKProduct+HybridAdditions.m" />
         <framework src="src/ios/Purchases.framework" embed="true" custom="true" />
     </platform>
 </plugin>

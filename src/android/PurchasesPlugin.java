@@ -22,7 +22,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Currency;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -360,15 +362,40 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     private void putIntroPrice(SkuDetails detail, JSONObject map) throws JSONException {
-        String introductoryPriceAmountMicros = detail.getIntroductoryPriceAmountMicros();
-        if (introductoryPriceAmountMicros != null && !introductoryPriceAmountMicros.isEmpty()) {
-            map.put("intro_price", String.valueOf(Long.parseLong(introductoryPriceAmountMicros) / 1000000d));
+        if (detail.getFreeTrialPeriod().isEmpty()) {
+            String introductoryPriceAmountMicros = detail.getIntroductoryPriceAmountMicros();
+            if (introductoryPriceAmountMicros != null && !introductoryPriceAmountMicros.isEmpty()) {
+                map.put("intro_price", String.valueOf(Long.parseLong(introductoryPriceAmountMicros) / 1000000d));
+            } else {
+                map.put("intro_price", "");
+            }
+            map.put("intro_price_string", detail.getIntroductoryPrice());
+            map.put("intro_price_period", detail.getIntroductoryPricePeriod());
+            if (detail.getIntroductoryPricePeriod() != null && !detail.getIntroductoryPricePeriod().isEmpty()) {
+                PurchasesPeriod period = PurchasesPeriod.parse(detail.getIntroductoryPricePeriod());
+                if (period.years > 0) {
+                    map.put("intro_price_period_unit", "YEAR");
+                    map.put("intro_price_period_number_of_units", "" + period.years);
+                } else if (period.months > 0) {
+                    map.put("intro_price_period_unit", "MONTH");
+                    map.put("intro_price_period_number_of_units", "" + period.months);
+                } else if (period.days > 0) {
+                    map.put("intro_price_period_unit", "DAY");
+                    map.put("intro_price_period_number_of_units", "" + period.days);
+                }
+            } else {
+                map.put("intro_price_period_unit", "");
+                map.put("intro_price_period_number_of_units", "");
+            }
+            map.put("intro_price_cycles", detail.getIntroductoryPriceCycles());
         } else {
-            map.put("intro_price", "");
-        }
-        map.put("intro_price_string", detail.getIntroductoryPrice());
-        map.put("intro_price_period", detail.getIntroductoryPricePeriod());
-        if (detail.getIntroductoryPricePeriod() != null && !detail.getIntroductoryPricePeriod().isEmpty()) {
+            map.put("intro_price", "0");
+            // Format using device locale. iOS will format using App Store locale, but there's no way
+            // to figure out how the price in the SKUDetails is being formatted.
+            NumberFormat format = NumberFormat.getCurrencyInstance();
+            format.setCurrency(Currency.getInstance(detail.getPriceCurrencyCode()));
+            map.put("intro_price_string", format.format(0));
+            map.put("intro_price_period", detail.getFreeTrialPeriod());
             PurchasesPeriod period = PurchasesPeriod.parse(detail.getIntroductoryPricePeriod());
             if (period.years > 0) {
                 map.put("intro_price_period_unit", "YEAR");
@@ -380,11 +407,8 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
                 map.put("intro_price_period_unit", "DAY");
                 map.put("intro_price_period_number_of_units", "" + period.days);
             }
-        } else {
-            map.put("intro_price_period_unit", "");
-            map.put("intro_price_period_number_of_units", "");
+            map.put("intro_price_cycles", "1");
         }
-        map.put("intro_price_cycles", detail.getIntroductoryPriceCycles());
     }
 
     private void cacheProduct(SkuDetails detail) {

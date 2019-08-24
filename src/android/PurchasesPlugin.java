@@ -350,37 +350,41 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             map.put("title", detail.getTitle());
             map.put("price", detail.getPriceAmountMicros() / 1000000d);
             map.put("price_string", detail.getPrice());
-            String introductoryPriceAmountMicros = detail.getIntroductoryPriceAmountMicros();
-            if (introductoryPriceAmountMicros != null && !introductoryPriceAmountMicros.isEmpty()) {
-                map.put("intro_price", String.valueOf(Long.parseLong(introductoryPriceAmountMicros) / 1000000d));
-            } else {
-                map.put("intro_price", "");
-            }
-            map.put("intro_price_string", detail.getIntroductoryPrice());
-            map.put("intro_price_period", detail.getIntroductoryPricePeriod());
-            if (detail.getIntroductoryPricePeriod() != null && !detail.getIntroductoryPricePeriod().isEmpty()) {
-                PurchasesPeriod period = PurchasesPeriod.parse(detail.getIntroductoryPricePeriod());
-                if (period.years > 0) {
-                    map.put("intro_price_period_unit", "YEAR");
-                    map.put("intro_price_period_number_of_units", "" + period.years);
-                } else if (period.months > 0) {
-                    map.put("intro_price_period_unit", "MONTH");
-                    map.put("intro_price_period_number_of_units", "" + period.months);
-                } else if (period.days > 0) {
-                    map.put("intro_price_period_unit", "DAY");
-                    map.put("intro_price_period_number_of_units", "" + period.days);
-                }
-            } else {
-                map.put("intro_price_period_unit", "");
-                map.put("intro_price_period_number_of_units", "");
-            }
-            map.put("intro_price_cycles", detail.getIntroductoryPriceCycles());
+            putIntroPrice(detail, map);
             map.put("currency_code", detail.getPriceCurrencyCode());
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         return map;
+    }
+
+    private void putIntroPrice(SkuDetails detail, JSONObject map) throws JSONException {
+        String introductoryPriceAmountMicros = detail.getIntroductoryPriceAmountMicros();
+        if (introductoryPriceAmountMicros != null && !introductoryPriceAmountMicros.isEmpty()) {
+            map.put("intro_price", String.valueOf(Long.parseLong(introductoryPriceAmountMicros) / 1000000d));
+        } else {
+            map.put("intro_price", "");
+        }
+        map.put("intro_price_string", detail.getIntroductoryPrice());
+        map.put("intro_price_period", detail.getIntroductoryPricePeriod());
+        if (detail.getIntroductoryPricePeriod() != null && !detail.getIntroductoryPricePeriod().isEmpty()) {
+            PurchasesPeriod period = PurchasesPeriod.parse(detail.getIntroductoryPricePeriod());
+            if (period.years > 0) {
+                map.put("intro_price_period_unit", "YEAR");
+                map.put("intro_price_period_number_of_units", "" + period.years);
+            } else if (period.months > 0) {
+                map.put("intro_price_period_unit", "MONTH");
+                map.put("intro_price_period_number_of_units", "" + period.months);
+            } else if (period.days > 0) {
+                map.put("intro_price_period_unit", "DAY");
+                map.put("intro_price_period_number_of_units", "" + period.days);
+            }
+        } else {
+            map.put("intro_price_period_unit", "");
+            map.put("intro_price_period_number_of_units", "");
+        }
+        map.put("intro_price_cycles", detail.getIntroductoryPriceCycles());
     }
 
     private void cacheProduct(SkuDetails detail) {

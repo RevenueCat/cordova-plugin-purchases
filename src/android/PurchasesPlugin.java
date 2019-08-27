@@ -299,12 +299,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             }
             map.put("allPurchasedProductIdentifiers", allPurchasedProductIds);
 
-            Date latest = purchaserInfo.getLatestExpirationDate();
-            if (latest != null) {
-                map.put("latestExpirationDate", Iso8601Utils.format(latest));
-            } else {
-                map.put("latestExpirationDate", JSONObject.NULL);
-            }
+            Mappers.putNullableDate(map, "latestExpirationDate", purchaserInfo.getLatestExpirationDate());
 
             JSONObject allExpirationDates = new JSONObject();
             Map<String, Date> dates = purchaserInfo.getAllExpirationDatesByProduct();
@@ -317,13 +312,20 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             JSONObject allEntitlementExpirationDates = new JSONObject();
             for (String entitlementId : purchaserInfo.getActiveEntitlements()) {
                 Date date = purchaserInfo.getExpirationDateForEntitlement(entitlementId);
-                if (date != null) {
-                    allEntitlementExpirationDates.put(entitlementId, Iso8601Utils.format(date));
-                } else {
-                    allEntitlementExpirationDates.put(entitlementId, JSONObject.NULL);
-                }
+                Mappers.putNullableDate(allEntitlementExpirationDates, entitlementId, date);
             }
             map.put("expirationsForActiveEntitlements", allEntitlementExpirationDates);
+
+            JSONObject purchaseDatesForActiveEntitlements = new JSONObject();
+            for (String entitlementId : purchaserInfo.getActiveEntitlements()) {
+                Date date = purchaserInfo.getPurchaseDateForEntitlement(entitlementId);
+                Mappers.putNullableDate(purchaseDatesForActiveEntitlements, entitlementId, date);
+            }
+            map.put("purchaseDatesForActiveEntitlements", purchaseDatesForActiveEntitlements);
+
+            map.put("entitlements", Mappers.map(purchaserInfo.getEntitlements()));
+            map.put("firstSeen", Iso8601Utils.format(purchaserInfo.getFirstSeen()));
+            map.put("originalAppUserId",purchaserInfo.getOriginalAppUserId());
         } catch (JSONException e) {
             e.printStackTrace();
         }

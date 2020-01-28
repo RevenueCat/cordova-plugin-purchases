@@ -7,6 +7,9 @@
     "files": {}
   },
   "installed_plugins": {
+    "cordova-annotated-plugin-android": {
+      "PACKAGE_NAME": "com.revenuecat.purchases_sample"
+    },
     "cordova-plugin-whitelist": {
       "PACKAGE_NAME": "com.revenuecat.purchases_sample"
     },
@@ -14,9 +17,5 @@
       "PACKAGE_NAME": "com.revenuecat.purchases_sample"
     }
   },
-  "dependent_plugins": {
-    "cordova-annotated-plugin-android": {
-      "PACKAGE_NAME": "com.revenuecat.purchases_sample"
-    }
-  }
+  "dependent_plugins": {}
 }

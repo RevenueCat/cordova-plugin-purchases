@@ -12,7 +12,7 @@
       "type": "registry",
       "id": "cordova-annotated-plugin-android"
     },
-    "is_top_level": false,
+    "is_top_level": true,
     "variables": {}
   },
   "cordova-support-kotlin": {

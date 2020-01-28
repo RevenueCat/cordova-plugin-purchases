@@ -11,4 +11,4 @@ cordova prepare ios
 
 # copy the plugin javascript file, since cordova prepare misses it
 cd $SCRIPT_DIRECTORY/../plugins/cordova-plugin-purchases
-cp ./www/plugin.js $SRCROOT/www/plugins/cordova-plugin-purchases/www/plugin.js
+cp www/plugin.js $SRCROOT/www/plugins/cordova-plugin-purchases/www/plugin.js

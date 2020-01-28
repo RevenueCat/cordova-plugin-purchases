@@ -3,3 +3,4 @@ node_modules
 *.idea/
 *.DS_Store
 *.log
+examples/cordova-sample/MyApp/node_modules

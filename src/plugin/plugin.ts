@@ -262,7 +262,7 @@ export interface PurchasesProduct {
    */
   readonly price: number;
   /**
-   * Formatted price of the item, including its currency sign.
+   * Formatted price of the item, including its currency sign, such as €3.99.
    */
   readonly price_string: string;
   /**

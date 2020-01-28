@@ -487,7 +487,7 @@ class Purchases {
    * Set this to true if you are passing in an appUserID but it is anonymous, this is true by default if you didn't pass an appUserID
    * If a user tries to purchase a product that is active on the current app store account, we will treat it as a restore and alias
    * the new ID with the previous id.
-   * @param {boolean} allowSharing true if enabled, false to diabled
+   * @param {boolean} allowSharing true if enabled, false to disabled
    */
   public static setAllowSharingStoreAccount(allowSharing: boolean) {
     window.cordova.exec(

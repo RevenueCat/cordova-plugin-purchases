@@ -22,5 +22,13 @@
     },
     "is_top_level": false,
     "variables": {}
+  },
+  "cordova-plugin-purchases": {
+    "source": {
+      "type": "local",
+      "path": "../node_modules/cordova-plugin-purchases"
+    },
+    "is_top_level": true,
+    "variables": {}
   }
 }

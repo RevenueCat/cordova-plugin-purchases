@@ -5,5 +5,5 @@ cordova platform add android
 cordova plugin remove purchases
 cordova plugin add ../../../../cordova-plugin-purchases --link --save
 
-cd ../plugins/cordova-plugin-purchases
+cd ../../../../cordova-plugin-purchases
 npm install

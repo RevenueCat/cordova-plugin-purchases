@@ -1,0 +1,65 @@
+{
+  "_from": "cordova-annotated-plugin-android",
+  "_id": "cordova-annotated-plugin-android@1.0.4",
+  "_inBundle": false,
+  "_integrity": "sha512-rGBUp9YMBWrw+v+7tgl8Mx5PzR0fA6Bs2ZATisdmSW/qlzQtd5P9yeOsqkMoaDSzM8IcKEsvY4ingcEbv3oYFA==",
+  "_location": "/cordova-annotated-plugin-android",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "tag",
+    "registry": true,
+    "raw": "cordova-annotated-plugin-android",
+    "name": "cordova-annotated-plugin-android",
+    "escapedName": "cordova-annotated-plugin-android",
+    "rawSpec": "",
+    "saveSpec": null,
+    "fetchSpec": "latest"
+  },
+  "_requiredBy": [
+    "#USER",
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/cordova-annotated-plugin-android/-/cordova-annotated-plugin-android-1.0.4.tgz",
+  "_shasum": "d8eb61b29a6fd32b324ccc62842c966acbefea42",
+  "_spec": "cordova-annotated-plugin-android",
+  "_where": "/Users/andresboedo/revenuecat/cordova-plugin-purchases/examples/cordova-sample/MyApp",
+  "author": {
+    "name": "Miquel Martin",
+    "email": "info@appfeel.com"
+  },
+  "bugs": {
+    "url": "https://github.com/appfeel/cordova-annotated-plugin-android/issues"
+  },
+  "bundleDependencies": false,
+  "cordova": {
+    "id": "cordova-annotated-plugin-android",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "deprecated": false,
+  "description": "Enhanced CordovaPlugin class",
+  "devDependencies": {
+    "cross-var": "^1.1.0",
+    "release-it": "^8.1.0",
+    "replace-in-file": "^3.4.2"
+  },
+  "homepage": "https://github.com/appfeel/cordova-annotated-plugin-android#readme",
+  "keywords": [
+    "cordova",
+    "ecosystem:cordova",
+    "cordova-android"
+  ],
+  "license": "MIT",
+  "name": "cordova-annotated-plugin-android",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/appfeel/cordova-annotated-plugin-android.git"
+  },
+  "scripts": {
+    "release": "release-it",
+    "version": "cross-var replace-in-file '/<plugin(.*)(\\n?)(.*)version=\"(.*)\"/ig' '<plugin$1$2$3version=\"$npm_package_version\"' ./plugin.xml --isRegex && git add plugin.xml"
+  },
+  "version": "1.0.4"
+}

@@ -1,0 +1,12 @@
+android {
+    buildTypes {
+        debug {
+            // minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'src/main/assets/www/proguard-annotated-plugin-android.txt'
+        }
+        release {
+            // minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'src/main/assets/www/proguard-annotated-plugin-android.txt'
+        }
+    }
+}

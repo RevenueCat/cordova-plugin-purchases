@@ -33,8 +33,12 @@ You're ready to go!
 
 You can just make the edits straight from Xcode or AppCode, then build and you're good. 
 
-#### In Javascript code: 
+#### In Javascript code, but not the javascript code for the plugin: 
 
-If you make changes in javascript code, you have to build twice and then run. 
-This is beacuse the build phase runs `cordova prepare ios`, which in turn modifies the `.xcproject` file. This file can't be changed before it's time for compilation, because otherwise the build will be cancelled. 
-So we run it as the last step of the build, after files have been copied. Thus, the need to run it twice - once to actually refresh the javascript files, and once more to have the new files copied over to the project by cordova. 
+You can just make the edits straight from Xcode or AppCode, then build and you're good. 
+
+#### In the plugin's javascript code:
+
+Unfortunately, the only way to reflect the changes at the time of this writing seems to be to remove the plugin and re-add it. 
+
+The build step will transpile the typescript files into js, however. So you can make the updates from Xcode, but you'll have to remove and add the plugin manually after any changes. 

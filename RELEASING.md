@@ -1,7 +1,7 @@
 1. Update to the latest SDK versions in `package.json` and `plugin.xml`
 1. Update version in `package.json` and `plugin.xml`.
 1. Run `npm run fetch:ios:sdk`
-1. Run `npm run fetch:ios:common`
+1. Run `git submodule sync && git submodule update --init --recursive`
 1. Compile common files aar
 1. Run `npm run build`
 1. Add an entry to CHANGELOG.md

@@ -1,0 +1,3 @@
+[submodule "purchases-hybrid-common"]
+	path = src/ios/Common
+	url = https://github.com/RevenueCat/purchases-hybrid-common.git

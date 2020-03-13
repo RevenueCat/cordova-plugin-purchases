@@ -29,24 +29,24 @@
         </config-file>
         <header-file src="src/ios/CDVPurchasesPlugin.h" />
         <source-file src="src/ios/CDVPurchasesPlugin.m" />
-        <header-file src="src/ios/Common/RCPurchaserInfo+HybridAdditions.h" />
-        <source-file src="src/ios/Common/RCPurchaserInfo+HybridAdditions.m" />
-        <header-file src="src/ios/Common/SKProduct+HybridAdditions.h" />
-        <source-file src="src/ios/Common/SKProduct+HybridAdditions.m" />
-        <source-file src="src/ios/Common/RCEntitlementInfo+HybridAdditions.h" />
-        <source-file src="src/ios/Common/RCEntitlementInfo+HybridAdditions.m" />
-        <source-file src="src/ios/Common/RCEntitlementInfos+HybridAdditions.h" />
-        <source-file src="src/ios/Common/RCEntitlementInfos+HybridAdditions.m" />
-        <source-file src="src/ios/Common/RCCommonFunctionality.h" />
-        <source-file src="src/ios/Common/RCCommonFunctionality.m" />
-        <source-file src="src/ios/Common/RCErrorContainer.h" />
-        <source-file src="src/ios/Common/RCErrorContainer.m" />
-        <source-file src="src/ios/Common/RCOffering+HybridAdditions.h" />
-        <source-file src="src/ios/Common/RCOffering+HybridAdditions.m" />
-        <source-file src="src/ios/Common/RCOfferings+HybridAdditions.h" />
-        <source-file src="src/ios/Common/RCOfferings+HybridAdditions.m" />
-        <source-file src="src/ios/Common/RCPackage+HybridAdditions.h" />
-        <source-file src="src/ios/Common/RCPackage+HybridAdditions.m" />
+        <header-file src="src/ios/Common/ios/RCPurchaserInfo+HybridAdditions.h" />
+        <source-file src="src/ios/Common/ios/RCPurchaserInfo+HybridAdditions.m" />
+        <header-file src="src/ios/Common/ios/SKProduct+HybridAdditions.h" />
+        <source-file src="src/ios/Common/ios/SKProduct+HybridAdditions.m" />
+        <source-file src="src/ios/Common/ios/RCEntitlementInfo+HybridAdditions.h" />
+        <source-file src="src/ios/Common/ios/RCEntitlementInfo+HybridAdditions.m" />
+        <source-file src="src/ios/Common/ios/RCEntitlementInfos+HybridAdditions.h" />
+        <source-file src="src/ios/Common/ios/RCEntitlementInfos+HybridAdditions.m" />
+        <source-file src="src/ios/Common/ios/RCCommonFunctionality.h" />
+        <source-file src="src/ios/Common/ios/RCCommonFunctionality.m" />
+        <source-file src="src/ios/Common/ios/RCErrorContainer.h" />
+        <source-file src="src/ios/Common/ios/RCErrorContainer.m" />
+        <source-file src="src/ios/Common/ios/RCOffering+HybridAdditions.h" />
+        <source-file src="src/ios/Common/ios/RCOffering+HybridAdditions.m" />
+        <source-file src="src/ios/Common/ios/RCOfferings+HybridAdditions.h" />
+        <source-file src="src/ios/Common/ios/RCOfferings+HybridAdditions.m" />
+        <source-file src="src/ios/Common/ios/RCPackage+HybridAdditions.h" />
+        <source-file src="src/ios/Common/ios/RCPackage+HybridAdditions.m" />
         <framework src="src/ios/Purchases.framework" embed="true" custom="true" />
     </platform>
 </plugin>

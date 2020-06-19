@@ -691,7 +691,7 @@ declare class Purchases {
      * Set this property to your proxy URL before configuring Purchases *only* if you've received a proxy key value from your RevenueCat contact.
      * @param url Proxy URL as a string.
      */
-    static setProxyURLString(url: string): void;
+    static setProxyURL(url: string): void;
     private static setupShouldPurchasePromoProductCallback;
     private static getMakeDeferredPurchaseFunction;
 }

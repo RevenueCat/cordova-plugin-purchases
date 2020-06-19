@@ -45,9 +45,9 @@ describe("Purchases", () => {
     );
   });
 
-  it("setProxyURLString fires PurchasesPlugin with the correct arguments", () => {
+  it("setProxyURL fires PurchasesPlugin with the correct arguments", () => {
     const expected = "https://proxy.com";
-    Purchases.setProxyURLString(expected);
+    Purchases.setProxyURL(expected);
 
     expect(execFn).toHaveBeenCalledWith(
       null,

@@ -459,7 +459,7 @@ var Purchases = /** @class */ (function () {
      * Set this property to your proxy URL before configuring Purchases *only* if you've received a proxy key value from your RevenueCat contact.
      * @param url Proxy URL as a string.
      */
-    Purchases.setProxyURLString = function (url) {
+    Purchases.setProxyURL = function (url) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setProxyURLString", [url]);
     };
     Purchases.setupShouldPurchasePromoProductCallback = function () {

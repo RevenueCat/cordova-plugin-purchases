@@ -23,7 +23,7 @@
     NSString *apiKey = [command argumentAtIndex:0];
     NSString *appUserID = [command argumentAtIndex:1];
     BOOL observerMode = [[command argumentAtIndex:2] boolValue];
-    NSString *appUserID = [command argumentAtIndex:3];
+    NSString *userDefaultsSuiteName = [command argumentAtIndex:3];
 
     [RCPurchases configureWithAPIKey:apiKey
                            appUserID:appUserID
@@ -177,7 +177,8 @@
     [self sendOKForCommand:command messageAsArray:nil];
 }
 
-- (void)invalidatePurchaserInfoCache:(CDVInvokedUrlCommand *)command { 
+- (void)setProxyURLString:(CDVInvokedUrlCommand *)command {
+    NSString *proxyURLString = [command argumentAtIndex:0];
     [RCCommonFunctionality setProxyURLString:proxyURLString];
     [self sendOKForCommand:command messageAsArray:nil];
 }

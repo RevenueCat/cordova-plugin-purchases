@@ -1,3 +1,13 @@
+## 1.2.0
+
+- Bumped iOS to 3.4.0 [Changelog here](https://github.com/RevenueCat/purchases-ios/releases)
+- Bumped Android to 3.2.0 [Changelog here](https://github.com/RevenueCat/purchases-android/releases)
+- Added managementURL to PurchaserInfo
+- Added setProxyURLString
+- Added originalPurchaseDate to PurchaserInfo
+- Adds new headers for platformFlavor and platformFlavorVersion
+- Adds userDefaultsSuiteName as an option when setting up the SDK
+
 ## 1.1.0
 
 - Adds an example project that shows how to set up an app with RevenueCat

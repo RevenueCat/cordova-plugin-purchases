@@ -7,6 +7,9 @@
 - Added originalPurchaseDate to PurchaserInfo
 - Adds new headers for platformFlavor and platformFlavorVersion
 - Adds userDefaultsSuiteName as an option when setting up the SDK
+- Linked TS Types (https://github.com/RevenueCat/cordova-plugin-purchases/pull/42)
+- Moved iOS common files to use pod dependencies (https://github.com/RevenueCat/cordova-plugin-purchases/pull/39)
+- Moved Android common files to use gradle maven dependency (https://github.com/RevenueCat/cordova-plugin-purchases/pull/39)
 
 ## 1.1.0
 

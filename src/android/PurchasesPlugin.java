@@ -28,10 +28,10 @@ import java.util.Map;
 public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     public static final String PLATFORM_NAME = "cordova";
-    public static final String PLUGIN_VERSION = "1.2.0-SNAPSHOT";
+    public static final String PLUGIN_VERSION = "1.2.0";
 
     @PluginAction(thread = ExecutionThread.MAIN, actionName = "setupPurchases", isAutofinish = false)
-    private void setupPurchases(String apiKey, String appUserID, boolean observerMode,
+    private void setupPurchases(String apiKey, @Nullable String appUserID, boolean observerMode, @Nullable String userDefaultsSuiteName, 
                                 CallbackContext callbackContext) {
         PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
         CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, observerMode, platformInfo);
@@ -193,6 +193,12 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "invalidatePurchaserInfoCache")
     private void invalidatePurchaserInfoCache(CallbackContext callbackContext) {
         CommonKt.invalidatePurchaserInfoCache();
+        callbackContext.success();
+    }
+    
+    @PluginAction(thread = ExecutionThread.MAIN, actionName = "setProxyURLString")
+    public void setProxyURLString(String proxyURLString) {
+        CommonKt.setProxyURLString(proxyURLString);
         callbackContext.success();
     }
 

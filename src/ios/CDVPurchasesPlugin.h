@@ -36,5 +36,6 @@
 - (void)setPhoneNumber:(nullable NSString *)phoneNumber;
 - (void)setDisplayName:(nullable NSString *)displayName;
 - (void)setPushToken:(nullable NSData *)pushToken;
+- (void)setProxyURLString:(nullable NSString *)proxyURLString;
 
 @end

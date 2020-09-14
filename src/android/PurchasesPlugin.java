@@ -1,6 +1,7 @@
 package com.revenuecat.purchases;
 
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.appfeel.cordova.annotated.android.plugin.AnnotatedCordovaPlugin;
@@ -11,6 +12,7 @@ import com.revenuecat.purchases.common.ErrorContainer;
 import com.revenuecat.purchases.common.MappersKt;
 import com.revenuecat.purchases.common.OnResult;
 import com.revenuecat.purchases.common.OnResultList;
+import com.revenuecat.purchases.interfaces.UpdatedPurchaserInfoListener;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;

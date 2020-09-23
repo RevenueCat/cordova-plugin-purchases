@@ -522,6 +522,9 @@ class Purchases {
 
   /**
    * Add a dict of attribution information
+   *
+   * * @deprecated Use the set<NetworkId> functions instead.
+   *
    * @param {object} data Attribution data from any of the attribution networks in Purchases.ATTRIBUTION_NETWORKS
    * @param {ATTRIBUTION_NETWORK} network Which network, see Purchases.ATTRIBUTION_NETWORK
    * @param {string?} networkUserId An optional unique id for identifying the user. Needs to be a string.
@@ -991,6 +994,186 @@ class Purchases {
       "setPushToken",
       [pushToken]
     );
+  }
+  
+  /**
+   * Subscriber attribute associated with the adjustID for the user
+   *
+   * @param adjustID null will delete the subscriber attribute.
+   */
+  public static setAdjustID(adjustID: string | null) { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setAdjustID",
+      [adjustID]
+    )
+  }
+  
+  /**
+   * Subscriber attribute associated with the appsflyerID for the user
+   *
+   * @param appsflyerID null will delete the subscriber attribute.
+   */
+  public static setAppsflyerID(appsflyerID: string | null) { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setAppsflyerID",
+      [appsflyerID]
+    )
+  }
+  
+  /**
+   * Subscriber attribute associated with the fbAnonymousID for the user
+   *
+   * @param fbAnonymousID null will delete the subscriber attribute.
+   */
+  public static setFBAnonymousID(fbAnonymousID: string | null) { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setFBAnonymousID",
+      [fbAnonymousID]
+    )
+  }
+  
+  /**
+   * Subscriber attribute associated with the mparticleID for the user
+   *
+   * @param mparticleID null will delete the subscriber attribute.
+   */
+  public static setMparticleID(mparticleID: string | null) { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setMparticleID",
+      [mparticleID]
+    )
+  }
+  
+  /**
+   * Subscriber attribute associated with the onesignalID for the user
+   *
+   * @param onesignalID null will delete the subscriber attribute.
+   */
+  public static setOnesignalID(onesignalID: string | null) { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setOnesignalID",
+      [onesignalID]
+    )
+  }
+  
+  /**
+   * Subscriber attribute associated with the mediaSource for the user
+   *
+   * @param mediaSource null will delete the subscriber attribute.
+   */
+  public static setMediaSource(mediaSource: string | null) { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setMediaSource",
+      [mediaSource]
+    )
+  }
+  
+  /**
+   * Subscriber attribute associated with the campaign for the user
+   *
+   * @param campaign null will delete the subscriber attribute.
+   */
+  public static setCampaign(campaign: string | null) { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setCampaign",
+      [campaign]
+    )
+  }
+  
+  /**
+   * Subscriber attribute associated with the adGroup for the user
+   *
+   * @param adGroup null will delete the subscriber attribute.
+   */
+  public static setAdGroup(adGroup: string | null) { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setAdGroup",
+      [adGroup]
+    )
+  }
+  
+  /**
+   * Subscriber attribute associated with ad token for the user
+   *
+   * @param ad null will delete the subscriber attribute.
+   */
+  public static setAd(ad: string | null) { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setAd",
+      [ad]
+    )
+  }
+  
+  /**
+   * Subscriber attribute associated with the keyword for the user
+   *
+   * @param keyword null will delete the subscriber attribute.
+   */
+  public static setKeyword(keyword: string | null) { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setKeyword",
+      [keyword]
+    )
+  }
+  
+  /**
+   * Subscriber attribute associated with the creative for the user
+   *
+   * @param creative null will delete the subscriber attribute.
+   */
+  public static setCreative(creative: string | null) { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setCreative",
+      [creative]
+    )
+  }
+
+  /**
+   * Automatically collect subscriber attributes associated with the device identifiers
+   * $idfa, $idfv, $ip on iOS
+   * $gpsAdId, $androidId, $ip on Android
+   */
+  public static collectDeviceIdentifiers() { 
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "collectDeviceIdentifiers",
+      []
+    )
   }
   
   /**

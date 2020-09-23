@@ -203,7 +203,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     
     @PluginAction(thread = ExecutionThread.MAIN, actionName = "setProxyURLString")
     public void setProxyURLString(String proxyURLString, CallbackContext callbackContext) {
-        CommonKt.setProxyURLString(proxyURLString);
+        SubscriberAttributesKt.setProxyURLString(proxyURLString);
         callbackContext.success();
     }
 
@@ -213,31 +213,103 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAttributes")
     private void setAttributes(JSONObject attributes, CallbackContext callbackContext) throws JSONException {
-        CommonKt.setAttributes(convertJsonToMap(attributes));
+        SubscriberAttributesKt.setAttributes(convertJsonToMap(attributes));
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setEmail")
     private void setEmail(String email, CallbackContext callbackContext) {
-        CommonKt.setEmail(email);
+        SubscriberAttributesKt.setEmail(email);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setPhoneNumber")
     private void setPhoneNumber(String phoneNumber, CallbackContext callbackContext) {
-        CommonKt.setPhoneNumber(phoneNumber);
+        SubscriberAttributesKt.setPhoneNumber(phoneNumber);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setDisplayName")
     private void setDisplayName(String displayName, CallbackContext callbackContext) {
-        CommonKt.setDisplayName(displayName);
+        SubscriberAttributesKt.setDisplayName(displayName);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setPushToken")
     private void setPushToken(String pushToken, CallbackContext callbackContext) {
-        CommonKt.setPushToken(pushToken);
+        SubscriberAttributesKt.setPushToken(pushToken);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAdjustID")
+    private void setAdjustID(String adjustID, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setAdjustID(adjustID);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAppsflyerID")
+    private void setAppsflyerID(String appsflyerID, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setAppsflyerID(appsflyerID);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setFBAnonymousID")
+    private void setFBAnonymousID(String fBAnonymousID, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setFBAnonymousID(fBAnonymousID);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setMparticleID")
+    private void setMparticleID(String mparticleID, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setMparticleID(mparticleID);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setOnesignalID")
+    private void setOnesignalID(String onesignalID, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setOnesignalID(onesignalID);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setMediaSource")
+    private void setMediaSource(String mediaSource, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setMediaSource(mediaSource);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setCampaign")
+    private void setCampaign(String campaign, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setCampaign(campaign);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAdGroup")
+    private void setAdGroup(String adGroup, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setAdGroup(adGroup);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAd")
+    private void setAd(String ad, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setAd(ad);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setKeyword")
+    private void setKeyword(String keyword, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setKeyword(keyword);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setCreative")
+    private void setCreative(String creative, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setCreative(creative);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "collectDeviceIdentifiers")
+    private void collectDeviceIdentifiers(CallbackContext callbackContext) { 
+        SubscriberAttributesKt.collectDeviceIdentifiers();
         callbackContext.success();
     }
 

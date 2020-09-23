@@ -175,7 +175,7 @@ export interface PurchasesEntitlementInfos {
         [key: string]: PurchasesEntitlementInfo;
     };
 }
-export interface Transaction {
+export interface PurchasesTransaction {
     /**
      * RevenueCat Id associated to the transaction.
      */
@@ -206,7 +206,7 @@ export interface PurchaserInfo {
      * Returns all the non-subscription purchases a user has made.
      * The purchases are ordered by purchase date in ascending order.
      */
-    readonly nonSubscriptionTransactions: [Transaction];
+    readonly nonSubscriptionTransactions: [PurchasesTransaction];
     /**
      * The latest expiration date of all purchased skus
      */

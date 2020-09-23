@@ -207,7 +207,7 @@ export interface PurchasesTransaction {
   /**
    * Purchase date of the transaction in ISO 8601 format.
    */
-  readonly purchaseDate: String;
+  readonly purchaseDate: string;
 }
 
 export interface PurchaserInfo {

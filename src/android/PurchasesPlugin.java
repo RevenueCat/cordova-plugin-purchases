@@ -9,9 +9,11 @@ import com.appfeel.cordova.annotated.android.plugin.ExecutionThread;
 import com.appfeel.cordova.annotated.android.plugin.PluginAction;
 import com.revenuecat.purchases.common.CommonKt;
 import com.revenuecat.purchases.common.ErrorContainer;
-import com.revenuecat.purchases.common.MappersKt;
 import com.revenuecat.purchases.common.OnResult;
 import com.revenuecat.purchases.common.OnResultList;
+import com.revenuecat.purchases.common.PlatformInfo;
+import com.revenuecat.purchases.common.SubscriberAttributesKt;
+import com.revenuecat.purchases.common.mappers.PurchaserInfoMapperKt;
 import com.revenuecat.purchases.interfaces.UpdatedPurchaserInfoListener;
 
 import org.apache.cordova.CallbackContext;
@@ -40,7 +42,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         Purchases.getSharedInstance().setUpdatedPurchaserInfoListener(new UpdatedPurchaserInfoListener() {
             @Override
             public void onReceived(@NonNull PurchaserInfo purchaserInfo) {
-                PluginResult result = new PluginResult(PluginResult.Status.OK, convertMapToJson(MappersKt.map(purchaserInfo)));
+                PluginResult result = new PluginResult(PluginResult.Status.OK, convertMapToJson(PurchaserInfoMapperKt.map(purchaserInfo)));
                 result.setKeepCallback(true);
                 callbackContext.sendPluginResult(result);
             }
@@ -59,7 +61,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     @PluginAction(thread = ExecutionThread.MAIN, actionName = "addAttributionData")
     public void addAttributionData(JSONObject data, Integer network, @Nullable String networkUserId,
                                    CallbackContext callbackContext) {
-        CommonKt.addAttributionData(data, network, networkUserId);
+        SubscriberAttributesKt.addAttributionData(data, network, networkUserId);
         callbackContext.success();
     }
 
@@ -203,7 +205,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     
     @PluginAction(thread = ExecutionThread.MAIN, actionName = "setProxyURLString")
     public void setProxyURLString(String proxyURLString, CallbackContext callbackContext) {
-        SubscriberAttributesKt.setProxyURLString(proxyURLString);
+        CommonKt.setProxyURLString(proxyURLString);
         callbackContext.success();
     }
 

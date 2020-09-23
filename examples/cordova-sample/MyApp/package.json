@@ -24,10 +24,12 @@
   "cordova": {
     "plugins": {
       "cordova-plugin-whitelist": {},
-      "cordova-annotated-plugin-android": {}
+      "cordova-annotated-plugin-android": {},
+      "cordova-plugin-purchases": {}
     },
     "platforms": [
-      "android"
+      "android",
+      "ios"
     ]
   }
 }

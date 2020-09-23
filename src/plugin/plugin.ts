@@ -195,6 +195,21 @@ export interface PurchasesEntitlementInfos {
   readonly active: { [key: string]: PurchasesEntitlementInfo };
 }
 
+export interface Transaction { 
+  /**
+   * RevenueCat Id associated to the transaction.
+   */
+  readonly revenueCatId: string;
+  /**
+   * Product Id associated with the transaction.
+   */
+  readonly productId: string;
+  /**
+   * Purchase date of the transaction in ISO 8601 format.
+   */
+  readonly purchaseDate: String;
+}
+
 export interface PurchaserInfo {
   /**
    * Entitlements attached to this purchaser info
@@ -208,6 +223,11 @@ export interface PurchaserInfo {
    * Set of purchased skus, active and inactive
    */
   readonly allPurchasedProductIdentifiers: [string];
+  /**
+   * Returns all the non-subscription purchases a user has made.
+   * The purchases are ordered by purchase date in ascending order.
+   */
+  readonly nonSubscriptionTransactions: [Transaction];
   /**
    * The latest expiration date of all purchased skus
    */

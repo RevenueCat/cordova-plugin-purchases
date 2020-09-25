@@ -28,8 +28,8 @@
       "cordova-plugin-purchases": {}
     },
     "platforms": [
-      "android",
-      "ios"
+      "ios",
+      "android"
     ]
   }
 }

@@ -543,7 +543,7 @@ class Purchases {
   /**
    * Add a dict of attribution information
    *
-   * * @deprecated Use the set<NetworkId> functions instead.
+   * @deprecated Use the set<NetworkId> functions instead.
    *
    * @param {object} data Attribution data from any of the attribution networks in Purchases.ATTRIBUTION_NETWORKS
    * @param {ATTRIBUTION_NETWORK} network Which network, see Purchases.ATTRIBUTION_NETWORK
@@ -1004,7 +1004,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with the push token for the user
    *
-   * @param pushToken null will delete the subscriber attribute.
+   * @param pushToken Empty String or null will delete the subscriber attribute.
    */
   public static setPushToken(pushToken: string | null) {
     window.cordova.exec(
@@ -1019,7 +1019,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with the adjustID for the user
    *
-   * @param adjustID null will delete the subscriber attribute.
+   * @param adjustID Empty String or null will delete the subscriber attribute.
    */
   public static setAdjustID(adjustID: string | null) { 
     window.cordova.exec(
@@ -1034,7 +1034,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with the appsflyerID for the user
    *
-   * @param appsflyerID null will delete the subscriber attribute.
+   * @param appsflyerID Empty String or null will delete the subscriber attribute.
    */
   public static setAppsflyerID(appsflyerID: string | null) { 
     window.cordova.exec(
@@ -1049,7 +1049,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with the fbAnonymousID for the user
    *
-   * @param fbAnonymousID null will delete the subscriber attribute.
+   * @param fbAnonymousID Empty String or null will delete the subscriber attribute.
    */
   public static setFBAnonymousID(fbAnonymousID: string | null) { 
     window.cordova.exec(
@@ -1064,7 +1064,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with the mparticleID for the user
    *
-   * @param mparticleID null will delete the subscriber attribute.
+   * @param mparticleID Empty String or null will delete the subscriber attribute.
    */
   public static setMparticleID(mparticleID: string | null) { 
     window.cordova.exec(
@@ -1079,7 +1079,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with the onesignalID for the user
    *
-   * @param onesignalID null will delete the subscriber attribute.
+   * @param onesignalID Empty String or null will delete the subscriber attribute.
    */
   public static setOnesignalID(onesignalID: string | null) { 
     window.cordova.exec(
@@ -1094,7 +1094,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with the mediaSource for the user
    *
-   * @param mediaSource null will delete the subscriber attribute.
+   * @param mediaSource Empty String or null will delete the subscriber attribute.
    */
   public static setMediaSource(mediaSource: string | null) { 
     window.cordova.exec(
@@ -1109,7 +1109,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with the campaign for the user
    *
-   * @param campaign null will delete the subscriber attribute.
+   * @param campaign Empty String or null will delete the subscriber attribute.
    */
   public static setCampaign(campaign: string | null) { 
     window.cordova.exec(
@@ -1124,7 +1124,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with the adGroup for the user
    *
-   * @param adGroup null will delete the subscriber attribute.
+   * @param adGroup Empty String or null will delete the subscriber attribute.
    */
   public static setAdGroup(adGroup: string | null) { 
     window.cordova.exec(
@@ -1139,7 +1139,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with ad token for the user
    *
-   * @param ad null will delete the subscriber attribute.
+   * @param ad Empty String or null will delete the subscriber attribute.
    */
   public static setAd(ad: string | null) { 
     window.cordova.exec(
@@ -1154,7 +1154,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with the keyword for the user
    *
-   * @param keyword null will delete the subscriber attribute.
+   * @param keyword Empty String or null will delete the subscriber attribute.
    */
   public static setKeyword(keyword: string | null) { 
     window.cordova.exec(
@@ -1169,7 +1169,7 @@ class Purchases {
   /**
    * Subscriber attribute associated with the creative for the user
    *
-   * @param creative null will delete the subscriber attribute.
+   * @param creative Empty String or null will delete the subscriber attribute.
    */
   public static setCreative(creative: string | null) { 
     window.cordova.exec(

@@ -145,7 +145,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Add a dict of attribution information
      *
-     * * @deprecated Use the set<NetworkId> functions instead.
+     * @deprecated Use the set<NetworkId> functions instead.
      *
      * @param {object} data Attribution data from any of the attribution networks in Purchases.ATTRIBUTION_NETWORKS
      * @param {ATTRIBUTION_NETWORK} network Which network, see Purchases.ATTRIBUTION_NETWORK
@@ -453,7 +453,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with the push token for the user
      *
-     * @param pushToken null will delete the subscriber attribute.
+     * @param pushToken Empty String or null will delete the subscriber attribute.
      */
     Purchases.setPushToken = function (pushToken) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setPushToken", [pushToken]);
@@ -461,7 +461,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with the adjustID for the user
      *
-     * @param adjustID null will delete the subscriber attribute.
+     * @param adjustID Empty String or null will delete the subscriber attribute.
      */
     Purchases.setAdjustID = function (adjustID) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setAdjustID", [adjustID]);
@@ -469,7 +469,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with the appsflyerID for the user
      *
-     * @param appsflyerID null will delete the subscriber attribute.
+     * @param appsflyerID Empty String or null will delete the subscriber attribute.
      */
     Purchases.setAppsflyerID = function (appsflyerID) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setAppsflyerID", [appsflyerID]);
@@ -477,7 +477,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with the fbAnonymousID for the user
      *
-     * @param fbAnonymousID null will delete the subscriber attribute.
+     * @param fbAnonymousID Empty String or null will delete the subscriber attribute.
      */
     Purchases.setFBAnonymousID = function (fbAnonymousID) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setFBAnonymousID", [fbAnonymousID]);
@@ -485,7 +485,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with the mparticleID for the user
      *
-     * @param mparticleID null will delete the subscriber attribute.
+     * @param mparticleID Empty String or null will delete the subscriber attribute.
      */
     Purchases.setMparticleID = function (mparticleID) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setMparticleID", [mparticleID]);
@@ -493,7 +493,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with the onesignalID for the user
      *
-     * @param onesignalID null will delete the subscriber attribute.
+     * @param onesignalID Empty String or null will delete the subscriber attribute.
      */
     Purchases.setOnesignalID = function (onesignalID) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setOnesignalID", [onesignalID]);
@@ -501,7 +501,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with the mediaSource for the user
      *
-     * @param mediaSource null will delete the subscriber attribute.
+     * @param mediaSource Empty String or null will delete the subscriber attribute.
      */
     Purchases.setMediaSource = function (mediaSource) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setMediaSource", [mediaSource]);
@@ -509,7 +509,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with the campaign for the user
      *
-     * @param campaign null will delete the subscriber attribute.
+     * @param campaign Empty String or null will delete the subscriber attribute.
      */
     Purchases.setCampaign = function (campaign) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setCampaign", [campaign]);
@@ -517,7 +517,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with the adGroup for the user
      *
-     * @param adGroup null will delete the subscriber attribute.
+     * @param adGroup Empty String or null will delete the subscriber attribute.
      */
     Purchases.setAdGroup = function (adGroup) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setAdGroup", [adGroup]);
@@ -525,7 +525,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with ad token for the user
      *
-     * @param ad null will delete the subscriber attribute.
+     * @param ad Empty String or null will delete the subscriber attribute.
      */
     Purchases.setAd = function (ad) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setAd", [ad]);
@@ -533,7 +533,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with the keyword for the user
      *
-     * @param keyword null will delete the subscriber attribute.
+     * @param keyword Empty String or null will delete the subscriber attribute.
      */
     Purchases.setKeyword = function (keyword) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setKeyword", [keyword]);
@@ -541,7 +541,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Subscriber attribute associated with the creative for the user
      *
-     * @param creative null will delete the subscriber attribute.
+     * @param creative Empty String or null will delete the subscriber attribute.
      */
     Purchases.setCreative = function (creative) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setCreative", [creative]);

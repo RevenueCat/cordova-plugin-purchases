@@ -1,5 +1,10 @@
 ### 1.3.1
 
+- Bumped `purchases-hybrid-common` to 1.4.5 [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases)
+- Bumped `purchases-ios` to 3.7.5 [Changelog here](https://github.com/RevenueCat/purchases-ios/releases)
+
+### 1.3.1
+
 - Bumped `purchases-hybrid-common` to 1.4.4 [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases)
 - Bumped `purchases-android` to 3.5.2 [Changelog here](https://github.com/RevenueCat/purchases-android/releases)
 

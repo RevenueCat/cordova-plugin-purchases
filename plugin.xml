@@ -33,7 +33,7 @@
                 <source url="https://github.com/CocoaPods/Specs.git"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="PurchasesHybridCommon" spec="1.4.4"/>
+                <pod name="PurchasesHybridCommon" spec="1.4.5"/>
             </pods>
         </podspec>
     </platform>

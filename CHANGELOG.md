@@ -2,6 +2,7 @@
 
 - Bumped `purchases-hybrid-common` to 1.4.5 [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases)
 - Bumped `purchases-ios` to 3.7.5 [Changelog here](https://github.com/RevenueCat/purchases-ios/releases)
+- Updates docs for subscriber attributes https://github.com/RevenueCat/cordova-plugin-purchases/pull/57
 
 ### 1.3.1
 

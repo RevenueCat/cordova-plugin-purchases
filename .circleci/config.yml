@@ -1,36 +1,160 @@
 version: 2.1
-jobs:
-  runtest:
-    macos:
-      xcode: "10.2.0"
-
+commands:
+  android-sdk-dependencies:
+    description: "Install and set android SDK"
     steps:
-      - checkout
+      - run:
+          name: set ANDROID_SDK_ROOT
+          command: |
+            echo 'export ANDROID_SDK_ROOT=$HOME/android-tools'  >> $BASH_ENV
+      - restore_cache:
+          key: android=tools-v1-{{ checksum "scripts/install-android-tools.sh" }}-{{ arch }}
 
-      # Download and cache dependencies
+      - run:
+          name: install android tools
+          command: |
+            sh scripts/install-android-tools.sh
+            echo 'export PATH=$ANDROID_SDK_ROOT/tools/bin:$PATH'  >> $BASH_ENV
+            echo 'export PATH=$ANDROID_SDK_ROOT/tools:$PATH'  >> $BASH_ENV
+            echo 'export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH'  >> $BASH_ENV
+            echo 'export PATH=$ANDROID_SDK_ROOT/emulator:$PATH'  >> $BASH_ENV
+            source $BASH_ENV
+            sdkmanager --list
+      - save_cache:
+          key: android=tools-v1-{{ checksum "scripts/install-android-tools.sh" }}-{{ arch }}
+          paths:
+            - /Users/distiller/android-tools
+
+  create-launch-android-emulator:
+    description: "create and launch android emulators"
+    steps:
+      - run:
+          name: create AVD
+          command: |
+            echo "no" | avdmanager --verbose create avd --force \
+              --name "Pixel_3a_API_26" \
+              --package "system-images;android-26;google_apis_playstore;x86"
+
+      - run:
+          name: start AVD
+          command: emulator @Pixel_3a_API_26 -no-window -no-audio
+          background: true
+
+      - run:
+          name: wait for emulator
+          command: |
+            adb wait-for-device shell 'while [[ -z $(getprop dev.bootcomplete) ]]; do sleep 1; done;'
+  
+  npm-dependencies:
+    description: "installs all global and local npm dependencies"
+    steps:
+      - run: npm install -g cordova
+      - run: npm install -g github:apache/cordova-paramedic
+      - run: npm install -g ios-deploy
       - restore_cache:
           keys:
             - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
             - v1-dependencies-
-
-      - run: yarn
-
+      - run: npm install
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+    
+  prepare-tests:
+    description: "prepares tests to run"
+    steps:
+      - run: sed -i .bck s/api_key/$API_KEY/ tests/tests.js
 
+  simulator-dependencies:
+    description: "Install iOS simulator dependencies"
+    steps:
+      - run:
+          name: "Install applesimutils"
+          command: |
+            HOMEBREW_NO_AUTO_UPDATE=1 brew tap wix/brew
+            HOMEBREW_NO_AUTO_UPDATE=1 brew install applesimutils
+  
+jobs:
+  checkout_code:
+    description: "Checkout code"
+    macos:
+      xcode: 11.3.1
+    steps:
+      - checkout
+      - persist_to_workspace:
+          paths: .
+          root: .
+  
+  android-integration-test:
+    description: "Run Android integration tests for Flutter"
+    macos:
+      xcode: 11.3.1
+    steps:
+      - attach_workspace:
+          at: .
+      - run: ls
+      - run: brew install gradle
+      - android-sdk-dependencies
+      - create-launch-android-emulator
+      - npm-dependencies
+      - prepare-tests
+      - run: npm run test:android
+
+  ios-integration-test:
+    description: "Run iOS integration tests for Flutter"
+    macos:
+      xcode: 11.3.1
+    steps:
+      - attach_workspace:
+          at: .
+      - simulator-dependencies
+      - run:
+          name: Open simulator
+          command: xcrun simctl boot "iPhone 11"
+      - npm-dependencies
+      - prepare-tests
+      - run: npm run test:ios
+
+  runtest:
+    macos:
+      xcode: 11.3.1
+
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+      - run: yarn
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
       - run: yarn test
-
       - run: yarn tslint
-
       - run:
           name: Build
           command: |
             yarn build
+
 workflows:
   version: 2
   build-test:
     jobs:
       - runtest
+  
+  android-integration-test:
+    jobs:
+      - checkout_code
+      - android-integration-test:
+          requires:
+            - checkout_code
+  
+  ios-integration-test:
+    jobs:
+      - checkout_code
+      - ios-integration-test:
+          requires:
+            - checkout_code
+

@@ -23,9 +23,11 @@
     "plugins": {
       "cordova-plugin-whitelist": {},
       "cordova-annotated-plugin-android": {},
+      "cordova-plugin-purchases": {},
       "cordova-plugin-add-swift-support": {}
     },
     "platforms": [
+      "ios",
       "android"
     ]
   },

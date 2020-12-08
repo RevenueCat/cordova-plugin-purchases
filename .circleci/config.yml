@@ -77,7 +77,7 @@ jobs:
       - create-launch-android-emulator
       - npm-dependencies
       - replace-api-key
-      - run: npm run test:android -- --target:"iPhone 11 Pro (13.3)"
+      - run: npm run test:android
 
   ios-integration-test:
     description: "Run iOS integration tests for Flutter"
@@ -90,7 +90,7 @@ jobs:
           command: xcrun instruments -w "iPhone 11 Pro (13.3) [" || true
       - npm-dependencies
       - replace-api-key
-      - run: npm run test:ios
+      - run: npm run test:ios -- --target:"iPhone 11 Pro (13.3)"
 
   runtest:
     macos:

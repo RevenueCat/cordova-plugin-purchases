@@ -60,20 +60,11 @@ commands:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
     
-  prepare-tests:
-    description: "prepares tests to run"
+  replace-api-key:
+    description: "replace API_KEY"
     steps:
       - run: sed -i .bck s/api_key/$API_KEY/ tests/tests.js
 
-  simulator-dependencies:
-    description: "Install iOS simulator dependencies"
-    steps:
-      - run:
-          name: "Install applesimutils"
-          command: |
-            HOMEBREW_NO_AUTO_UPDATE=1 brew tap wix/brew
-            HOMEBREW_NO_AUTO_UPDATE=1 brew install applesimutils
-  
 jobs:
   android-integration-test:
     description: "Run Android integration tests for Flutter"
@@ -85,8 +76,8 @@ jobs:
       - android-sdk-dependencies
       - create-launch-android-emulator
       - npm-dependencies
-      - prepare-tests
-      - run: npm run test:android
+      - replace-api-key
+      - run: npm run test:android -- --target:"iPhone 11 Pro (13.3)"
 
   ios-integration-test:
     description: "Run iOS integration tests for Flutter"
@@ -95,10 +86,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Open simulator
+          name: Start simulator
           command: xcrun instruments -w "iPhone 11 Pro (13.3) [" || true
       - npm-dependencies
-      - prepare-tests
+      - replace-api-key
       - run: npm run test:ios
 
   runtest:

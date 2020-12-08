@@ -90,7 +90,7 @@ jobs:
           command: xcrun instruments -w "iPhone 11 Pro (13.3) [" || true
       - npm-dependencies
       - replace-api-key
-      - run: npm run test:ios -- --target:"iPhone 11 Pro (13.3)"
+      - run: cordova-paramedic --verbose --platform ios --plugin . --target:"iPhone-11-Pro, 13.3"
 
   runtest:
     macos:

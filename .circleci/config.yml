@@ -1,3 +1,10 @@
+release-tags-and-branches: &release-tags-and-branches
+  filters:
+    tags:
+      ignore: /^.*-SNAPSHOT/
+    branches:
+      only: /^release\/.*/
+
 version: 2.1
 commands:
   android-sdk-dependencies:
@@ -122,21 +129,9 @@ workflows:
   
   android-integration-test:
     jobs:
-      - android-integration-test:
-          filters:
-            tags:
-              only: /^(\d+\.)(\d+\.)(\d+)$/
-#            Uncomment before merging
-#            branches:
-#              only: /^release\/(\d+\.)(\d+\.)(\d+)$/
+      - android-integration-test: *release-tags-and-branches
   
   ios-integration-test:
     jobs:
-      - ios-integration-test:
-          filters:
-            tags:
-              only: /^(\d+\.)(\d+\.)(\d+)$/
-#            Uncomment before merging
-#            branches:
-#              only: /^release\/(\d+\.)(\d+\.)(\d+)$/
+      - ios-integration-test: *release-tags-and-branches
 

@@ -76,7 +76,7 @@ jobs:
   android-integration-test:
     description: "Run Android integration tests for Flutter"
     macos:
-      xcode: 12.2.0
+      xcode: 11.3.1
     steps:
       - checkout
       - run: brew install gradle
@@ -89,7 +89,7 @@ jobs:
   ios-integration-test:
     description: "Run iOS integration tests for Flutter"
     macos:
-      xcode: 12.2.0
+      xcode: 11.3.1
     steps:
       - checkout
       - run:

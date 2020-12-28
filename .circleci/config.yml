@@ -100,8 +100,8 @@ jobs:
       - run: npm run test:ios
 
   runtest:
-    macos:
-      xcode: 12.2.0
+    docker:
+      - image: circleci/node:lts
 
     steps:
       - checkout

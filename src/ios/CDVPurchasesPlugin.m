@@ -100,6 +100,9 @@
 
 - (void)getAppUserID:(CDVInvokedUrlCommand *)command
 {
+- (void)syncPurchases:(CDVInvokedUrlCommand *)command {
+    [RCCommonFunctionality syncPurchasesWithCompletionBlock:[self getResponseCompletionBlock:command]];
+}
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[RCCommonFunctionality appUserID]];
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
@@ -133,10 +136,6 @@
     [RCCommonFunctionality getPurchaserInfoWithCompletionBlock:[self getResponseCompletionBlock:command]];
 }
 
-- (void)syncPurchases:(CDVInvokedUrlCommand *)command
-{
-    // NO-OP
-}
 
 - (void)setAutomaticAppleSearchAdsAttributionCollection:(CDVInvokedUrlCommand *)command
 {
@@ -183,6 +182,14 @@
     [self sendOKForCommand:command messageAsArray:nil];
 }
 
+- (void)presentCodeRedemptionSheet:(CDVInvokedUrlCommand *)command {
+    if (@available(iOS 14.0, *)) {
+        [RCCommonFunctionality presentCodeRedemptionSheet];
+    } else {
+        NSLog(@"[Purchases] Warning: tried to present codeRedemptionSheet, but it's only available on iOS 14.0 or greater.");
+    }
+    [self sendOKForCommand:command messageAsArray:nil];
+}
 #pragma mark Subscriber Attributes
 
 - (void)setAttributes:(CDVInvokedUrlCommand *)command {

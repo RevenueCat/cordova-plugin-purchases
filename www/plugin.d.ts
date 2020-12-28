@@ -512,25 +512,6 @@ declare class Purchases {
     /**
      * Make a purchase
      *
-     * @deprecated Use purchaseProduct instead.
-     *
-     * @param {string} productIdentifier The product identifier of the product you want to purchase.
-     * @param {function(string, PurchaserInfo):void} callback Callback triggered after a successful purchase.
-     * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error or when the user cancels the purchase.
-     * If user cancelled, userCancelled will be true
-     * @param {string?} oldSKU Optional sku you wish to upgrade from.
-     * @param {PURCHASE_TYPE} type Optional type of product, can be inapp or subs. Subs by default
-     */
-    static makePurchase(productIdentifier: string, callback: ({ productIdentifier, purchaserInfo }: {
-        productIdentifier: string;
-        purchaserInfo: PurchaserInfo;
-    }) => void, errorCallback: ({ error, userCancelled }: {
-        error: PurchasesError;
-        userCancelled: boolean;
-    }) => void, oldSKU?: string | null, type?: PURCHASE_TYPE): void;
-    /**
-     * Make a purchase
-     *
      * @param {string} productIdentifier The product identifier of the product you want to purchase.
      * @param {function(string, PurchaserInfo):void} callback Callback triggered after a successful purchase.
      * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error or when the user cancels the purchase.

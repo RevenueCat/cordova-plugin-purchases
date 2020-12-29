@@ -315,6 +315,12 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success();
     }
 
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "presentCodeRedemptionSheet")
+    private void presentCodeRedemptionSheet(CallbackContext callbackContext) {
+        // noop
+        callbackContext.success();
+    }
+
     //================================================================================
     // Private methods
     //================================================================================

@@ -119,6 +119,11 @@
     [self sendOKForCommand:command messageAsArray:nil];
 }
 
+- (void)setSimulatesAskToBuyInSandbox:(CDVInvokedUrlCommand *)command {
+    [RCCommonFunctionality setSimulatesAskToBuyInSandbox:[[command argumentAtIndex:0] boolValue]];
+    [self sendOKForCommand:command messageAsArray:nil];
+}
+
 - (void)getPurchaserInfo:(CDVInvokedUrlCommand *)command {
     [RCCommonFunctionality getPurchaserInfoWithCompletionBlock:[self getResponseCompletionBlock:command]];
 }

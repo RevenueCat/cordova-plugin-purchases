@@ -168,6 +168,11 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success();
     }
 
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setSimulatesAskToBuyInSandbox")
+    private void setSimulatesAskToBuyInSandbox(boolean enabled, CallbackContext callbackContext) {
+        // NOOP
+    }
+
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAutomaticAppleSearchAdsAttributionCollection")
     private void setAutomaticAppleSearchAdsAttributionCollection(boolean enabled, CallbackContext callbackContext) {
         // NOOP

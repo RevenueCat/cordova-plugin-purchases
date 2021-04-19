@@ -621,6 +621,7 @@ declare class Purchases {
      */
     static logOut(callback: (purchaserInfo: PurchaserInfo) => void, errorCallback: (error: PurchasesError) => void): void;
     /**
+     * @deprecated, use logIn instead.
      * This function will alias two appUserIDs together.
      * @param {string} newAppUserID The new appUserID that should be linked to the currently identified appUserID. Needs to be a string.
      * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after creating the alias

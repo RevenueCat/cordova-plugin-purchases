@@ -163,6 +163,7 @@ var Purchases = /** @class */ (function () {
         this.setupShouldPurchasePromoProductCallback();
     };
     /**
+     * @deprecated, configure behavior through the RevenueCat dashboard instead.
      * Set this to true if you are passing in an appUserID but it is anonymous, this is true by default if you didn't pass an appUserID
      * If a user tries to purchase a product that is active on the current app store account, we will treat it as a restore and alias
      * the new ID with the previous id.
@@ -295,6 +296,7 @@ var Purchases = /** @class */ (function () {
         ]);
     };
     /**
+     * @deprecated, use logIn instead.
      * This function will identify the current user with an appUserID. Typically this would be used after a logout to identify a new user without calling configure
      * @param {string} newAppUserID The appUserID that should be linked to the currently user
      * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after identifying.
@@ -311,6 +313,7 @@ var Purchases = /** @class */ (function () {
         ]);
     };
     /**
+     * @deprecated, use logOut instead.
      * Resets the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
      * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after resetting
      * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem resetting the SDK. This gets normally triggered if there

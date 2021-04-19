@@ -101,6 +101,15 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)logIn:(CDVInvokedUrlCommand *)command {
+    NSString *appUserID = [command argumentAtIndex:0];
+    [RCCommonFunctionality logInWithAppUserID:appUserID completionBlock:[self getResponseCompletionBlock:command]];
+}
+
+- (void)logOut:(CDVInvokedUrlCommand *)command {
+    [RCCommonFunctionality logOutWithCompletionBlock:[self getResponseCompletionBlock:command]];
+}
+
 - (void)createAlias:(CDVInvokedUrlCommand *)command {
     NSString *newAppUserID = [command argumentAtIndex:0];
 

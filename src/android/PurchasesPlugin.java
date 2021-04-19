@@ -149,7 +149,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "logOut", isAutofinish = false)
-    private void logOut(String newAppUserID, CallbackContext callbackContext) {
+    private void logOut(CallbackContext callbackContext) {
         CommonKt.logOut(getOnResult(callbackContext));
     }
 

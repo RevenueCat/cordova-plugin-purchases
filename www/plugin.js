@@ -283,10 +283,9 @@ var Purchases = /** @class */ (function () {
      * This function will logIn the current user with an appUserID. Typically this would be used after a log in
      * to identify a user without calling configure.
      * @param {String} appUserID The appUserID that should be linked to the currently user
-     * @param {function(PurchaserInfo,boolean):void} callback Callback that will receive the new purchaserInfo after logging in,
-     * as well as a boolean that will be true if the user has been created for the first time in the RevenueCat backend, and false otherwise.
+     * @param {function(LogInResult):void} callback Callback that will receive an object that contains the purchaserInfo after logging in, as well as a boolean indicating
+     * whether the user has just been created for the first time in the RevenueCat backend.
      * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem logging in.
-     * @returns {Promise<LogInResult>} A promise of a purchaser info object. Rejections return an error code, and a userInfo object with more information.
      */
     Purchases.logIn = function (appUserID, callback, errorCallback) {
         // noinspection SuspiciousTypeOfGuard

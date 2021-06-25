@@ -236,16 +236,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
   
           @Override
           public void onReceived(Boolean result) {
-            try {
-                JSONArray writableArray = new JSONArray();
-                JSONObject responseObject = new JSONObject();
-                responseObject.put("canMakePayments", result);
-                writableArray.put(responseObject);
-                
-                callbackContext.success(writableArray);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
           }
         });
     }

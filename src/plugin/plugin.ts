@@ -506,9 +506,9 @@ class Purchases {
   public static PURCHASE_TYPE = PURCHASE_TYPE;
 
   /**
-   * Supported SKU types.
-   * @readonly
-   * @enum {string}
+   * Enum for billing features.
+   * Currently, these are only relevant for Google Play Android users:
+   * https://developer.android.com/reference/com/android/billingclient/api/BillingClient.FeatureType
    */
     public static BILLING_FEATURE = BILLING_FEATURE;
 
@@ -1231,7 +1231,7 @@ class Purchases {
     );
   }
 
-  /**
+/**
  * Check if billing is supported for the current user (meaning IN-APP purchases are supported)
  * and optionally, whether a list of specified feature types are supported. 
  * 

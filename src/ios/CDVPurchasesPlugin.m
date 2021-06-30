@@ -287,7 +287,6 @@
 }
 
 - (void)canMakePayments:(CDVInvokedUrlCommand *)command {
-    NSArray *features = [command argumentAtIndex:0];
     BOOL canMakePayments = [RCCommonFunctionality canMakePaymentsWithFeatures:[command argumentAtIndex:0]];
     CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:canMakePayments];
     

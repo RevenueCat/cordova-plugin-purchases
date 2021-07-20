@@ -112,8 +112,10 @@
 
 - (void)createAlias:(CDVInvokedUrlCommand *)command {
     NSString *newAppUserID = [command argumentAtIndex:0];
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     [RCCommonFunctionality createAlias:newAppUserID completionBlock:[self getResponseCompletionBlock:command]];
+#pragma GCC diagnostic pop
 }
 
 - (void)identify:(CDVInvokedUrlCommand *)command {

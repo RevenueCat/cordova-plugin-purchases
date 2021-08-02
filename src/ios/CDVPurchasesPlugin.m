@@ -40,9 +40,10 @@
 
 - (void)setAllowSharingStoreAccount:(CDVInvokedUrlCommand *)command {
     BOOL allowSharingStoreAccount = [[command argumentAtIndex:0] boolValue];
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     [RCCommonFunctionality setAllowSharingStoreAccount:allowSharingStoreAccount];
-
+#pragma GCC diagnostic pop
     [self sendOKForCommand:command messageAsArray:nil];
 }
 
@@ -50,9 +51,10 @@
     NSDictionary *data = [command argumentAtIndex:0];
     NSInteger network = [[command argumentAtIndex:1] integerValue];
     NSString *networkUserId = [command argumentAtIndex:2];
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     [RCCommonFunctionality addAttributionData:data network:network networkUserId:networkUserId];
-
+#pragma GCC diagnostic pop
     [self sendOKForCommand:command messageAsArray:nil];
 }
 
@@ -99,19 +101,36 @@
     [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
+- (void)logIn:(CDVInvokedUrlCommand *)command {
+    NSString *appUserID = [command argumentAtIndex:0];
+    [RCCommonFunctionality logInWithAppUserID:appUserID completionBlock:[self getResponseCompletionBlock:command]];
+}
+
+- (void)logOut:(CDVInvokedUrlCommand *)command {
+    [RCCommonFunctionality logOutWithCompletionBlock:[self getResponseCompletionBlock:command]];
+}
+
 - (void)createAlias:(CDVInvokedUrlCommand *)command {
     NSString *newAppUserID = [command argumentAtIndex:0];
-
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     [RCCommonFunctionality createAlias:newAppUserID completionBlock:[self getResponseCompletionBlock:command]];
+#pragma GCC diagnostic pop
 }
 
 - (void)identify:(CDVInvokedUrlCommand *)command {
     NSString *appUserID = [command argumentAtIndex:0];
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     [RCCommonFunctionality identify:appUserID completionBlock:[self getResponseCompletionBlock:command]];
+#pragma GCC diagnostic pop
 }
 
 - (void)reset:(CDVInvokedUrlCommand *)command {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
     [RCCommonFunctionality resetWithCompletionBlock:[self getResponseCompletionBlock:command]];
+#pragma GCC diagnostic pop
 }
 
 - (void)setDebugLogsEnabled:(CDVInvokedUrlCommand *)command {
@@ -286,6 +305,13 @@
     [self sendOKForCommand:command messageAsArray:nil];
 }
 
+- (void)canMakePayments:(CDVInvokedUrlCommand *)command {
+    BOOL canMakePayments = [RCCommonFunctionality canMakePaymentsWithFeatures:[command argumentAtIndex:0]];
+    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsBool:canMakePayments];
+    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+}
+
 #pragma mark Delegate Methods
 
 - (void)purchases:(RCPurchases *)purchases didReceiveUpdatedPurchaserInfo:(RCPurchaserInfo *)purchaserInfo {
@@ -332,7 +358,7 @@
 }
 
 - (NSString *)platformFlavorVersion {
-    return @"2.1.1";
+    return @"2.3.0";
 }
 
 @end

@@ -11,6 +11,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.INTRO_ELIGIBILITY_STATUS = exports.PACKAGE_TYPE = exports.PRORATION_MODE = exports.BILLING_FEATURE = exports.PURCHASE_TYPE = exports.ATTRIBUTION_NETWORK = void 0;
 var PLUGIN_NAME = "PurchasesPlugin";
 var ATTRIBUTION_NETWORK;
 (function (ATTRIBUTION_NETWORK) {
@@ -32,6 +33,34 @@ var PURCHASE_TYPE;
      */
     PURCHASE_TYPE["SUBS"] = "subs";
 })(PURCHASE_TYPE = exports.PURCHASE_TYPE || (exports.PURCHASE_TYPE = {}));
+/**
+ * Enum for billing features.
+ * Currently, these are only relevant for Google Play Android users:
+ * https://developer.android.com/reference/com/android/billingclient/api/BillingClient.FeatureType
+ */
+var BILLING_FEATURE;
+(function (BILLING_FEATURE) {
+    /**
+     * Purchase/query for subscriptions.
+     */
+    BILLING_FEATURE[BILLING_FEATURE["SUBSCRIPTIONS"] = 0] = "SUBSCRIPTIONS";
+    /**
+     * Subscriptions update/replace.
+     */
+    BILLING_FEATURE[BILLING_FEATURE["SUBSCRIPTIONS_UPDATE"] = 1] = "SUBSCRIPTIONS_UPDATE";
+    /**
+     * Purchase/query for in-app items on VR.
+     */
+    BILLING_FEATURE[BILLING_FEATURE["IN_APP_ITEMS_ON_VR"] = 2] = "IN_APP_ITEMS_ON_VR";
+    /**
+     * Purchase/query for subscriptions on VR.
+     */
+    BILLING_FEATURE[BILLING_FEATURE["SUBSCRIPTIONS_ON_VR"] = 3] = "SUBSCRIPTIONS_ON_VR";
+    /**
+     * Launch a price change confirmation flow.
+     */
+    BILLING_FEATURE[BILLING_FEATURE["PRICE_CHANGE_CONFIRMATION"] = 4] = "PRICE_CHANGE_CONFIRMATION";
+})(BILLING_FEATURE = exports.BILLING_FEATURE || (exports.BILLING_FEATURE = {}));
 var PRORATION_MODE;
 (function (PRORATION_MODE) {
     PRORATION_MODE[PRORATION_MODE["UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY"] = 0] = "UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY";
@@ -134,6 +163,7 @@ var Purchases = /** @class */ (function () {
         this.setupShouldPurchasePromoProductCallback();
     };
     /**
+     * @deprecated, configure behavior through the RevenueCat dashboard instead.
      * Set this to true if you are passing in an appUserID but it is anonymous, this is true by default if you didn't pass an appUserID
      * If a user tries to purchase a product that is active on the current app store account, we will treat it as a restore and alias
      * the new ID with the previous id.
@@ -250,6 +280,34 @@ var Purchases = /** @class */ (function () {
         window.cordova.exec(callback, null, PLUGIN_NAME, "getAppUserID", []);
     };
     /**
+     * This function will logIn the current user with an appUserID. Typically this would be used after a log in
+     * to identify a user without calling configure.
+     * @param {String} appUserID The appUserID that should be linked to the currently user
+     * @param {function(LogInResult):void} callback Callback that will receive an object that contains the purchaserInfo after logging in, as well as a boolean indicating
+     * whether the user has just been created for the first time in the RevenueCat backend.
+     * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem logging in.
+     */
+    Purchases.logIn = function (appUserID, callback, errorCallback) {
+        // noinspection SuspiciousTypeOfGuard
+        if (typeof appUserID !== "string") {
+            throw new Error("appUserID needs to be a string");
+        }
+        window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "logIn", [
+            appUserID,
+        ]);
+    };
+    /**
+     * Logs out the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
+     * If the current user is already anonymous, this will produce a PurchasesError.
+     * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after resetting
+     * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is an error when logging out.
+     * This could happen for example if logOut is called but the current user is anonymous.
+     */
+    Purchases.logOut = function (callback, errorCallback) {
+        window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "logOut", []);
+    };
+    /**
+     * @deprecated, use logIn instead.
      * This function will alias two appUserIDs together.
      * @param {string} newAppUserID The new appUserID that should be linked to the currently identified appUserID. Needs to be a string.
      * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after creating the alias
@@ -266,6 +324,7 @@ var Purchases = /** @class */ (function () {
         ]);
     };
     /**
+     * @deprecated, use logIn instead.
      * This function will identify the current user with an appUserID. Typically this would be used after a logout to identify a new user without calling configure
      * @param {string} newAppUserID The appUserID that should be linked to the currently user
      * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after identifying.
@@ -282,6 +341,7 @@ var Purchases = /** @class */ (function () {
         ]);
     };
     /**
+     * @deprecated, use logOut instead.
      * Resets the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
      * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after resetting
      * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem resetting the SDK. This gets normally triggered if there
@@ -301,7 +361,7 @@ var Purchases = /** @class */ (function () {
     };
     /**
      * Enables/Disables debugs logs
-     * @param {Boolean} enabled Enable or not debug logs
+     * @param {boolean} enabled Enable or not debug logs
      */
     Purchases.setDebugLogsEnabled = function (enabled) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setDebugLogsEnabled", [
@@ -310,7 +370,7 @@ var Purchases = /** @class */ (function () {
     };
     /**
      * iOS only.
-     * @param {Boolean} simulatesAskToBuyInSandbox Set this property to true *only* when testing the ask-to-buy / SCA purchases flow.
+     * @param {boolean} simulatesAskToBuyInSandbox Set this property to true *only* when testing the ask-to-buy / SCA purchases flow.
      * More information: http://errors.rev.cat/ask-to-buy
      */
     Purchases.setSimulatesAskToBuyInSandbox = function (enabled) {
@@ -330,7 +390,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Enable automatic collection of Apple Search Ads attribution. Disabled by default.
      *
-     * @param {Boolean} enabled Enable or not automatic collection
+     * @param {boolean} enabled Enable or not automatic collection
      */
     Purchases.setAutomaticAppleSearchAdsAttributionCollection = function (enabled) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setAutomaticAppleSearchAdsAttributionCollection", [enabled]);
@@ -559,6 +619,19 @@ var Purchases = /** @class */ (function () {
     Purchases.setProxyURL = function (url) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setProxyURLString", [url]);
     };
+    /**
+     * Check if billing is supported for the current user (meaning IN-APP purchases are supported)
+     * and optionally, whether a list of specified feature types are supported.
+     *
+     * Note: Billing features are only relevant to Google Play Android users.
+     * For other stores and platforms, billing features won't be checked.
+     * @param feature An array of feature types to check for support. Feature types must be one of
+     *       [BILLING_FEATURE]. By default, is an empty list and no specific feature support will be checked.
+     */
+    Purchases.canMakePayments = function (features, callback, errorCallback) {
+        if (features === void 0) { features = []; }
+        window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "canMakePayments", [features]);
+    };
     Purchases.setupShouldPurchasePromoProductCallback = function () {
         var _this = this;
         window.cordova.exec(function (_a) {
@@ -591,6 +664,12 @@ var Purchases = /** @class */ (function () {
      * @enum {string}
      */
     Purchases.PURCHASE_TYPE = PURCHASE_TYPE;
+    /**
+     * Enum for billing features.
+     * Currently, these are only relevant for Google Play Android users:
+     * https://developer.android.com/reference/com/android/billingclient/api/BillingClient.FeatureType
+     */
+    Purchases.BILLING_FEATURE = BILLING_FEATURE;
     /**
      * Replace SKU's ProrationMode.
      * @readonly

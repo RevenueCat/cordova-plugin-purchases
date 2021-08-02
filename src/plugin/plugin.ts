@@ -28,6 +28,37 @@ export enum PURCHASE_TYPE {
   SUBS = "subs",
 }
 
+/**
+ * Enum for billing features.
+ * Currently, these are only relevant for Google Play Android users:
+ * https://developer.android.com/reference/com/android/billingclient/api/BillingClient.FeatureType
+ */
+ export enum BILLING_FEATURE {
+  /**
+   * Purchase/query for subscriptions.
+   */
+  SUBSCRIPTIONS,
+
+  /**
+   * Subscriptions update/replace.
+   */
+  SUBSCRIPTIONS_UPDATE,
+
+  /**
+   * Purchase/query for in-app items on VR.
+   */
+  IN_APP_ITEMS_ON_VR,
+
+  /**
+   * Purchase/query for subscriptions on VR.
+   */
+  SUBSCRIPTIONS_ON_VR,
+
+  /**
+   * Launch a price change confirmation flow.
+   */
+  PRICE_CHANGE_CONFIRMATION,
+}
 export enum PRORATION_MODE {
   UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY = 0,
 
@@ -227,7 +258,7 @@ export interface PurchaserInfo {
    * Returns all the non-subscription purchases a user has made.
    * The purchases are ordered by purchase date in ascending order.
    */
-  readonly nonSubscriptionTransactions: [PurchasesTransaction];
+  readonly nonSubscriptionTransactions: PurchasesTransaction[];
   /**
    * The latest expiration date of all purchased skus
    */
@@ -366,7 +397,7 @@ export interface PurchasesOffering {
   /**
    * Array of `Package` objects available for purchase.
    */
-  readonly availablePackages: [PurchasesPackage];
+  readonly availablePackages: PurchasesPackage[];
   /**
    * Lifetime package type configured in the RevenueCat dashboard, if available.
    */
@@ -447,6 +478,20 @@ export interface IntroEligibility {
   readonly description: string;
 }
 
+/**
+ * Holds the logIn result
+ */
+export interface LogInResult {
+  /**
+   * The Purchaser Info for the user.
+   */
+  readonly purchaserInfo: PurchaserInfo;
+  /**
+   * True if the call resulted in a new user getting created in the RevenueCat backend.
+   */
+  readonly created: boolean;
+}
+
 export type ShouldPurchasePromoProductListener = (deferredPurchase: () => void) => void;
 let shouldPurchasePromoProductListeners: ShouldPurchasePromoProductListener[] = [];
 
@@ -473,6 +518,13 @@ class Purchases {
    * @enum {string}
    */
   public static PURCHASE_TYPE = PURCHASE_TYPE;
+
+  /**
+   * Enum for billing features.
+   * Currently, these are only relevant for Google Play Android users:
+   * https://developer.android.com/reference/com/android/billingclient/api/BillingClient.FeatureType
+   */
+    public static BILLING_FEATURE = BILLING_FEATURE;
 
   /**
    * Replace SKU's ProrationMode.
@@ -511,7 +563,7 @@ class Purchases {
     appUserID?: string | null,
     observerMode: boolean = false,
     userDefaultsSuiteName?: string
-  ) {
+  ): void {
     window.cordova.exec(
       (purchaserInfo: any) => {
         window.cordova.fireWindowEvent("onPurchaserInfoUpdated", purchaserInfo);
@@ -525,12 +577,13 @@ class Purchases {
   }
 
   /**
+   * @deprecated, configure behavior through the RevenueCat dashboard instead.
    * Set this to true if you are passing in an appUserID but it is anonymous, this is true by default if you didn't pass an appUserID
    * If a user tries to purchase a product that is active on the current app store account, we will treat it as a restore and alias
    * the new ID with the previous id.
    * @param {boolean} allowSharing true if enabled, false to disabled
    */
-  public static setAllowSharingStoreAccount(allowSharing: boolean) {
+  public static setAllowSharingStoreAccount(allowSharing: boolean): void {
     window.cordova.exec(
       null,
       null,
@@ -553,7 +606,7 @@ class Purchases {
     data: { [key: string]: any },
     network: ATTRIBUTION_NETWORK,
     networkUserId?: string
-  ) {
+  ): void {
     window.cordova.exec(null, null, PLUGIN_NAME, "addAttributionData", [
       data,
       network,
@@ -709,6 +762,44 @@ class Purchases {
   }
 
   /**
+   * This function will logIn the current user with an appUserID. Typically this would be used after a log in 
+   * to identify a user without calling configure.
+   * @param {String} appUserID The appUserID that should be linked to the currently user
+   * @param {function(LogInResult):void} callback Callback that will receive an object that contains the purchaserInfo after logging in, as well as a boolean indicating 
+   * whether the user has just been created for the first time in the RevenueCat backend. 
+   * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem logging in.
+   */
+  public static logIn(
+    appUserID: string, 
+    callback: (logInResult: LogInResult) => void, 
+    errorCallback: (error: PurchasesError) => void
+  ) {
+    // noinspection SuspiciousTypeOfGuard
+    if (typeof appUserID !== "string") {
+      throw new Error("appUserID needs to be a string");
+    }
+    window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "logIn", [
+      appUserID,
+    ]);
+  }
+
+  /**
+   * Logs out the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
+   * If the current user is already anonymous, this will produce a PurchasesError.
+   * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after resetting
+   * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is an error when logging out. 
+   * This could happen for example if logOut is called but the current user is anonymous.
+   */
+  public static logOut(
+    callback: (purchaserInfo: PurchaserInfo) => void,
+    errorCallback: (error: PurchasesError) => void
+  ) {
+    window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "logOut", []);
+  }
+
+
+  /**
+   * @deprecated, use logIn instead.
    * This function will alias two appUserIDs together.
    * @param {string} newAppUserID The new appUserID that should be linked to the currently identified appUserID. Needs to be a string.
    * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after creating the alias
@@ -730,6 +821,7 @@ class Purchases {
   }
 
   /**
+   * @deprecated, use logIn instead.
    * This function will identify the current user with an appUserID. Typically this would be used after a logout to identify a new user without calling configure
    * @param {string} newAppUserID The appUserID that should be linked to the currently user
    * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after identifying.
@@ -751,6 +843,7 @@ class Purchases {
   }
 
   /**
+   * @deprecated, use logOut instead.
    * Resets the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
    * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after resetting
    * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem resetting the SDK. This gets normally triggered if there
@@ -784,9 +877,9 @@ class Purchases {
 
   /**
    * Enables/Disables debugs logs
-   * @param {Boolean} enabled Enable or not debug logs
+   * @param {boolean} enabled Enable or not debug logs
    */
-  public static setDebugLogsEnabled(enabled: boolean) {
+  public static setDebugLogsEnabled(enabled: boolean): void {
     window.cordova.exec(null, null, PLUGIN_NAME, "setDebugLogsEnabled", [
       enabled,
     ]);
@@ -794,10 +887,10 @@ class Purchases {
 
   /**
    * iOS only.
-   * @param {Boolean} simulatesAskToBuyInSandbox Set this property to true *only* when testing the ask-to-buy / SCA purchases flow. 
+   * @param {boolean} simulatesAskToBuyInSandbox Set this property to true *only* when testing the ask-to-buy / SCA purchases flow. 
    * More information: http://errors.rev.cat/ask-to-buy
    */
-  public static setSimulatesAskToBuyInSandbox(enabled: boolean) {
+  public static setSimulatesAskToBuyInSandbox(enabled: boolean): void {
     window.cordova.exec(null, null, PLUGIN_NAME, "setSimulatesAskToBuyInSandbox", [
       enabled,
     ]);
@@ -809,16 +902,16 @@ class Purchases {
    *
    * @warning This function should only be called if you're not calling makePurchase.
    */
-  public static syncPurchases() {
+  public static syncPurchases(): void {
     window.cordova.exec(null, null, PLUGIN_NAME, "syncPurchases", []);
   }
 
   /**
    * Enable automatic collection of Apple Search Ads attribution. Disabled by default.
    *
-   * @param {Boolean} enabled Enable or not automatic collection
+   * @param {boolean} enabled Enable or not automatic collection
    */
-  public static setAutomaticAppleSearchAdsAttributionCollection(enabled: boolean) {
+  public static setAutomaticAppleSearchAdsAttributionCollection(enabled: boolean): void {
     window.cordova.exec(
       null,
       null,
@@ -896,7 +989,7 @@ class Purchases {
    * This is useful for cases where purchaser information might have been updated outside of the
    * app, like if a promotional subscription is granted through the RevenueCat dashboard.
    */
-  public static invalidatePurchaserInfoCache() {
+  public static invalidatePurchaserInfoCache(): void {
     window.cordova.exec(
       null,
       null,
@@ -911,7 +1004,7 @@ class Purchases {
    * Refer to https://docs.revenuecat.com/docs/ios-subscription-offers#offer-codes for more information on how
    * to configure and use offer codes.
    */
-  public static presentCodeRedemptionSheet() {
+  public static presentCodeRedemptionSheet(): void {
     window.cordova.exec(null, null, PLUGIN_NAME, "presentCodeRedemptionSheet", []);
   }
 
@@ -925,7 +1018,7 @@ class Purchases {
    *
    * @param attributes Map of attributes by key. Set the value as an empty string to delete an attribute.
    */
-  public static setAttributes(attributes: { [key: string]: string | null }) {
+  public static setAttributes(attributes: { [key: string]: string | null }): void {
     window.cordova.exec(
       null,
       null,
@@ -940,7 +1033,7 @@ class Purchases {
    *
    * @param email Empty String or null will delete the subscriber attribute.
    */
-  public static setEmail(email: string | null) {
+  public static setEmail(email: string | null): void {
     window.cordova.exec(
       null,
       null,
@@ -955,7 +1048,7 @@ class Purchases {
    *
    * @param phoneNumber Empty String or null will delete the subscriber attribute.
    */
-  public static setPhoneNumber(phoneNumber: string | null) {
+  public static setPhoneNumber(phoneNumber: string | null): void {
     window.cordova.exec(
       null,
       null,
@@ -970,7 +1063,7 @@ class Purchases {
    *
    * @param displayName Empty String or null will delete the subscriber attribute.
    */
-  public static setDisplayName(displayName: string | null) {
+  public static setDisplayName(displayName: string | null): void {
     window.cordova.exec(
       null,
       null,
@@ -985,7 +1078,7 @@ class Purchases {
    *
    * @param pushToken Empty String or null will delete the subscriber attribute.
    */
-  public static setPushToken(pushToken: string | null) {
+  public static setPushToken(pushToken: string | null): void {
     window.cordova.exec(
       null,
       null,
@@ -1001,7 +1094,7 @@ class Purchases {
    *
    * @param adjustID Empty String or null will delete the subscriber attribute.
    */
-  public static setAdjustID(adjustID: string | null) { 
+  public static setAdjustID(adjustID: string | null) : void {
     window.cordova.exec(
       null,
       null,
@@ -1016,7 +1109,7 @@ class Purchases {
    * Required for the RevenueCat AppsFlyer integration
    * @param appsflyerID Empty String or null will delete the subscriber attribute.
    */
-  public static setAppsflyerID(appsflyerID: string | null) { 
+  public static setAppsflyerID(appsflyerID: string | null) : void {
     window.cordova.exec(
       null,
       null,
@@ -1032,7 +1125,7 @@ class Purchases {
    *
    * @param fbAnonymousID Empty String or null will delete the subscriber attribute.
    */
-  public static setFBAnonymousID(fbAnonymousID: string | null) { 
+  public static setFBAnonymousID(fbAnonymousID: string | null) : void {
     window.cordova.exec(
       null,
       null,
@@ -1048,7 +1141,7 @@ class Purchases {
    *
    * @param mparticleID Empty String or null will delete the subscriber attribute.
    */
-  public static setMparticleID(mparticleID: string | null) { 
+  public static setMparticleID(mparticleID: string | null) : void {
     window.cordova.exec(
       null,
       null,
@@ -1064,7 +1157,7 @@ class Purchases {
    *
    * @param onesignalID Empty String or null will delete the subscriber attribute.
    */
-  public static setOnesignalID(onesignalID: string | null) { 
+  public static setOnesignalID(onesignalID: string | null) : void {
     window.cordova.exec(
       null,
       null,
@@ -1079,7 +1172,7 @@ class Purchases {
    *
    * @param mediaSource Empty String or null will delete the subscriber attribute.
    */
-  public static setMediaSource(mediaSource: string | null) { 
+  public static setMediaSource(mediaSource: string | null) : void {
     window.cordova.exec(
       null,
       null,
@@ -1094,7 +1187,7 @@ class Purchases {
    *
    * @param campaign Empty String or null will delete the subscriber attribute.
    */
-  public static setCampaign(campaign: string | null) { 
+  public static setCampaign(campaign: string | null) : void {
     window.cordova.exec(
       null,
       null,
@@ -1109,7 +1202,7 @@ class Purchases {
    *
    * @param adGroup Empty String or null will delete the subscriber attribute.
    */
-  public static setAdGroup(adGroup: string | null) { 
+  public static setAdGroup(adGroup: string | null) : void {
     window.cordova.exec(
       null,
       null,
@@ -1124,7 +1217,7 @@ class Purchases {
    *
    * @param ad Empty String or null will delete the subscriber attribute.
    */
-  public static setAd(ad: string | null) { 
+  public static setAd(ad: string | null) : void {
     window.cordova.exec(
       null,
       null,
@@ -1139,7 +1232,7 @@ class Purchases {
    *
    * @param keyword Empty String or null will delete the subscriber attribute.
    */
-  public static setKeyword(keyword: string | null) { 
+  public static setKeyword(keyword: string | null) : void {
     window.cordova.exec(
       null,
       null,
@@ -1154,7 +1247,7 @@ class Purchases {
    *
    * @param creative Empty String or null will delete the subscriber attribute.
    */
-  public static setCreative(creative: string | null) { 
+  public static setCreative(creative: string | null) : void {
     window.cordova.exec(
       null,
       null,
@@ -1169,7 +1262,7 @@ class Purchases {
    * $idfa, $idfv, $ip on iOS
    * $gpsAdId, $androidId, $ip on Android
    */
-  public static collectDeviceIdentifiers() { 
+  public static collectDeviceIdentifiers(): void { 
     window.cordova.exec(
       null,
       null,
@@ -1183,7 +1276,7 @@ class Purchases {
    * Set this property to your proxy URL before configuring Purchases *only* if you've received a proxy key value from your RevenueCat contact.
    * @param url Proxy URL as a string.
    */
-  public static setProxyURL(url: string) {
+  public static setProxyURL(url: string): void {
     window.cordova.exec(
       null,
       null,
@@ -1193,7 +1286,30 @@ class Purchases {
     );
   }
 
-  private static setupShouldPurchasePromoProductCallback() { 
+/**
+ * Check if billing is supported for the current user (meaning IN-APP purchases are supported)
+ * and optionally, whether a list of specified feature types are supported. 
+ * 
+ * Note: Billing features are only relevant to Google Play Android users.
+ * For other stores and platforms, billing features won't be checked.
+ * @param feature An array of feature types to check for support. Feature types must be one of 
+ *       [BILLING_FEATURE]. By default, is an empty list and no specific feature support will be checked.
+ */
+
+  public static canMakePayments(
+    features: BILLING_FEATURE[] = [],
+    callback: (canMakePayments: boolean) => void,
+    errorCallback: (error: PurchasesError) => void): void {
+    window.cordova.exec(
+      callback,
+      errorCallback,
+      PLUGIN_NAME,
+      "canMakePayments",
+      [features]
+    );
+  }
+
+  private static setupShouldPurchasePromoProductCallback(): void { 
     window.cordova.exec(
       ({callbackID}:{callbackID: number}) => {
           shouldPurchasePromoProductListeners.forEach(listener =>

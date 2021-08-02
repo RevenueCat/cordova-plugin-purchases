@@ -22,6 +22,33 @@ export declare enum PURCHASE_TYPE {
      */
     SUBS = "subs"
 }
+/**
+ * Enum for billing features.
+ * Currently, these are only relevant for Google Play Android users:
+ * https://developer.android.com/reference/com/android/billingclient/api/BillingClient.FeatureType
+ */
+export declare enum BILLING_FEATURE {
+    /**
+     * Purchase/query for subscriptions.
+     */
+    SUBSCRIPTIONS = 0,
+    /**
+     * Subscriptions update/replace.
+     */
+    SUBSCRIPTIONS_UPDATE = 1,
+    /**
+     * Purchase/query for in-app items on VR.
+     */
+    IN_APP_ITEMS_ON_VR = 2,
+    /**
+     * Purchase/query for subscriptions on VR.
+     */
+    SUBSCRIPTIONS_ON_VR = 3,
+    /**
+     * Launch a price change confirmation flow.
+     */
+    PRICE_CHANGE_CONFIRMATION = 4
+}
 export declare enum PRORATION_MODE {
     UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY = 0,
     /**
@@ -206,7 +233,7 @@ export interface PurchaserInfo {
      * Returns all the non-subscription purchases a user has made.
      * The purchases are ordered by purchase date in ascending order.
      */
-    readonly nonSubscriptionTransactions: [PurchasesTransaction];
+    readonly nonSubscriptionTransactions: PurchasesTransaction[];
     /**
      * The latest expiration date of all purchased skus
      */
@@ -346,7 +373,7 @@ export interface PurchasesOffering {
     /**
      * Array of `Package` objects available for purchase.
      */
-    readonly availablePackages: [PurchasesPackage];
+    readonly availablePackages: PurchasesPackage[];
     /**
      * Lifetime package type configured in the RevenueCat dashboard, if available.
      */
@@ -424,6 +451,19 @@ export interface IntroEligibility {
      */
     readonly description: string;
 }
+/**
+ * Holds the logIn result
+ */
+export interface LogInResult {
+    /**
+     * The Purchaser Info for the user.
+     */
+    readonly purchaserInfo: PurchaserInfo;
+    /**
+     * True if the call resulted in a new user getting created in the RevenueCat backend.
+     */
+    readonly created: boolean;
+}
 export declare type ShouldPurchasePromoProductListener = (deferredPurchase: () => void) => void;
 declare class Purchases {
     /**
@@ -446,6 +486,12 @@ declare class Purchases {
      * @enum {string}
      */
     static PURCHASE_TYPE: typeof PURCHASE_TYPE;
+    /**
+     * Enum for billing features.
+     * Currently, these are only relevant for Google Play Android users:
+     * https://developer.android.com/reference/com/android/billingclient/api/BillingClient.FeatureType
+     */
+    static BILLING_FEATURE: typeof BILLING_FEATURE;
     /**
      * Replace SKU's ProrationMode.
      * @readonly
@@ -477,6 +523,7 @@ declare class Purchases {
      */
     static setup(apiKey: string, appUserID?: string | null, observerMode?: boolean, userDefaultsSuiteName?: string): void;
     /**
+     * @deprecated, configure behavior through the RevenueCat dashboard instead.
      * Set this to true if you are passing in an appUserID but it is anonymous, this is true by default if you didn't pass an appUserID
      * If a user tries to purchase a product that is active on the current app store account, we will treat it as a restore and alias
      * the new ID with the previous id.
@@ -557,6 +604,24 @@ declare class Purchases {
      */
     static getAppUserID(callback: (appUserID: string) => void): void;
     /**
+     * This function will logIn the current user with an appUserID. Typically this would be used after a log in
+     * to identify a user without calling configure.
+     * @param {String} appUserID The appUserID that should be linked to the currently user
+     * @param {function(LogInResult):void} callback Callback that will receive an object that contains the purchaserInfo after logging in, as well as a boolean indicating
+     * whether the user has just been created for the first time in the RevenueCat backend.
+     * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem logging in.
+     */
+    static logIn(appUserID: string, callback: (logInResult: LogInResult) => void, errorCallback: (error: PurchasesError) => void): void;
+    /**
+     * Logs out the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
+     * If the current user is already anonymous, this will produce a PurchasesError.
+     * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after resetting
+     * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is an error when logging out.
+     * This could happen for example if logOut is called but the current user is anonymous.
+     */
+    static logOut(callback: (purchaserInfo: PurchaserInfo) => void, errorCallback: (error: PurchasesError) => void): void;
+    /**
+     * @deprecated, use logIn instead.
      * This function will alias two appUserIDs together.
      * @param {string} newAppUserID The new appUserID that should be linked to the currently identified appUserID. Needs to be a string.
      * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after creating the alias
@@ -565,6 +630,7 @@ declare class Purchases {
      */
     static createAlias(newAppUserID: string, callback: (purchaserInfo: PurchaserInfo) => void, errorCallback: (error: PurchasesError) => void): void;
     /**
+     * @deprecated, use logIn instead.
      * This function will identify the current user with an appUserID. Typically this would be used after a logout to identify a new user without calling configure
      * @param {string} newAppUserID The appUserID that should be linked to the currently user
      * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after identifying.
@@ -573,6 +639,7 @@ declare class Purchases {
      */
     static identify(newAppUserID: string, callback: (purchaserInfo: PurchaserInfo) => void, errorCallback: (error: PurchasesError) => void): void;
     /**
+     * @deprecated, use logOut instead.
      * Resets the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
      * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after resetting
      * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem resetting the SDK. This gets normally triggered if there
@@ -588,12 +655,12 @@ declare class Purchases {
     static getPurchaserInfo(callback: (purchaserInfo: PurchaserInfo) => void, errorCallback: (error: PurchasesError) => void): void;
     /**
      * Enables/Disables debugs logs
-     * @param {Boolean} enabled Enable or not debug logs
+     * @param {boolean} enabled Enable or not debug logs
      */
     static setDebugLogsEnabled(enabled: boolean): void;
     /**
      * iOS only.
-     * @param {Boolean} simulatesAskToBuyInSandbox Set this property to true *only* when testing the ask-to-buy / SCA purchases flow.
+     * @param {boolean} simulatesAskToBuyInSandbox Set this property to true *only* when testing the ask-to-buy / SCA purchases flow.
      * More information: http://errors.rev.cat/ask-to-buy
      */
     static setSimulatesAskToBuyInSandbox(enabled: boolean): void;
@@ -607,7 +674,7 @@ declare class Purchases {
     /**
      * Enable automatic collection of Apple Search Ads attribution. Disabled by default.
      *
-     * @param {Boolean} enabled Enable or not automatic collection
+     * @param {boolean} enabled Enable or not automatic collection
      */
     static setAutomaticAppleSearchAdsAttributionCollection(enabled: boolean): void;
     /**
@@ -783,6 +850,16 @@ declare class Purchases {
      * @param url Proxy URL as a string.
      */
     static setProxyURL(url: string): void;
+    /**
+     * Check if billing is supported for the current user (meaning IN-APP purchases are supported)
+     * and optionally, whether a list of specified feature types are supported.
+     *
+     * Note: Billing features are only relevant to Google Play Android users.
+     * For other stores and platforms, billing features won't be checked.
+     * @param feature An array of feature types to check for support. Feature types must be one of
+     *       [BILLING_FEATURE]. By default, is an empty list and no specific feature support will be checked.
+     */
+    static canMakePayments(features: BILLING_FEATURE[] | undefined, callback: (canMakePayments: boolean) => void, errorCallback: (error: PurchasesError) => void): void;
     private static setupShouldPurchasePromoProductCallback;
     private static getMakeDeferredPurchaseFunction;
 }

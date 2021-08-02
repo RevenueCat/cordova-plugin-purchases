@@ -7,13 +7,14 @@ import androidx.annotation.Nullable;
 import com.appfeel.cordova.annotated.android.plugin.AnnotatedCordovaPlugin;
 import com.appfeel.cordova.annotated.android.plugin.ExecutionThread;
 import com.appfeel.cordova.annotated.android.plugin.PluginAction;
-import com.revenuecat.purchases.common.CommonKt;
-import com.revenuecat.purchases.common.ErrorContainer;
-import com.revenuecat.purchases.common.OnResult;
-import com.revenuecat.purchases.common.OnResultList;
+import com.revenuecat.purchases.hybridcommon.CommonKt;
+import com.revenuecat.purchases.hybridcommon.ErrorContainer;
+import com.revenuecat.purchases.hybridcommon.OnResult;
+import com.revenuecat.purchases.hybridcommon.OnResultList;
+import com.revenuecat.purchases.hybridcommon.OnResultAny;
 import com.revenuecat.purchases.common.PlatformInfo;
-import com.revenuecat.purchases.common.SubscriberAttributesKt;
-import com.revenuecat.purchases.common.mappers.PurchaserInfoMapperKt;
+import com.revenuecat.purchases.hybridcommon.SubscriberAttributesKt;
+import com.revenuecat.purchases.hybridcommon.mappers.PurchaserInfoMapperKt;
 import com.revenuecat.purchases.interfaces.UpdatedPurchaserInfoListener;
 
 import org.apache.cordova.CallbackContext;
@@ -32,7 +33,7 @@ import java.util.Map;
 public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     public static final String PLATFORM_NAME = "cordova";
-    public static final String PLUGIN_VERSION = "2.1.1";
+    public static final String PLUGIN_VERSION = "2.3.0";
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "setupPurchases", isAutofinish = false)
     private void setupPurchases(String apiKey, @Nullable String appUserID, boolean observerMode,
@@ -142,6 +143,16 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         CommonKt.restoreTransactions(getOnResult(callbackContext));
     }
 
+    @PluginAction(thread = ExecutionThread.UI, actionName = "logIn", isAutofinish = false)
+    private void logIn(String appUserID, CallbackContext callbackContext) {
+        CommonKt.logIn(appUserID, getOnResult(callbackContext));
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "logOut", isAutofinish = false)
+    private void logOut(CallbackContext callbackContext) {
+        CommonKt.logOut(getOnResult(callbackContext));
+    }
+
     @PluginAction(thread = ExecutionThread.UI, actionName = "reset", isAutofinish = false)
     private void reset(CallbackContext callbackContext) {
         CommonKt.reset(getOnResult(callbackContext));
@@ -213,6 +224,33 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         CommonKt.setProxyURLString(proxyURLString);
         callbackContext.success();
     }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "canMakePayments", isAutofinish = false)
+    private void canMakePayments(JSONArray features, CallbackContext callbackContext) {
+        ArrayList<Integer> featureList = new ArrayList<>();
+        try {
+            if (features != null) {
+                for (int i = 0; i < features.length(); i++) {
+                    featureList.add(features.getInt(i));
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        CommonKt.canMakePayments(this.cordova.getActivity(), featureList, new OnResultAny<Boolean>() {
+          @Override
+          public void onError(@Nullable ErrorContainer errorContainer) {
+            callbackContext.error(convertMapToJson(errorContainer.getInfo()));
+          }
+  
+          @Override
+          public void onReceived(Boolean result) {
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
+          }
+        });
+    }
+
 
     //================================================================================
     // Subscriber Attributes

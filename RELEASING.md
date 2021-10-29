@@ -1,5 +1,5 @@
 1. Update versions in `VERSIONS.md`
-1. Update to the latest purchases-hybrid-sdk version in `plugin.xml`
+1. Update to the latest purchases-hybrid-common version in `plugin.xml`
 1. Update version in `package.json`, `plugin.xml`, `PurchasesPlugin.java`, and `CDVPurchasesPlugin.m`.
 1. Run `npm run build`
 1. Add an entry to CHANGELOG.md

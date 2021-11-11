@@ -1168,6 +1168,22 @@ class Purchases {
   }
   
   /**
+   * Subscriber attribute associated with the Airship Channel Id for the user
+   * Required for the RevenueCat Airship integration
+   *
+   * @param airshipChannelID Empty String or null will delete the subscriber attribute.
+   */
+  public static setAirshipChannelID(airshipChannelID: string | null) : void {
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setAirshipChannelID",
+      [airshipChannelID]
+    )
+  }
+
+  /**
    * Subscriber attribute associated with the install media source for the user
    *
    * @param mediaSource Empty String or null will delete the subscriber attribute.

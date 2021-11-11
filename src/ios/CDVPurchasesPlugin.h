@@ -43,6 +43,7 @@
 - (void)setFBAnonymousID:(CDVInvokedUrlCommand *)command;
 - (void)setMparticleID:(CDVInvokedUrlCommand *)command;
 - (void)setOnesignalID:(CDVInvokedUrlCommand *)command;
+- (void)setAirshipChannelID:(CDVInvokedUrlCommand *)command;
 - (void)setMediaSource:(CDVInvokedUrlCommand *)command;
 - (void)setCampaign:(CDVInvokedUrlCommand *)command;
 - (void)setAdGroup:(CDVInvokedUrlCommand *)command;

@@ -316,6 +316,12 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success();
     }
 
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAirshipChannelID")
+    private void setAirshipChannelID(String airshipChannelID, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setAirshipChannelID(airshipChannelID);
+        callbackContext.success();
+    }
+
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setMediaSource")
     private void setMediaSource(String mediaSource, CallbackContext callbackContext) { 
         SubscriberAttributesKt.setMediaSource(mediaSource);

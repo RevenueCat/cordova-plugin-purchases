@@ -358,7 +358,7 @@
 }
 
 - (NSString *)platformFlavorVersion {
-    return @"2.3.2";
+    return @"2.4.0";
 }
 
 @end

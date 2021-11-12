@@ -33,7 +33,7 @@ import java.util.Map;
 public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     public static final String PLATFORM_NAME = "cordova";
-    public static final String PLUGIN_VERSION = "2.3.2";
+    public static final String PLUGIN_VERSION = "2.4.0";
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "setupPurchases", isAutofinish = false)
     private void setupPurchases(String apiKey, @Nullable String appUserID, boolean observerMode,
@@ -313,6 +313,12 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setOnesignalID")
     private void setOnesignalID(String onesignalID, CallbackContext callbackContext) { 
         SubscriberAttributesKt.setOnesignalID(onesignalID);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAirshipChannelID")
+    private void setAirshipChannelID(String airshipChannelID, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setAirshipChannelID(airshipChannelID);
         callbackContext.success();
     }
 

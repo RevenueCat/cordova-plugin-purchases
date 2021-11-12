@@ -264,6 +264,12 @@
     [self sendOKForCommand:command messageAsArray:nil];
 }
 
+- (void)setAirshipChannelID:(CDVInvokedUrlCommand *)command {
+    NSString *airshipChannelID = [command argumentAtIndex:0];
+    [RCCommonFunctionality setAirshipChannelID:airshipChannelID];
+    [self sendOKForCommand:command messageAsArray:nil];
+}
+
 - (void)setMediaSource:(CDVInvokedUrlCommand *)command {
     NSString *mediaSource = [command argumentAtIndex:0];
     [RCCommonFunctionality setMediaSource:mediaSource];
@@ -358,7 +364,7 @@
 }
 
 - (NSString *)platformFlavorVersion {
-    return @"2.3.2";
+    return @"2.4.0";
 }
 
 @end

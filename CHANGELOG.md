@@ -6,7 +6,6 @@
 - Added support for Airship integration via `setAirshipChannelID`
     https://github.com/RevenueCat/cordova-plugin-purchases/pull/113
 
-
 ## 2.3.2
 
 - Bump `purchases-ios` to 3.12.8

@@ -6,6 +6,10 @@ release-tags-and-branches: &release-tags-and-branches
       only: /^release\/.*/
 
 version: 2.1
+orbs:
+  android: circleci/android@0.2.1
+  android-wordpress-orb: wordpress-mobile/android@1.0.15
+
 commands:
   android-sdk-dependencies:
     description: "Install and set android SDK"
@@ -72,22 +76,42 @@ commands:
     steps:
       - run: sed -i .bck s/api_key/$API_KEY/ tests/tests.js
 
+  install-sdkman:
+    description: Install SDKMAN
+    steps:
+      - run:
+          name: Installing SDKMAN
+          command: |
+            curl -s "https://get.sdkman.io?rcupdate=false" | bash
+            echo -e '\nsource "/home/circleci/.sdkman/bin/sdkman-init.sh"' >> $BASH_ENV
+            source $BASH_ENV
+      - run:
+          name: Setup Java environment
+          command: |
+            sdk env install
+
 jobs:
   android-integration-test:
-    description: "Run Android integration tests for Flutter"
-    macos:
-      xcode: 11.3.1
+    description: "Run Android integration tests for Cordova"
+    docker:
+      - image: circleci/android:api-28
+    resource_class: large
     steps:
       - checkout
       - run: brew install gradle
+      - install-sdkman
+      - android/accept-licenses
       - android-sdk-dependencies
       - create-launch-android-emulator
       - npm-dependencies
       - replace-api-key
       - run: npm run test:android
+    environment:
+      JVM_OPTS: -Xmx6g
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 
   ios-integration-test:
-    description: "Run iOS integration tests for Flutter"
+    description: "Run iOS integration tests for Cordova"
     macos:
       xcode: 13.1.0
     steps:
@@ -127,9 +151,9 @@ workflows:
     jobs:
       - runtest
   
-  # android-integration-test:
-    # jobs:
-      # - android-integration-test: *release-tags-and-branches
+  android-integration-test:
+    jobs:
+      - android-integration-test: *release-tags-and-branches
   
   ios-integration-test:
     jobs:

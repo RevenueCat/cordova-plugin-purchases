@@ -74,9 +74,9 @@ commands:
 
 jobs:
   android-integration-test:
-    description: "Run Android integration tests for Flutter"
+    description: "Run Android integration tests for Cordova"
     macos:
-      xcode: 11.3.1
+      xcode: 13.1.0
     steps:
       - checkout
       - run: brew install gradle
@@ -87,7 +87,7 @@ jobs:
       - run: npm run test:android
 
   ios-integration-test:
-    description: "Run iOS integration tests for Flutter"
+    description: "Run iOS integration tests for Cordova"
     macos:
       xcode: 13.1.0
     steps:
@@ -127,9 +127,9 @@ workflows:
     jobs:
       - runtest
   
-  # android-integration-test:
-    # jobs:
-      # - android-integration-test: *release-tags-and-branches
+  android-integration-test:
+    jobs:
+      - android-integration-test: *release-tags-and-branches
   
   ios-integration-test:
     jobs:

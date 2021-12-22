@@ -32,5 +32,9 @@ exports.defineAutoTests = function() {
         }
       );
     }, 10000);
+
+    it("THIS IS A FAILURE TEST", function(done) {
+      done.fail("we want this failure");
+    }, 10000);
   });
 };

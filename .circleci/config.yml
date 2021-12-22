@@ -7,7 +7,7 @@ release-tags-and-branches: &release-tags-and-branches
 
 version: 2.1
 orbs:
-  android: circleci/android@1.0
+  android: circleci/android@2.0.0
 
 commands:
   android-sdk-dependencies:
@@ -90,6 +90,7 @@ jobs:
     description: "Run Android integration tests for Cordova"
     executor:
       name: android/android-machine
+      tag: 2021.10.1
       resource-class: large
     shell: /bin/bash --login -o pipefail
     steps:

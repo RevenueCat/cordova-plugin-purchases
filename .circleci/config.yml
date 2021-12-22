@@ -38,28 +38,14 @@ commands:
     description: "Install all global and local npm dependencies"
     steps:
       - run: npm install -g cordova
-      - run: npm install -g github:apache/cordova-paramedic#master
-#      - restore_cache:
-#          keys:
-#            - v2-dependencies-{{ checksum "package.json" }}
+      - run: npm install -g github:apache/cordova-paramedic
       - run: npm install --legacy-peer-deps
-#      - save_cache:
-#          paths:
-#            - node_modules
-#          key: v2-dependencies-{{ checksum "package.json" }}
 
   npm-ios-dependencies:
     description: "Install all ios global and local npm dependencies"
     steps:
       - run: npm install -g ios-deploy
-#      - restore_cache:
-#          keys:
-#            - v2-ios-dependencies-{{ checksum "package.json" }}
       - run: npm install --legacy-peer-deps
-#      - save_cache:
-#          paths:
-#            - node_modules
-#          key: v2-ios-dependencies-{{ checksum "package.json" }}
     
   replace-api-key-linux:
     description: "Replace API_KEY"

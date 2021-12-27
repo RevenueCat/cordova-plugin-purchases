@@ -6,6 +6,9 @@ release-tags-and-branches: &release-tags-and-branches
       only: /^release\/.*/
 
 version: 2.1
+orbs:
+  android: circleci/android@1.0
+
 commands:
   android-sdk-dependencies:
     description: "Install and set android SDK"
@@ -30,64 +33,90 @@ commands:
           key: android=tools-v1-{{ checksum "scripts/install-android-tools.sh" }}-{{ arch }}
           paths:
             - ~/android-tools
-
-  create-launch-android-emulator:
-    description: "create and launch android emulators"
-    steps:
-      - run:
-          name: create AVD
-          command: |
-            echo "no" | avdmanager --verbose create avd --force \
-              --name "Pixel_3a_API_26" \
-              --package "system-images;android-26;google_apis_playstore;x86"
-
-      - run:
-          name: start AVD
-          command: emulator @Pixel_3a_API_26 -no-window -no-audio
-          background: true
-
-      - run:
-          name: wait for emulator
-          command: |
-            adb wait-for-device shell 'while [[ -z $(getprop dev.bootcomplete) ]]; do sleep 1; done;'
   
   npm-dependencies:
-    description: "installs all global and local npm dependencies"
+    description: "Install all global and local npm dependencies"
     steps:
       - run: npm install -g cordova
-      - run: npm install -g github:apache/cordova-paramedic
+      - run: npm install -g github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
+      - run: npm install --legacy-peer-deps
+
+  npm-ios-dependencies:
+    description: "Install all ios global and local npm dependencies"
+    steps:
       - run: npm install -g ios-deploy
-      - restore_cache:
-          keys:
-            - v2-dependencies-{{ checksum "package.json" }}
-            - v2-dependencies-
-      - run: npm install
-      - save_cache:
-          paths:
-            - node_modules
-          key: v2-dependencies-{{ checksum "package.json" }}
+      - run: npm install --legacy-peer-deps
     
+  replace-api-key-linux:
+    description: "Replace API_KEY"
+    steps:
+      - run: sed -i s/api_key/$API_KEY/ tests/tests.js
+
   replace-api-key:
-    description: "replace API_KEY"
+    description: "Replace API_KEY"
     steps:
       - run: sed -i .bck s/api_key/$API_KEY/ tests/tests.js
 
+  install-sdkman:
+    description: Install SDKMAN
+    steps:
+      - run:
+          name: Installing SDKMAN
+          command: |
+            curl -s "https://get.sdkman.io?rcupdate=false" | bash
+            echo -e '\nsource "/home/circleci/.sdkman/bin/sdkman-init.sh"' >> $BASH_ENV
+            source $BASH_ENV
+      - run:
+          name: Setup Java environment
+          command: |
+            sdk env install
+            echo -e '\nexport JAVA_HOME="/home/circleci/.sdkman/candidates/java/current"' >> $BASH_ENV
+
+  install-nvm:
+    steps:
+      - run:
+          name: Install node 16.13.1
+          command: |
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> $BASH_ENV
+            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
+      - run: nvm install 16.13.1
+      - run: nvm use 16.13.1
+      - run: echo 'nvm use 16.13.1' >> $BASH_ENV
+      - run: node -v
+
 jobs:
   android-integration-test:
-    description: "Run Android integration tests for Flutter"
-    macos:
-      xcode: 11.3.1
+    description: "Run Android integration tests for Cordova"
+    executor:
+      name: android/android-machine
+      resource-class: large
+    shell: /bin/bash --login -o pipefail
     steps:
       - checkout
-      - run: brew install gradle
-      - android-sdk-dependencies
-      - create-launch-android-emulator
+      - install-sdkman
+      - android/accept-licenses
+      - android/create-avd:
+          avd-name: myavd
+          system-image: system-images;android-29;default;x86
+          install: true
+      - android/start-emulator:
+          avd-name: myavd
+          no-window: true
+          post-emulator-launch-assemble-command: ""
+      - install-nvm
       - npm-dependencies
-      - replace-api-key
+      - replace-api-key-linux
+      - run: sudo apt-get update
+      - run: sudo apt-get install gradle
+      - run: rm -rf ~/.gradle/caches/
       - run: npm run test:android
+    environment:
+      JVM_OPTS: -Xmx6g
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 
   ios-integration-test:
-    description: "Run iOS integration tests for Flutter"
+    description: "Run iOS integration tests for Cordova"
     macos:
       xcode: 13.1.0
     steps:
@@ -96,6 +125,7 @@ jobs:
           name: Start simulator
           command: xcrun instruments -w "iPhone 11 Pro (13.3) [" || true
       - npm-dependencies
+      - npm-ios-dependencies
       - replace-api-key
       - run: npm run test:ios
 
@@ -127,9 +157,9 @@ workflows:
     jobs:
       - runtest
   
-  # android-integration-test:
-    # jobs:
-      # - android-integration-test: *release-tags-and-branches
+  android-integration-test:
+    jobs:
+      - android-integration-test: *release-tags-and-branches
   
   ios-integration-test:
     jobs:

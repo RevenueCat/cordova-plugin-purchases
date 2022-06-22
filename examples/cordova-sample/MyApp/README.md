@@ -15,21 +15,29 @@ sed -i .bck s/api_key/<your_api_key>/ www/js/index.js
 ```
 
 
-2. iOS
+3. Coreutils
+
+Use homebrew to install coreutils
+
+```bash
+brew install coreutils
+```
+
+4. iOS
 
 Edit the project settings in Xcode: 
 Add a Run Script Build Phase, name it "Refresh Javascript Sources"
 Add the following code: 
 
 ```bash
-sh ../../bin/refresh_javascript_sources_ios.sh
+sh $PROJECT_DIR/../../bin/refresh_javascript_sources_ios.sh
 ```
 
 You're ready to go! 
 
 #### when making changes: 
 
-##### In Obj-C code:
+##### In Swift code:
 
 You can just make the edits straight from Xcode or AppCode, then build and you're good. 
 

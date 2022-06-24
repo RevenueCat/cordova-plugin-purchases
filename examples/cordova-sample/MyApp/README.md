@@ -3,17 +3,15 @@
 1. cd into the root of the example project, then:
 
 ```bash
-sh bin/setup.sh
-```
 
-2. api key
+sudo gem install bundler
+````
 
-Edit the api key in index.js
+2. Prepare workspace with API key and StoreKit config file
 
 ```bash
-sed -i .bck s/api_key/<your_api_key>/ www/js/index.js
+sh bin/setup.sh <your_api_key>
 ```
-
 
 3. Coreutils
 

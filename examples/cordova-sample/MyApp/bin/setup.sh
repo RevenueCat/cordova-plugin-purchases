@@ -1,4 +1,11 @@
 #! /bin/sh
+
+command -v bundle >/dev/null 2>&1 || { echo >&2 "bundler is not installed. run gem install bundler."; exit 1; }
+OG_DIR=$PWD
+
+echo "Running bundle install."
+bundle install
+
 if [ -z "$1" ]
   then
     echo "No API Key supplied, use setup.sh <API_KEY> (without <>'s) if you wish to setup the project with an api key."
@@ -18,3 +25,8 @@ cordova plugin add ../../../../cordova-plugin-purchases --link --save
 
 cd ../../../../cordova-plugin-purchases
 npm install
+
+cd $OG_DIR
+SK_CONFIG_SCRIPT_PATH=bin/sk_config_setup.rb
+echo "Running ${SK_CONFIG_SCRIPT_PATH}"
+bundle exec ruby $SK_CONFIG_SCRIPT_PATH

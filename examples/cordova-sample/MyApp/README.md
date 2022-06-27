@@ -4,7 +4,7 @@
 
 ```bash
 
-sudo gem install bundler
+gem install bundler
 ````
 
 2. Prepare workspace with API key and StoreKit config file

@@ -344,7 +344,7 @@ private extension CDVPurchasesPlugin {
     }
 
     var platformFlavorVersion: String {
-        return "2.4.1"
+        return "3.0.0-beta"
     }
 
     func sendOKFor(command: CDVInvokedUrlCommand, messageAsArray: [CDVCommandStatus]? = nil) {

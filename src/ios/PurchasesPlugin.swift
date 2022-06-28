@@ -22,12 +22,12 @@ public class CDVPurchasesPlugin : CDVPlugin {
             return
         }
         let appUserID = command.arguments[1] as? String
-        let observerMode = command.arguments[2] as? NSNumber ?? NSNumber(value: false)
+        let observerMode = command.arguments[2] as? Bool ?? false
         let userDefaultsSuiteName = command.arguments[3] as? String
 
         Purchases.configure(withAPIKey: apiKey,
                             appUserID: appUserID,
-                            observerMode: observerMode.boolValue,
+                            observerMode: observerMode,
                             userDefaultsSuiteName: userDefaultsSuiteName,
                             platformFlavor: self.platformFlavor,
                             platformFlavorVersion: self.platformFlavorVersion)
@@ -41,23 +41,23 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
     @objc(setAllowSharingStoreAccount:)
     func setAllowSharingStoreAccount(command: CDVInvokedUrlCommand) {
-        let allowSharingStoreAccount = command.arguments[0] as? NSNumber ?? NSNumber(value: false)
+        let allowSharingStoreAccount = command.arguments[0] as? Bool ?? false
 
-        RCCommonFunctionality.setAllowSharingStoreAccount(allowSharingStoreAccount.boolValue)
+        RCCommonFunctionality.setAllowSharingStoreAccount(allowSharingStoreAccount)
         self.sendOKFor(command: command)
     }
 
     @objc(addAttributionData:)
     func addAttributionData(command: CDVInvokedUrlCommand) {
-        let network = command.arguments[1] as? NSNumber
-        let networkUserId = command.arguments[2] as? NSString
+        let network = command.arguments[1] as? Int
+        let networkUserId = command.arguments[2] as? String
 
-        guard let data = command.arguments[0] as? NSDictionary? as? [AnyHashable: Any],
-              let network = network?.intValue,
-              let networkUserId = networkUserId as? String else {
+        guard let data = command.arguments[0] as? [AnyHashable: Any],
+              let network = network,
+              let networkUserId = networkUserId else {
             self.sendBadParametersFor(command: command,
                                       parametersNamed: ["data", "network", "networkUserId"],
-                                      expectedTypes: [NSDictionary.self, NSNumber.self, NSString.self])
+                                      expectedTypes: [NSDictionary.self, Int.self, String.self])
             return
         }
 
@@ -88,7 +88,7 @@ public class CDVPurchasesPlugin : CDVPlugin {
     @objc(purchaseProduct:)
     func purchaseProduct(command: CDVInvokedUrlCommand) {
         guard let productIdentifier = command.arguments[0] as? String else {
-            self.sendBadParameterFor(command: command, parameterNamed: "productIdentifier", expectedType: NSString.self)
+            self.sendBadParameterFor(command: command, parameterNamed: "productIdentifier", expectedType: String.self)
             return
         }
 
@@ -103,7 +103,7 @@ public class CDVPurchasesPlugin : CDVPlugin {
         let offeringIdentifier = command.arguments[1] as? String else {
             self.sendBadParametersFor(command: command,
                                       parametersNamed: ["packageIdentifier", "offeringIdentifier"],
-                                      expectedTypes: [NSString.self, NSString.self])
+                                      expectedTypes: [String.self, String.self])
             return
         }
 
@@ -127,7 +127,7 @@ public class CDVPurchasesPlugin : CDVPlugin {
     @objc(logIn:)
     func logIn(command: CDVInvokedUrlCommand) {
         guard let appUserID = command.arguments[0] as? String else {
-            self.sendBadParameterFor(command: command, parameterNamed: "appUserID", expectedType: NSString.self)
+            self.sendBadParameterFor(command: command, parameterNamed: "appUserID", expectedType: String.self)
             return
         }
 
@@ -148,8 +148,8 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
     @objc(setDebugLogsEnabled:)
     func setDebugLogsEnabled(command: CDVInvokedUrlCommand) {
-        guard let debugLogsEnabled = (command.arguments[0] as? NSNumber)?.boolValue else {
-            self.sendBadParameterFor(command: command, parameterNamed: "debugLogsEnabled", expectedType: NSNumber.self)
+        guard let debugLogsEnabled = command.arguments[0] as? Bool else {
+            self.sendBadParameterFor(command: command, parameterNamed: "debugLogsEnabled", expectedType: Bool.self)
             return
         }
 
@@ -169,10 +169,10 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
     @objc(setAutomaticAppleSearchAdsAttributionCollection:)
     func setAutomaticAppleSearchAdsAttributionCollection(command: CDVInvokedUrlCommand) {
-        guard let automaticCollection = (command.arguments[0] as? NSNumber)?.boolValue else {
+        guard let automaticCollection = command.arguments[0] as? Bool else {
             self.sendBadParameterFor(command: command,
                                      parameterNamed: "AutomaticAppleSearchAdsAttributionCollection",
-                                     expectedType: NSNumber.self)
+                                     expectedType: Bool.self)
             return
         }
 
@@ -182,10 +182,10 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
     @objc(setSimulatesAskToBuyInSandbox:)
     func setSimulatesAskToBuyInSandbox(command: CDVInvokedUrlCommand) {
-        guard let askToBuyInSandbox = (command.arguments[0] as? NSNumber)?.boolValue else {
+        guard let askToBuyInSandbox = command.arguments[0] as? Bool else {
             self.sendBadParameterFor(command: command,
                                      parameterNamed: "setSimulatesAskToBuyInSandbox",
-                                     expectedType: NSNumber.self)
+                                     expectedType: Bool.self)
             return
         }
 
@@ -208,7 +208,7 @@ public class CDVPurchasesPlugin : CDVPlugin {
     // TODO: Remove this warning message once this plugin adopts the newest PurchasesHybridCommon.
     @objc(checkTrialOrIntroductoryPriceEligibility:)
     func checkTrialOrIntroductoryPriceEligibility(command: CDVInvokedUrlCommand) {
-        guard let products = command.arguments[0] as? NSArray as? [String] else {
+        guard let products = command.arguments[0] as? [String] else {
             self.sendBadParameterFor(command: command, parameterNamed: "productIdentifiers", expectedType: NSArray.self)
             return
         }
@@ -237,7 +237,7 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
     @objc(setAttributes:)
     func setAttributes(command: CDVInvokedUrlCommand) {
-        guard let attributes = command.arguments[0] as? NSDictionary as? [String: String] else {
+        guard let attributes = command.arguments[0] as? [String: String] else {
             self.sendBadParameterFor(command: command, parameterNamed: "attributes", expectedType: NSDictionary.self)
             return
         }
@@ -346,8 +346,7 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
     @objc(setProxyURLString:)
     func setProxyURLString(command: CDVInvokedUrlCommand) {
-        let urlString = command.arguments[0] as? NSString
-        RCCommonFunctionality.proxyURLString = urlString as? String
+        RCCommonFunctionality.proxyURLString = command.arguments[0] as? String
         self.sendOKFor(command: command)
     }
 
@@ -359,21 +358,17 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
     @objc(canMakePayments:)
     func canMakePayments(command: CDVInvokedUrlCommand) {
-        guard let features = command.arguments[0] as? NSArray as? [NSNumber] else {
-            self.sendBadParameterFor(command: command, parameterNamed: "features", expectedType: NSArray.self)
-            return
-        }
-
-        let canMakePayments = RCCommonFunctionality.canMakePayments(withFeatures: features)
+        // The implementation of this method does nothing with `features`.
+        let canMakePayments = RCCommonFunctionality.canMakePayments(withFeatures: [])
         let result = CDVPluginResult(status: .ok, messageAs: canMakePayments)
         self.commandDelegate.send(result, callbackId: command.callbackId)
     }
 
     @objc(makeDeferredPurchase:)
     func makeDeferredPurchase(command: CDVInvokedUrlCommand) {
-        let callbackID = command.arguments[0] as! NSNumber
-        assert(callbackID.intValue >= 0)
-        let defermentBlock = self.defermentBlocks[callbackID.intValue]
+        let callbackID = command.arguments[0] as! Int
+        assert(callbackID >= 0)
+        let defermentBlock = self.defermentBlocks[callbackID]
         RCCommonFunctionality.makeDeferredPurchase(defermentBlock,
                                                    completionBlock: self.responseCompletion(forCommand: command))
     }

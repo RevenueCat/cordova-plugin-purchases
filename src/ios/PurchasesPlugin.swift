@@ -199,6 +199,13 @@ public class CDVPurchasesPlugin : CDVPlugin {
         self.commandDelegate.send(result, callbackId: command.callbackId)
     }
 
+    // NOTE: This method crashes now that it's in Swift. The underlying method call relies on an implicit cast
+    // of a NSDictionary to an RCIntroEligibility object which works in ObjC becasue ObjC doesn't actually care
+    // about types while Swift is type-safe and knows an NSDictionary<String, Any> is not an RCIntroEligibility.
+    // Example crash:
+    // Could not cast value of type '__NSDictionaryI' (0xabacabb) to 'RCIntroEligibility'
+    // This will be fixed once we adopt the newer PurchasesHybridCommon framework (written in Swift, too)
+    // TODO: Remove this warning message once this plugin adopts the newest PurchasesHybridCommon.
     @objc(checkTrialOrIntroductoryPriceEligibility:)
     func checkTrialOrIntroductoryPriceEligibility(command: CDVInvokedUrlCommand) {
         guard let products = command.arguments[0] as? NSArray as? [String] else {

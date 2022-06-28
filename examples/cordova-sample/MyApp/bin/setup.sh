@@ -21,9 +21,9 @@ cordova platform add ios
 cordova platform add android
 
 cordova plugin remove cordova-plugin-purchases
-cordova plugin add ../../../../cordova-plugin-purchases --link --save
+cordova plugin add ../../../ --link --save
 
-cd ../../../../cordova-plugin-purchases
+cd ../../../
 npm install
 
 cd $OG_DIR

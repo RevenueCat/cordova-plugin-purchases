@@ -9,14 +9,18 @@
 import Foundation
 import PurchasesHybridCommon
 
-@objc public class CDVPurchasesPlugin : CDVPlugin {
+public class CDVPurchasesPlugin : CDVPlugin {
 
     private var updatedPurchaserInfoCallbackID: String?
     private var shouldPurchasePromoProductCallbackID: String?
     private var defermentBlocks: [RCDeferredPromotionalPurchaseBlock] = []
 
-    @objc(setupPurchases:) func setupPurchases(command: CDVInvokedUrlCommand) {
-        let apiKey = command.arguments[0] as? String ?? ""
+    @objc(setupPurchases:)
+    func setupPurchases(command: CDVInvokedUrlCommand) {
+        guard let apiKey = command.arguments[0] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "apiKey", expectedType: String.self)
+            return
+        }
         let appUserID = command.arguments[1] as? String
         let observerMode = command.arguments[2] as? NSNumber ?? NSNumber(value: false)
         let userDefaultsSuiteName = command.arguments[3] as? String
@@ -35,14 +39,16 @@ import PurchasesHybridCommon
         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
     }
 
-    @objc(setAllowSharingStoreAccount:) func setAllowSharingStoreAccount(command: CDVInvokedUrlCommand) {
+    @objc(setAllowSharingStoreAccount:)
+    func setAllowSharingStoreAccount(command: CDVInvokedUrlCommand) {
         let allowSharingStoreAccount = command.arguments[0] as? NSNumber ?? NSNumber(value: false)
 
         RCCommonFunctionality.setAllowSharingStoreAccount(allowSharingStoreAccount.boolValue)
         self.sendOKFor(command: command)
     }
 
-    @objc(addAttributionData:) func addAttributionData(command: CDVInvokedUrlCommand) {
+    @objc(addAttributionData:)
+    func addAttributionData(command: CDVInvokedUrlCommand) {
         let network = command.arguments[1] as? NSNumber
         let networkUserId = command.arguments[2] as? NSString
 
@@ -59,26 +65,28 @@ import PurchasesHybridCommon
         self.sendOKFor(command: command)
     }
 
-    @objc(getOfferings:) func getOfferings(command: CDVInvokedUrlCommand) {
+    @objc(getOfferings:)
+    func getOfferings(command: CDVInvokedUrlCommand) {
         RCCommonFunctionality.getOfferingsWithCompletionBlock { offerings, error in
             // TODO: change to pass `responseCompletion` directly instead of extracting block, this is for debugging.
             self.responseCompletion(forCommand: command)(offerings, error)
         }
     }
 
-    @objc(getProductInfo:) func getProductInfo(command: CDVInvokedUrlCommand) {
+    @objc(getProductInfo:)
+    func getProductInfo(command: CDVInvokedUrlCommand) {
         guard let products = command.arguments[0] as? [Any] else {
             self.sendBadParameterFor(command: command, parameterNamed: "products", expectedType: NSArray.self)
             return
         }
 
         RCCommonFunctionality.getProductInfo(products) {
-            let result = CDVPluginResult(status: .ok, messageAs: $0)
-            self.commandDelegate.send(result, callbackId: command.callbackId)
+            self.sendOKFor(command: command, messageAsArray: $0)
         }
     }
 
-    @objc(purchaseProduct:) func purchaseProduct(command: CDVInvokedUrlCommand) {
+    @objc(purchaseProduct:)
+    func purchaseProduct(command: CDVInvokedUrlCommand) {
         guard let productIdentifier = command.arguments[0] as? String else {
             self.sendBadParameterFor(command: command, parameterNamed: "productIdentifier", expectedType: NSString.self)
             return
@@ -89,7 +97,8 @@ import PurchasesHybridCommon
                                               completionBlock: self.responseCompletion(forCommand: command))
     }
 
-    @objc(purchasePackage:) func purchasePackage(command: CDVInvokedUrlCommand) {
+    @objc(purchasePackage:)
+    func purchasePackage(command: CDVInvokedUrlCommand) {
         guard let packageIdentifier = command.arguments[0] as? String,
         let offeringIdentifier = command.arguments[1] as? String else {
             self.sendBadParametersFor(command: command,
@@ -104,16 +113,19 @@ import PurchasesHybridCommon
                                               completionBlock: self.responseCompletion(forCommand: command))
     }
 
-    @objc(restoreTransactions:) func restoreTransactions(command: CDVInvokedUrlCommand) {
+    @objc(restoreTransactions:)
+    func restoreTransactions(command: CDVInvokedUrlCommand) {
         RCCommonFunctionality.restoreTransactions(completionBlock: self.responseCompletion(forCommand: command))
     }
 
-    @objc(getAppUserID:) func getAppUserID(command: CDVInvokedUrlCommand) {
+    @objc(getAppUserID:)
+    func getAppUserID(command: CDVInvokedUrlCommand) {
         let result = CDVPluginResult(status: .ok, messageAs: RCCommonFunctionality.appUserID())
         self.commandDelegate.send(result, callbackId: command.callbackId)
     }
 
-    @objc(logIn:) func logIn(command: CDVInvokedUrlCommand) {
+    @objc(logIn:)
+    func logIn(command: CDVInvokedUrlCommand) {
         guard let appUserID = command.arguments[0] as? String else {
             self.sendBadParameterFor(command: command, parameterNamed: "appUserID", expectedType: NSString.self)
             return
@@ -123,18 +135,19 @@ import PurchasesHybridCommon
                                     completionBlock: self.responseCompletion(forCommand: command))
     }
 
-    @objc(logOut:) func logOut(command: CDVInvokedUrlCommand) {
+    @objc(logOut:)
+    func logOut(command: CDVInvokedUrlCommand) {
         RCCommonFunctionality.logOut(completionBlock: self.responseCompletion(forCommand: command))
     }
 
 
-    @objc(setupShouldPurchasePromoProductCallback:) func setupShouldPurchasePromoProductCallback(command: CDVInvokedUrlCommand) {
-        self.shouldPurchasePromoProductCallbackID = command.callbackId;
-        // TODO: This next line is needed, right? It wasn't in the old version.
-        self.sendOKFor(command: command)
+    @objc(setupShouldPurchasePromoProductCallback:)
+    func setupShouldPurchasePromoProductCallback(command: CDVInvokedUrlCommand) {
+        self.shouldPurchasePromoProductCallbackID = command.callbackId
     }
 
-    @objc(setDebugLogsEnabled:) func setDebugLogsEnabled(command: CDVInvokedUrlCommand) {
+    @objc(setDebugLogsEnabled:)
+    func setDebugLogsEnabled(command: CDVInvokedUrlCommand) {
         guard let debugLogsEnabled = (command.arguments[0] as? NSNumber)?.boolValue else {
             self.sendBadParameterFor(command: command, parameterNamed: "debugLogsEnabled", expectedType: NSNumber.self)
             return
@@ -144,15 +157,18 @@ import PurchasesHybridCommon
         self.sendOKFor(command: command)
     }
 
-    @objc(getPurchaserInfo:) func getPurchaserInfo(command: CDVInvokedUrlCommand) {
+    @objc(getPurchaserInfo:)
+    func getPurchaserInfo(command: CDVInvokedUrlCommand) {
         RCCommonFunctionality.getPurchaserInfo(completionBlock: self.responseCompletion(forCommand: command))
     }
 
-    @objc(syncPurchases:) func syncPurchases(command: CDVInvokedUrlCommand) {
+    @objc(syncPurchases:)
+    func syncPurchases(command: CDVInvokedUrlCommand) {
         RCCommonFunctionality.syncPurchases(completionBlock: self.responseCompletion(forCommand: command))
     }
 
-    @objc(setAutomaticAppleSearchAdsAttributionCollection:) func setAutomaticAppleSearchAdsAttributionCollection(command: CDVInvokedUrlCommand) {
+    @objc(setAutomaticAppleSearchAdsAttributionCollection:)
+    func setAutomaticAppleSearchAdsAttributionCollection(command: CDVInvokedUrlCommand) {
         guard let automaticCollection = (command.arguments[0] as? NSNumber)?.boolValue else {
             self.sendBadParameterFor(command: command,
                                      parameterNamed: "AutomaticAppleSearchAdsAttributionCollection",
@@ -164,7 +180,8 @@ import PurchasesHybridCommon
         self.sendOKFor(command: command)
     }
 
-    @objc(setSimulatesAskToBuyInSandbox:) func setSimulatesAskToBuyInSandbox(command: CDVInvokedUrlCommand) {
+    @objc(setSimulatesAskToBuyInSandbox:)
+    func setSimulatesAskToBuyInSandbox(command: CDVInvokedUrlCommand) {
         guard let askToBuyInSandbox = (command.arguments[0] as? NSNumber)?.boolValue else {
             self.sendBadParameterFor(command: command,
                                      parameterNamed: "setSimulatesAskToBuyInSandbox",
@@ -176,12 +193,14 @@ import PurchasesHybridCommon
         self.sendOKFor(command: command)
     }
 
-    @objc(isAnonymous:) func isAnonymous(command: CDVInvokedUrlCommand) {
+    @objc(isAnonymous:)
+    func isAnonymous(command: CDVInvokedUrlCommand) {
         let result = CDVPluginResult(status: .ok, messageAs: RCCommonFunctionality.isAnonymous())
         self.commandDelegate.send(result, callbackId: command.callbackId)
     }
 
-    @objc(checkTrialOrIntroductoryPriceEligibility:) func checkTrialOrIntroductoryPriceEligibility(command: CDVInvokedUrlCommand) {
+    @objc(checkTrialOrIntroductoryPriceEligibility:)
+    func checkTrialOrIntroductoryPriceEligibility(command: CDVInvokedUrlCommand) {
         guard let products = command.arguments[0] as? NSArray as? [String] else {
             self.sendBadParameterFor(command: command, parameterNamed: "productIdentifiers", expectedType: NSArray.self)
             return
@@ -193,12 +212,14 @@ import PurchasesHybridCommon
         }
     }
 
-    @objc(invalidatePurchaserInfoCache:) func invalidatePurchaserInfoCache(command: CDVInvokedUrlCommand) {
+    @objc(invalidatePurchaserInfoCache:)
+    func invalidatePurchaserInfoCache(command: CDVInvokedUrlCommand) {
         RCCommonFunctionality.invalidatePurchaserInfoCache()
         self.sendOKFor(command: command)
     }
 
-    @objc(presentCodeRedemptionSheet:) func presentCodeRedemptionSheet(command: CDVInvokedUrlCommand) {
+    @objc(presentCodeRedemptionSheet:)
+    func presentCodeRedemptionSheet(command: CDVInvokedUrlCommand) {
         if #available(iOS 14.0, *) {
             RCCommonFunctionality.presentCodeRedemptionSheet()
         } else {
@@ -207,7 +228,8 @@ import PurchasesHybridCommon
         self.sendOKFor(command: command)
     }
 
-    @objc(setAttributes:) func setAttributes(command: CDVInvokedUrlCommand) {
+    @objc(setAttributes:)
+    func setAttributes(command: CDVInvokedUrlCommand) {
         guard let attributes = command.arguments[0] as? NSDictionary as? [String: String] else {
             self.sendBadParameterFor(command: command, parameterNamed: "attributes", expectedType: NSDictionary.self)
             return
@@ -217,82 +239,119 @@ import PurchasesHybridCommon
         self.sendOKFor(command: command)
     }
 
-    @objc(setEmail:) func setEmail(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "email", setFunction: RCCommonFunctionality.setEmail)
+    @objc(setEmail:)
+    func setEmail(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "email", setFunction: RCCommonFunctionality.setEmail)
     }
 
-    @objc(setPhoneNumber:) func setPhoneNumber(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "phoneNumber", setFunction: RCCommonFunctionality.setPhoneNumber)
+    @objc(setPhoneNumber:)
+    func setPhoneNumber(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command,
+                                    name: "phoneNumber",
+                                    setFunction: RCCommonFunctionality.setPhoneNumber)
     }
 
-    @objc(setDisplayName:) func setDisplayName(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "displayName", setFunction: RCCommonFunctionality.setDisplayName)
+    @objc(setDisplayName:)
+    func setDisplayName(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command,
+                                    name: "displayName",
+                                    setFunction: RCCommonFunctionality.setDisplayName)
     }
 
-    @objc(setPushToken:) func setPushToken(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "pushToken", setFunction: RCCommonFunctionality.setPushToken)
+    @objc(setPushToken:)
+    func setPushToken(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command,
+                                    name: "pushToken",
+                                    setFunction: RCCommonFunctionality.setPushToken)
     }
 
-    @objc(setProxyURLString:) func setProxyURLString(command: CDVInvokedUrlCommand) {
+    @objc(setAdjustID:)
+    func setAdjustID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "adjustID", setFunction: RCCommonFunctionality.setAdjustID)
+    }
+
+    @objc(setAppsflyerID:)
+    func setAppsflyerID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command,
+                                    name: "appsFlyerID",
+                                    setFunction: RCCommonFunctionality.setAppsflyerID)
+    }
+
+    @objc(setFBAnonymousID:)
+    func setFBAnonymousID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command,
+                                    name: "fbAnonymousID",
+                                    setFunction: RCCommonFunctionality.setFBAnonymousID)
+    }
+
+    @objc(setMparticleID:)
+    func setMparticleID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command,
+                                    name: "mparticleID",
+                                    setFunction: RCCommonFunctionality.setMparticleID)
+    }
+
+    @objc(setOnesignalID:)
+    func setOnesignalID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command,
+                                    name: "onesignalID",
+                                    setFunction: RCCommonFunctionality.setOnesignalID)
+    }
+
+    @objc(setAirshipChannelID:)
+    func setAirshipChannelID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command,
+                                    name: "airshipChannelID",
+                                    setFunction: RCCommonFunctionality.setAirshipChannelID)
+    }
+
+    @objc(setMediaSource:)
+    func setMediaSource(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command,
+                                    name: "mediaSource",
+                                    setFunction: RCCommonFunctionality.setMediaSource)
+    }
+
+    @objc(setCampaign:)
+    func setCampaign(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "campaign", setFunction: RCCommonFunctionality.setCampaign)
+    }
+
+    @objc(setAdGroup:)
+    func setAdGroup(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "adGroup", setFunction: RCCommonFunctionality.setAdGroup)
+    }
+
+    @objc(setAd:)
+    func setAd(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "ad", setFunction: RCCommonFunctionality.setAd)
+    }
+
+    @objc(setKeyword:)
+    func setKeyword(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "keyword", setFunction: RCCommonFunctionality.setKeyword)
+    }
+
+    @objc(setCreative:)
+    func setCreative(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "creative", setFunction: RCCommonFunctionality.setCreative)
+    }
+
+    @objc(setProxyURLString:)
+    func setProxyURLString(command: CDVInvokedUrlCommand) {
         let urlString = command.arguments[0] as? NSString
         RCCommonFunctionality.proxyURLString = urlString as? String
         self.sendOKFor(command: command)
     }
 
-    @objc(setAdjustID:) func setAdjustID(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "adjustID", setFunction: RCCommonFunctionality.setAdjustID)
-    }
-
-    @objc(setAppsflyerID:) func setAppsflyerID(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "appsFlyerID", setFunction: RCCommonFunctionality.setAppsflyerID)
-    }
-
-    @objc(setFBAnonymousID:) func setFBAnonymousID(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "fbAnonymousID", setFunction: RCCommonFunctionality.setFBAnonymousID)
-    }
-
-    @objc(setMparticleID:) func setMparticleID(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "mparticleID", setFunction: RCCommonFunctionality.setMparticleID)
-    }
-
-    @objc(setOnesignalID:) func setOnesignalID(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "onesignalID", setFunction: RCCommonFunctionality.setOnesignalID)
-    }
-
-    @objc(setAirshipChannelID:) func setAirshipChannelID(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "airshipChannelID", setFunction: RCCommonFunctionality.setAirshipChannelID)
-    }
-
-    @objc(setMediaSource:) func setMediaSource(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "mediaSource", setFunction: RCCommonFunctionality.setMediaSource)
-    }
-
-    @objc(setCampaign:) func setCampaign(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "campaign", setFunction: RCCommonFunctionality.setCampaign)
-    }
-
-    @objc(setAdGroup:) func setAdGroup(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "adGroup", setFunction: RCCommonFunctionality.setAdGroup)
-    }
-
-    @objc(setAd:) func setAd(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "ad", setFunction: RCCommonFunctionality.setAd)
-    }
-
-    @objc(setKeyword:) func setKeyword(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "keyword", setFunction: RCCommonFunctionality.setKeyword)
-    }
-
-    @objc(setCreative:) func setCreative(command: CDVInvokedUrlCommand) {
-        simpleStringSet(command: command, name: "creative", setFunction: RCCommonFunctionality.setCreative)
-    }
-
-    @objc(collectDeviceIdentifiers:) func collectDeviceIdentifiers(command: CDVInvokedUrlCommand) {
+    @objc(collectDeviceIdentifiers:)
+    func collectDeviceIdentifiers(command: CDVInvokedUrlCommand) {
         RCCommonFunctionality.collectDeviceIdentifiers()
         self.sendOKFor(command: command)
     }
 
-    @objc(canMakePayments:) func canMakePayments(command: CDVInvokedUrlCommand) {
+    @objc(canMakePayments:)
+    func canMakePayments(command: CDVInvokedUrlCommand) {
         guard let features = command.arguments[0] as? NSArray as? [NSNumber] else {
             self.sendBadParameterFor(command: command, parameterNamed: "features", expectedType: NSArray.self)
             return
@@ -303,11 +362,7 @@ import PurchasesHybridCommon
         self.commandDelegate.send(result, callbackId: command.callbackId)
     }
 
-}
-
-// Currently unused
-extension CDVPurchasesPlugin {
-
+    @objc(makeDeferredPurchase:)
     func makeDeferredPurchase(command: CDVInvokedUrlCommand) {
         let callbackID = command.arguments[0] as! NSNumber
         assert(callbackID.intValue >= 0)
@@ -326,7 +381,9 @@ extension CDVPurchasesPlugin: PurchasesDelegate {
         self.commandDelegate.send(result, callbackId: self.updatedPurchaserInfoCallbackID)
     }
 
-    private func purchases(_ purchases: Purchases, shouldPurchasePromoProduct product: SKProduct, defermentBlock makeDeferredPurchase: @escaping RCDeferredPromotionalPurchaseBlock) {
+    private func purchases(_ purchases: Purchases,
+                           shouldPurchasePromoProduct product: SKProduct,
+                           defermentBlock makeDeferredPurchase: @escaping RCDeferredPromotionalPurchaseBlock) {
         // TODO: This is not threadsafe.
         self.defermentBlocks.append(makeDeferredPurchase)
         let position = self.defermentBlocks.count - 1
@@ -347,25 +404,22 @@ private extension CDVPurchasesPlugin {
         return "3.0.0-beta"
     }
 
-    func sendOKFor(command: CDVInvokedUrlCommand, messageAsArray: [CDVCommandStatus]? = nil) {
+    func sendOKFor(command: CDVInvokedUrlCommand, messageAsArray: [Any]? = nil) {
         let pluginResult = CDVPluginResult(status: .ok, messageAs: messageAsArray)
         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
     }
 
-    func sendBadParameterFor(command: CDVInvokedUrlCommand, parameterNamed: String, expectedType: AnyObject.Type) {
-        sendBadParametersFor(command: command, parametersNamed: [parameterNamed], expectedTypes: [expectedType])
+    func sendBadParameterFor(command: CDVInvokedUrlCommand, parameterNamed: String, expectedType: Any.Type) {
+        self.sendBadParametersFor(command: command, parametersNamed: [parameterNamed], expectedTypes: [expectedType])
     }
 
     func sendBadParametersFor(command: CDVInvokedUrlCommand,
                               parametersNamed: [String],
-                              expectedTypes: [AnyObject.Type]) {
+                              expectedTypes: [Any.Type]) {
 
-        var argCount = parametersNamed.count
-        let args = zip(parametersNamed, expectedTypes).reduce("", { name, type in
-            let separator = argCount > 1 ? ", " : ""
-            argCount-=1
-            return "parameter: \(name), type: \(type)\(separator)"
-        })
+        let args = zip(parametersNamed, expectedTypes)
+            .map { name, type in "parameter: \(name), type: \(type)" }
+            .joined(separator: ", ")
 
         let pluginResult = CDVPluginResult(status: .error, messageAs: "Invalid or missing parameter(s): \(args)")
         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
@@ -384,7 +438,7 @@ private extension CDVPurchasesPlugin {
         return callback
     }
 
-    func simpleStringSet(command: CDVInvokedUrlCommand, name: String, setFunction: (String) -> Void) {
+    func setSubscriberAttribute(command: CDVInvokedUrlCommand, name: String, setFunction: (String) -> Void) {
         guard let setValue = command.arguments[0] as? NSString else {
             self.sendBadParameterFor(command: command, parameterNamed: name, expectedType: NSString.self)
             return

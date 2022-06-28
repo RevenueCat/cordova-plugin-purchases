@@ -67,10 +67,7 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
     @objc(getOfferings:)
     func getOfferings(command: CDVInvokedUrlCommand) {
-        RCCommonFunctionality.getOfferingsWithCompletionBlock { offerings, error in
-            // TODO: change to pass `responseCompletion` directly instead of extracting block, this is for debugging.
-            self.responseCompletion(forCommand: command)(offerings, error)
-        }
+        RCCommonFunctionality.getOfferingsWithCompletionBlock(self.responseCompletion(forCommand: command))
     }
 
     @objc(getProductInfo:)

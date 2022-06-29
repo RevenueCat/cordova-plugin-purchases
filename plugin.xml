@@ -21,6 +21,7 @@
         <source-file src="src/android/PurchasesPlugin.java" target-dir="src/com/revenuecat/purchases"/>
     </platform>
     <platform name="ios">
+        <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/>
         <config-file target="config.xml" parent="/*">
             <feature name="PurchasesPlugin">
                 <param name="ios-package" value="CDVPurchasesPlugin"/>
@@ -32,7 +33,7 @@
                 <source url="https://github.com/CocoaPods/Specs.git"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="PurchasesHybridCommon" spec="1.10.0"/>
+                <pod name="PurchasesHybridCommon" spec="3.2.0"/>
             </pods>
         </podspec>
     </platform>

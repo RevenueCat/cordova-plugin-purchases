@@ -43,7 +43,6 @@ for target in project.targets
     end
 end
 
-
 swift_version_to_set = "5.0"
 puts("Updating build configuration if they are missing Swift version")
 for build_config in project.build_configurations
@@ -55,7 +54,6 @@ for build_config in project.build_configurations
         puts("Version #{swift_version} already existed, leaving as-is")
     end
 end
-
 
 project.save
 

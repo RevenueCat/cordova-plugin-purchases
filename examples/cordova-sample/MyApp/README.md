@@ -48,3 +48,9 @@ You can just make the edits straight from Xcode or AppCode, then build and you'r
 Unfortunately, the only way to reflect the changes at the time of this writing seems to be to remove the plugin and re-add it. 
 
 The build step will transpile the typescript files into js, however. So you can make the updates from Xcode, but you'll have to remove and add the plugin manually after any changes. 
+
+
+#### Troubleshooting iOS
+
+If the setup doesn't work, it might because the pod spec repo is out of date.
+cd into the iOS platform folder `platforms/ios` where `Podfile` lives, and run `pod install --repo-update`

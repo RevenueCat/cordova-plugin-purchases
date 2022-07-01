@@ -9,3 +9,4 @@ examples/cordova-sample/MyApp/node_modules
 examples/cordova-sample/MyApp/platforms
 examples/cordova-sample/MyApp/plugins
 package-lock.json
+*.bck

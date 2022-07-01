@@ -12,11 +12,11 @@ import RevenueCat
 
 public class CDVPurchasesPlugin : CDVPlugin {
 
-    typealias DeferredPromotionalPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
+    public typealias DeferredPromotionalPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
     typealias HybridResponseBlock = ([String: Any]?, ErrorContainer?) -> Void
 
     private var purchases: Purchases!
-    private var updatedPurchaserInfoCallbackID: String!
+    private var updatedCustomerInfoCallbackID: String!
     private var shouldPurchasePromoProductCallbackID: String?
     private var defermentBlocks: [DeferredPromotionalPurchaseBlock] = []
 
@@ -38,7 +38,7 @@ public class CDVPurchasesPlugin : CDVPlugin {
                                              platformFlavorVersion: self.platformFlavorVersion,
                                              dangerousSettings: nil)
         self.purchases.delegate = self
-        self.updatedPurchaserInfoCallbackID = command.callbackId
+        self.updatedCustomerInfoCallbackID = command.callbackId
         let pluginResult = CDVPluginResult(status: .noResult)
         pluginResult?.setKeepCallbackAs(true)
         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
@@ -373,15 +373,15 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
 extension CDVPurchasesPlugin: PurchasesDelegate {
 
-    private func purchases(_ purchases: Purchases, didReceiveUpdated purchaserInfo: CustomerInfo) {
-        let result = CDVPluginResult(status: .ok, messageAs: purchaserInfo.dictionary)
+    public func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
+        let result = CDVPluginResult(status: .ok, messageAs: customerInfo.dictionary)
         result?.setKeepCallbackAs(true)
-        self.commandDelegate.send(result, callbackId: self.updatedPurchaserInfoCallbackID)
+        self.commandDelegate.send(result, callbackId: self.updatedCustomerInfoCallbackID)
     }
 
-    private func purchases(_ purchases: Purchases,
-                           shouldPurchasePromoProduct product: StoreProduct,
-                           defermentBlock makeDeferredPurchase: @escaping DeferredPromotionalPurchaseBlock) {
+    public func purchases(_ purchases: Purchases,
+                          readyForPromotedProduct product: StoreProduct,
+                          purchase makeDeferredPurchase: @escaping DeferredPromotionalPurchaseBlock) {
         // TODO: This is not threadsafe.
         self.defermentBlocks.append(makeDeferredPurchase)
         let position = self.defermentBlocks.count - 1

@@ -7,9 +7,7 @@
 require 'xcodeproj'
 
 def save_project_if_needed(project, modified = false)
-    unless modified
-        return
-    end
+    return unless modified
 
     puts("Saving project")
     project.save

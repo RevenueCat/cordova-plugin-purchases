@@ -116,8 +116,8 @@ public class CDVPurchasesPlugin : CDVPlugin {
                                      completion: self.responseCompletion(forCommand: command))
     }
 
-    @objc(restoreTransactions:)
-    func restoreTransactions(command: CDVInvokedUrlCommand) {
+    @objc(restorePurchases:)
+    func restorePurchases(command: CDVInvokedUrlCommand) {
         CommonFunctionality.restorePurchases(completion: self.responseCompletion(forCommand: command))
     }
 
@@ -159,8 +159,8 @@ public class CDVPurchasesPlugin : CDVPlugin {
         self.sendOKFor(command: command)
     }
 
-    @objc(getPurchaserInfo:)
-    func getPurchaserInfo(command: CDVInvokedUrlCommand) {
+    @objc(getCustomerInfo:)
+    func getCustomerInfo(command: CDVInvokedUrlCommand) {
         CommonFunctionality.customerInfo(completion: self.responseCompletion(forCommand: command))
     }
 
@@ -215,8 +215,8 @@ public class CDVPurchasesPlugin : CDVPlugin {
     }
 
     // Update name
-    @objc(invalidatePurchaserInfoCache:)
-    func invalidatePurchaserInfoCache(command: CDVInvokedUrlCommand) {
+    @objc(invalidateCustomerInfoCache:)
+    func invalidateCustomerInfoCache(command: CDVInvokedUrlCommand) {
         CommonFunctionality.invalidateCustomerInfoCache()
         self.sendOKFor(command: command)
     }
@@ -354,7 +354,6 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
     @objc(canMakePayments:)
     func canMakePayments(command: CDVInvokedUrlCommand) {
-        // The implementation of this method does nothing with `features`.
         let canMakePayments = CommonFunctionality.canMakePaymentsWithFeatures([])
         let result = CDVPluginResult(status: .ok, messageAs: canMakePayments)
         self.commandDelegate.send(result, callbackId: command.callbackId)

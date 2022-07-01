@@ -25,7 +25,7 @@ const app = {
       this.onDeviceReady.bind(this),
       false
     );
-    window.addEventListener("onPurchaserInfoUpdated", (info) => {
+    window.addEventListener("onCustomerInfoUpdated", (info) => {
 
     });
   },
@@ -64,7 +64,7 @@ const app = {
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
     Purchases.setup("api_key");
-    Purchases.getPurchaserInfo(
+    Purchases.getCustomerInfo(
       info => {
         const isPro = typeof info.entitlements.active.pro_cat !== "undefined";
         console.log("isPro " + JSON.stringify(isPro));
@@ -81,6 +81,8 @@ const app = {
         console.log("ISANONYMOUS " + isAnonymous);
         }
     );
+
+    Purchases.invalidateCustomerInfoCache();
 
     Purchases.getOfferings(
       offerings => {

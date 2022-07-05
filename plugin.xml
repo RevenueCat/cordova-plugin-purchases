@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-purchases" version="3.0.0-beta">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-purchases" version="3.0.1-beta">
 
     <dependency id="cordova-annotated-plugin-android" />
 
@@ -28,6 +28,11 @@
             </feature>
         </config-file>
         <source-file src="src/ios/PurchasesPlugin.swift" />
+        <source-file src="src/ios/PurchasesPlugin+APIHelpers.swift" />
+        <source-file src="src/ios/PurchasesPlugin+Attribution.swift" />
+        <source-file src="src/ios/PurchasesPlugin+PurchasesDelegate.swift" />
+        <source-file src="src/ios/PurchasesPlugin+Purchasing.swift" />
+        <source-file src="src/ios/PurchasesPlugin+Users.swift" />
         <podspec>
             <config>
                 <source url="https://github.com/CocoaPods/Specs.git"/>

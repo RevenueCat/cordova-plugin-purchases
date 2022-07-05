@@ -33,7 +33,7 @@ import java.util.Map;
 public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     public static final String PLATFORM_NAME = "cordova";
-    public static final String PLUGIN_VERSION = "3.0.0-beta";
+    public static final String PLUGIN_VERSION = "3.0.1-beta";
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "setupPurchases", isAutofinish = false)
     private void setupPurchases(String apiKey, @Nullable String appUserID, boolean observerMode,

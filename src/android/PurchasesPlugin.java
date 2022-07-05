@@ -131,8 +131,8 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success(CommonKt.getAppUserID());
     }
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "restoreTransactions", isAutofinish = false)
-    private void restoreTransactions(CallbackContext callbackContext) {
+    @PluginAction(thread = ExecutionThread.UI, actionName = "restorePurchases", isAutofinish = false)
+    private void restorePurchases(CallbackContext callbackContext) {
         CommonKt.restorePurchases(getOnResult(callbackContext));
     }
 
@@ -146,8 +146,8 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         CommonKt.logOut(getOnResult(callbackContext));
     }
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "getPurchaserInfo", isAutofinish = false)
-    private void getPurchaserInfo(CallbackContext callbackContext) {
+    @PluginAction(thread = ExecutionThread.UI, actionName = "getCustomerInfo", isAutofinish = false)
+    private void getCustomerInfo(CallbackContext callbackContext) {
         CommonKt.getCustomerInfo(getOnResult(callbackContext));
     }
 
@@ -191,8 +191,8 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success(convertMapToJson(map));
     }
     
-    @PluginAction(thread = ExecutionThread.WORKER, actionName = "invalidatePurchaserInfoCache")
-    private void invalidatePurchaserInfoCache(CallbackContext callbackContext) {
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "invalidateCustomerInfoCache")
+    private void invalidateCustomerInfoCache(CallbackContext callbackContext) {
         CommonKt.invalidateCustomerInfoCache();
         callbackContext.success();
     }

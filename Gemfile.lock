@@ -17,10 +17,11 @@ GEM
       rexml (~> 3.2.4)
 
 PLATFORMS
+  arm64-darwin-20
   arm64-darwin-21
 
 DEPENDENCIES
   xcodeproj
 
 BUNDLED WITH
-   2.2.32
+   2.3.17

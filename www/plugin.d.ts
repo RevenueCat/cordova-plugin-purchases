@@ -215,7 +215,7 @@ export interface PurchasesTransaction {
      */
     readonly purchaseDate: string;
 }
-export interface PurchaserInfo {
+export interface CustomerInfo {
     /**
      * Entitlements attached to this purchaser info
      */
@@ -455,9 +455,9 @@ export interface IntroEligibility {
  */
 export interface LogInResult {
     /**
-     * The Purchaser Info for the user.
+     * The Customer Info for the user.
      */
-    readonly purchaserInfo: PurchaserInfo;
+    readonly customerInfo: CustomerInfo;
     /**
      * True if the call resulted in a new user getting created in the RevenueCat backend.
      */
@@ -559,16 +559,16 @@ declare class Purchases {
      * Make a purchase
      *
      * @param {string} productIdentifier The product identifier of the product you want to purchase.
-     * @param {function(string, PurchaserInfo):void} callback Callback triggered after a successful purchase.
+     * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchase.
      * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error or when the user cancels the purchase.
      * If user cancelled, userCancelled will be true
      * @param {UpgradeInfo} upgradeInfo Android only. Optional UpgradeInfo you wish to upgrade from containing the oldSKU
      * and the optional prorationMode.
      * @param {PURCHASE_TYPE} type Optional type of product, can be inapp or subs. Subs by default
      */
-    static purchaseProduct(productIdentifier: string, callback: ({ productIdentifier, purchaserInfo, }: {
+    static purchaseProduct(productIdentifier: string, callback: ({ productIdentifier, customerInfo, }: {
         productIdentifier: string;
-        purchaserInfo: PurchaserInfo;
+        customerInfo: CustomerInfo;
     }) => void, errorCallback: ({ error, userCancelled, }: {
         error: PurchasesError;
         userCancelled: boolean;
@@ -577,26 +577,26 @@ declare class Purchases {
      * Make a purchase
      *
      * @param {PurchasesPackage} aPackage The Package you wish to purchase. You can get the Packages by calling getOfferings
-     * @param {function(string, PurchaserInfo):void} callback Callback triggered after a successful purchase.
+     * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchase.
      * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error or when the user cancels the purchase.
      * If user cancelled, userCancelled will be true
      * @param {UpgradeInfo} upgradeInfo Android only. Optional UpgradeInfo you wish to upgrade from containing the oldSKU
      * and the optional prorationMode.
      */
-    static purchasePackage(aPackage: PurchasesPackage, callback: ({ productIdentifier, purchaserInfo, }: {
+    static purchasePackage(aPackage: PurchasesPackage, callback: ({ productIdentifier, customerInfo, }: {
         productIdentifier: string;
-        purchaserInfo: PurchaserInfo;
+        customerInfo: CustomerInfo;
     }) => void, errorCallback: ({ error, userCancelled, }: {
         error: PurchasesError;
         userCancelled: boolean;
     }) => void, upgradeInfo?: UpgradeInfo | null): void;
     /**
      * Restores a user's previous purchases and links their appUserIDs to any user's also using those purchases.
-     * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after restoring transactions.
+     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after restoring transactions.
      * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem restoring the user transactions. This gets normally triggered if there
      * is an error retrieving the new purchaser info for the new user or the user cancelled the restore
      */
-    static restoreTransactions(callback: (purchaserInfo: PurchaserInfo) => void, errorCallback: (error: PurchasesError) => void): void;
+    static restorePurchases(callback: (customerInfo: CustomerInfo) => void, errorCallback: (error: PurchasesError) => void): void;
     /**
      * Get the appUserID that is currently in placed in the SDK
      * @param {function(string):void} callback Callback that will receive the current appUserID
@@ -606,7 +606,7 @@ declare class Purchases {
      * This function will logIn the current user with an appUserID. Typically this would be used after a log in
      * to identify a user without calling configure.
      * @param {String} appUserID The appUserID that should be linked to the currently user
-     * @param {function(LogInResult):void} callback Callback that will receive an object that contains the purchaserInfo after logging in, as well as a boolean indicating
+     * @param {function(LogInResult):void} callback Callback that will receive an object that contains the customerInfo after logging in, as well as a boolean indicating
      * whether the user has just been created for the first time in the RevenueCat backend.
      * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem logging in.
      */
@@ -614,44 +614,44 @@ declare class Purchases {
     /**
      * Logs out the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
      * If the current user is already anonymous, this will produce a PurchasesError.
-     * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after resetting
+     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after resetting
      * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is an error when logging out.
      * This could happen for example if logOut is called but the current user is anonymous.
      */
-    static logOut(callback: (purchaserInfo: PurchaserInfo) => void, errorCallback: (error: PurchasesError) => void): void;
+    static logOut(callback: (customerInfo: CustomerInfo) => void, errorCallback: (error: PurchasesError) => void): void;
     /**
      * @deprecated, use logIn instead.
      * This function will alias two appUserIDs together.
      * @param {string} newAppUserID The new appUserID that should be linked to the currently identified appUserID. Needs to be a string.
-     * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after creating the alias
+     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after creating the alias
      * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem creating the alias. This gets normally triggered if there
      * is an error retrieving the new purchaser info for the new user or there is an error creating the alias.
      */
-    static createAlias(newAppUserID: string, callback: (purchaserInfo: PurchaserInfo) => void, errorCallback: (error: PurchasesError) => void): void;
+    static createAlias(newAppUserID: string, callback: (customerInfo: CustomerInfo) => void, errorCallback: (error: PurchasesError) => void): void;
     /**
      * @deprecated, use logIn instead.
      * This function will identify the current user with an appUserID. Typically this would be used after a logout to identify a new user without calling configure
      * @param {string} newAppUserID The appUserID that should be linked to the currently user
-     * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after identifying.
+     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after identifying.
      * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem identifying the new user. This gets normally triggered if there
      * is an error retrieving the new purchaser info for the new user.
      */
-    static identify(newAppUserID: string, callback: (purchaserInfo: PurchaserInfo) => void, errorCallback: (error: PurchasesError) => void): void;
+    static identify(newAppUserID: string, callback: (customerInfo: CustomerInfo) => void, errorCallback: (error: PurchasesError) => void): void;
     /**
      * @deprecated, use logOut instead.
      * Resets the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
-     * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after resetting
+     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after resetting
      * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem resetting the SDK. This gets normally triggered if there
      * is an error retrieving the new purchaser info for the new user.
      */
-    static reset(callback: (purchaserInfo: PurchaserInfo) => void, errorCallback: (error: PurchasesError) => void): void;
+    static reset(callback: (customerInfo: CustomerInfo) => void, errorCallback: (error: PurchasesError) => void): void;
     /**
-     * Gets the current purchaser info. This call will return the cached purchaser info unless the cache is stale, in which case,
+     * Gets the current customer info. This call will return the cached customer info unless the cache is stale, in which case,
      * it will make a network call to retrieve it from the servers.
-     * @param {function(PurchaserInfo):void} callback Callback that will receive the purchaser info
-     * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem retrieving the purchaser info
+     * @param {function(CustomerInfo):void} callback Callback that will receive the purchaser info
+     * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem retrieving the customer info
      */
-    static getPurchaserInfo(callback: (purchaserInfo: PurchaserInfo) => void, errorCallback: (error: PurchasesError) => void): void;
+    static getCustomerInfo(callback: (customerInfo: CustomerInfo) => void, errorCallback: (error: PurchasesError) => void): void;
     /**
      * Enables/Disables debugs logs
      * @param {boolean} enabled Enable or not debug logs
@@ -715,16 +715,16 @@ declare class Purchases {
      */
     static removeShouldPurchasePromoProductListener(listenerToRemove: ShouldPurchasePromoProductListener): boolean;
     /**
-     * Invalidates the cache for purchaser information.
+     * Invalidates the cache for customer information.
      *
      * Most apps will not need to use this method; invalidating the cache can leave your app in an invalid state.
-     * Refer to https://docs.revenuecat.com/docs/purchaserinfo#section-get-user-information for more information on
+     * Refer to https://docs.revenuecat.com/docs/customer-info#section-get-user-information for more information on
      * using the cache properly.
      *
      * This is useful for cases where purchaser information might have been updated outside of the
      * app, like if a promotional subscription is granted through the RevenueCat dashboard.
      */
-    static invalidatePurchaserInfoCache(): void;
+    static invalidateCustomerInfoCache(): void;
     /**
      * iOS only. Presents a code redemption sheet, useful for redeeming offer codes
      * Refer to https://docs.revenuecat.com/docs/ios-subscription-offers#offer-codes for more information on how

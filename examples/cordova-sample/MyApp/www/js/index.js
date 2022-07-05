@@ -82,6 +82,7 @@ const app = {
         }
     );
 
+    // TODO: Used during development of next major, remove before release.
     Purchases.invalidateCustomerInfoCache();
 
     Purchases.getOfferings(

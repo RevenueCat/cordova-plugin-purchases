@@ -163,32 +163,6 @@ var Purchases = /** @class */ (function () {
         this.setupShouldPurchasePromoProductCallback();
     };
     /**
-     * @deprecated, configure behavior through the RevenueCat dashboard instead.
-     * Set this to true if you are passing in an appUserID but it is anonymous, this is true by default if you didn't pass an appUserID
-     * If a user tries to purchase a product that is active on the current app store account, we will treat it as a restore and alias
-     * the new ID with the previous id.
-     * @param {boolean} allowSharing true if enabled, false to disabled
-     */
-    Purchases.setAllowSharingStoreAccount = function (allowSharing) {
-        window.cordova.exec(null, null, PLUGIN_NAME, "setAllowSharingStoreAccount", [allowSharing]);
-    };
-    /**
-     * Add a dict of attribution information
-     *
-     * @deprecated Use the set<NetworkId> functions instead.
-     *
-     * @param {object} data Attribution data from any of the attribution networks in Purchases.ATTRIBUTION_NETWORKS
-     * @param {ATTRIBUTION_NETWORK} network Which network, see Purchases.ATTRIBUTION_NETWORK
-     * @param {string?} networkUserId An optional unique id for identifying the user. Needs to be a string.
-     */
-    Purchases.addAttributionData = function (data, network, networkUserId) {
-        window.cordova.exec(null, null, PLUGIN_NAME, "addAttributionData", [
-            data,
-            network,
-            networkUserId,
-        ]);
-    };
-    /**
      * Gets the Offerings configured in the RevenueCat dashboard
      * @param {function(PurchasesOfferings):void} callback Callback triggered after a successful getOfferings call.
      * @param {function(PurchasesError):void} errorCallback Callback triggered after an error or when retrieving offerings.
@@ -199,7 +173,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Fetch the product info
      * @param {[string]} productIdentifiers Array of product identifiers
-     * @param {function(PurchasesProduct[]):void} callback Callback triggered after a successful getProducts call. It will receive an array of product objects.
+     * @param {function(PurchasesStoreProduct[]):void} callback Callback triggered after a successful getProducts call. It will receive an array of product objects.
      * @param {function(PurchasesError):void} errorCallback Callback triggered after an error or when retrieving products
      * @param {PURCHASE_TYPE} type Optional type of products to fetch, can be inapp or subs. Subs by default
      */
@@ -305,50 +279,6 @@ var Purchases = /** @class */ (function () {
      */
     Purchases.logOut = function (callback, errorCallback) {
         window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "logOut", []);
-    };
-    /**
-     * @deprecated, use logIn instead.
-     * This function will alias two appUserIDs together.
-     * @param {string} newAppUserID The new appUserID that should be linked to the currently identified appUserID. Needs to be a string.
-     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after creating the alias
-     * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem creating the alias. This gets normally triggered if there
-     * is an error retrieving the new purchaser info for the new user or there is an error creating the alias.
-     */
-    Purchases.createAlias = function (newAppUserID, callback, errorCallback) {
-        // noinspection SuspiciousTypeOfGuard
-        if (typeof newAppUserID !== "string" || newAppUserID === "") {
-            throw new Error("newAppUserID is a required string and cannot be empty");
-        }
-        window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "createAlias", [
-            newAppUserID,
-        ]);
-    };
-    /**
-     * @deprecated, use logIn instead.
-     * This function will identify the current user with an appUserID. Typically this would be used after a logout to identify a new user without calling configure
-     * @param {string} newAppUserID The appUserID that should be linked to the currently user
-     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after identifying.
-     * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem identifying the new user. This gets normally triggered if there
-     * is an error retrieving the new purchaser info for the new user.
-     */
-    Purchases.identify = function (newAppUserID, callback, errorCallback) {
-        // noinspection SuspiciousTypeOfGuard
-        if (typeof newAppUserID !== "string" || newAppUserID === "") {
-            throw new Error("newAppUserID is a required string and cannot be empty");
-        }
-        window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "identify", [
-            newAppUserID,
-        ]);
-    };
-    /**
-     * @deprecated, use logOut instead.
-     * Resets the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
-     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after resetting
-     * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem resetting the SDK. This gets normally triggered if there
-     * is an error retrieving the new purchaser info for the new user.
-     */
-    Purchases.reset = function (callback, errorCallback) {
-        window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "reset", []);
     };
     /**
      * Gets the current customer info. This call will return the cached customer info unless the cache is stale, in which case,
@@ -653,14 +583,6 @@ var Purchases = /** @class */ (function () {
     Purchases.getMakeDeferredPurchaseFunction = function (callbackID) {
         return function () { return window.cordova.exec(null, null, PLUGIN_NAME, "makeDeferredPurchase", [callbackID]); };
     };
-    /**
-     * @deprecated use ATTRIBUTION_NETWORK instead
-     *
-     * Enum for attribution networks
-     * @readonly
-     * @enum {Number}
-     */
-    Purchases.ATTRIBUTION_NETWORKS = ATTRIBUTION_NETWORK;
     /**
      * Enum for attribution networks
      * @readonly

@@ -53,12 +53,6 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.sendPluginResult(result);
     }
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "setAllowSharingStoreAccount")
-    public void setAllowSharingStoreAccount(boolean allowSharingStoreAccount, CallbackContext callbackContext) {
-        CommonKt.setAllowSharingAppStoreAccount(allowSharingStoreAccount);
-        callbackContext.success();
-    }
-
     @PluginAction(thread = ExecutionThread.UI, actionName = "getOfferings", isAutofinish = false)
     private void getOfferings(CallbackContext callbackContext) {
         CommonKt.getOfferings(getOnResult(callbackContext));

@@ -10,24 +10,6 @@ import PurchasesHybridCommon
 
 @objc public extension CDVPurchasesPlugin {
 
-    @objc(addAttributionData:)
-    func addAttributionData(command: CDVInvokedUrlCommand) {
-        let network = command.arguments[1] as? Int
-        let networkUserId = command.arguments[2] as? String
-
-        guard let data = command.arguments[0] as? [String: Any],
-              let network = network,
-              let networkUserId = networkUserId else {
-            self.sendBadParametersFor(command: command,
-                                      parametersNamed: ["data", "network", "networkUserId"],
-                                      expectedTypes: [NSDictionary.self, Int.self, String.self])
-            return
-        }
-
-        CommonFunctionality.addAttributionData(data, network: network, networkUserId: networkUserId)
-        self.sendOKFor(command: command)
-    }
-
     @objc(setAutomaticAppleSearchAdsAttributionCollection:)
     func setAutomaticAppleSearchAdsAttributionCollection(command: CDVInvokedUrlCommand) {
         guard let automaticCollection = command.arguments[0] as? Bool else {

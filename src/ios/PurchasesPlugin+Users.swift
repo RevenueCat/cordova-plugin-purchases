@@ -48,12 +48,4 @@ import PurchasesHybridCommon
         self.sendOKFor(command: command)
     }
 
-    @objc(setAllowSharingStoreAccount:)
-    func setAllowSharingStoreAccount(command: CDVInvokedUrlCommand) {
-        let allowSharingStoreAccount = command.arguments[0] as? Bool ?? false
-
-        CommonFunctionality.setAllowSharingStoreAccount(allowSharingStoreAccount)
-        self.sendOKFor(command: command)
-    }
-
 }

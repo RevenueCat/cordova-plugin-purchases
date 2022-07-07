@@ -123,7 +123,11 @@ export declare enum INTRO_ELIGIBILITY_STATUS {
     /**
      * The user is eligible for a free trial or intro pricing for this product.
      */
-    INTRO_ELIGIBILITY_STATUS_ELIGIBLE = 2
+    INTRO_ELIGIBILITY_STATUS_ELIGIBLE = 2,
+    /**
+     * There is no free trial or intro pricing for this product.
+     */
+    INTRO_ELIGIBILITY_STATUS_NO_INTRO_OFFER_EXISTS = 3
 }
 /**
  * The EntitlementInfo object gives you access to all of the information about the status of a user entitlement.
@@ -200,16 +204,31 @@ export interface PurchasesEntitlementInfos {
     readonly active: {
         [key: string]: PurchasesEntitlementInfo;
     };
+    /**
+     * Dictionary of active ``EntitlementInfo`` objects keyed by their identifiers.
+     * @ Note: When queried from the sandbox environment, it only returns entitlements active in sandbox.
+     * When queried from production, this only returns entitlements active in production.
+     */
+    readonly activeInCurrentEnvironment: {
+        [key: string]: PurchasesEntitlementInfo;
+    };
+    /**
+     * Dictionary of active ``EntitlementInfo`` objects keyed by their identifiers.
+     * @note: these can be active on any environment.
+     */
+    readonly activeInAnyEnvironment: {
+        [key: string]: PurchasesEntitlementInfo;
+    };
 }
-export interface PurchasesTransaction {
+export interface PurchasesStoreTransaction {
     /**
      * RevenueCat Id associated to the transaction.
      */
-    readonly revenueCatId: string;
+    readonly transactionIdentifier: string;
     /**
      * Product Id associated with the transaction.
      */
-    readonly productId: string;
+    readonly productIdentifier: string;
     /**
      * Purchase date of the transaction in ISO 8601 format.
      */
@@ -232,7 +251,7 @@ export interface CustomerInfo {
      * Returns all the non-subscription purchases a user has made.
      * The purchases are ordered by purchase date in ascending order.
      */
-    readonly nonSubscriptionTransactions: PurchasesTransaction[];
+    readonly nonSubscriptionTransactions: PurchasesStoreTransaction[];
     /**
      * The latest expiration date of all purchased skus
      */
@@ -284,7 +303,7 @@ export interface CustomerInfo {
      */
     readonly managementURL: string | null;
 }
-export interface PurchasesProduct {
+export interface PurchasesStoreProduct {
     /**
      * Product Id.
      */
@@ -350,7 +369,7 @@ export interface PurchasesPackage {
     /**
      * Product assigned to this package.
      */
-    readonly product: PurchasesProduct;
+    readonly product: PurchasesStoreProduct;
     /**
      * Offering this package belongs to.
      */
@@ -466,14 +485,6 @@ export interface LogInResult {
 export declare type ShouldPurchasePromoProductListener = (deferredPurchase: () => void) => void;
 declare class Purchases {
     /**
-     * @deprecated use ATTRIBUTION_NETWORK instead
-     *
-     * Enum for attribution networks
-     * @readonly
-     * @enum {Number}
-     */
-    static ATTRIBUTION_NETWORKS: typeof ATTRIBUTION_NETWORK;
-    /**
      * Enum for attribution networks
      * @readonly
      * @enum {Number}
@@ -522,26 +533,6 @@ declare class Purchases {
      */
     static setup(apiKey: string, appUserID?: string | null, observerMode?: boolean, userDefaultsSuiteName?: string): void;
     /**
-     * @deprecated, configure behavior through the RevenueCat dashboard instead.
-     * Set this to true if you are passing in an appUserID but it is anonymous, this is true by default if you didn't pass an appUserID
-     * If a user tries to purchase a product that is active on the current app store account, we will treat it as a restore and alias
-     * the new ID with the previous id.
-     * @param {boolean} allowSharing true if enabled, false to disabled
-     */
-    static setAllowSharingStoreAccount(allowSharing: boolean): void;
-    /**
-     * Add a dict of attribution information
-     *
-     * @deprecated Use the set<NetworkId> functions instead.
-     *
-     * @param {object} data Attribution data from any of the attribution networks in Purchases.ATTRIBUTION_NETWORKS
-     * @param {ATTRIBUTION_NETWORK} network Which network, see Purchases.ATTRIBUTION_NETWORK
-     * @param {string?} networkUserId An optional unique id for identifying the user. Needs to be a string.
-     */
-    static addAttributionData(data: {
-        [key: string]: any;
-    }, network: ATTRIBUTION_NETWORK, networkUserId?: string): void;
-    /**
      * Gets the Offerings configured in the RevenueCat dashboard
      * @param {function(PurchasesOfferings):void} callback Callback triggered after a successful getOfferings call.
      * @param {function(PurchasesError):void} errorCallback Callback triggered after an error or when retrieving offerings.
@@ -550,11 +541,11 @@ declare class Purchases {
     /**
      * Fetch the product info
      * @param {[string]} productIdentifiers Array of product identifiers
-     * @param {function(PurchasesProduct[]):void} callback Callback triggered after a successful getProducts call. It will receive an array of product objects.
+     * @param {function(PurchasesStoreProduct[]):void} callback Callback triggered after a successful getProducts call. It will receive an array of product objects.
      * @param {function(PurchasesError):void} errorCallback Callback triggered after an error or when retrieving products
      * @param {PURCHASE_TYPE} type Optional type of products to fetch, can be inapp or subs. Subs by default
      */
-    static getProducts(productIdentifiers: string[], callback: (products: PurchasesProduct[]) => void, errorCallback: (error: PurchasesError) => void, type?: PURCHASE_TYPE): void;
+    static getProducts(productIdentifiers: string[], callback: (products: PurchasesStoreProduct[]) => void, errorCallback: (error: PurchasesError) => void, type?: PURCHASE_TYPE): void;
     /**
      * Make a purchase
      *
@@ -619,32 +610,6 @@ declare class Purchases {
      * This could happen for example if logOut is called but the current user is anonymous.
      */
     static logOut(callback: (customerInfo: CustomerInfo) => void, errorCallback: (error: PurchasesError) => void): void;
-    /**
-     * @deprecated, use logIn instead.
-     * This function will alias two appUserIDs together.
-     * @param {string} newAppUserID The new appUserID that should be linked to the currently identified appUserID. Needs to be a string.
-     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after creating the alias
-     * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem creating the alias. This gets normally triggered if there
-     * is an error retrieving the new purchaser info for the new user or there is an error creating the alias.
-     */
-    static createAlias(newAppUserID: string, callback: (customerInfo: CustomerInfo) => void, errorCallback: (error: PurchasesError) => void): void;
-    /**
-     * @deprecated, use logIn instead.
-     * This function will identify the current user with an appUserID. Typically this would be used after a logout to identify a new user without calling configure
-     * @param {string} newAppUserID The appUserID that should be linked to the currently user
-     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after identifying.
-     * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem identifying the new user. This gets normally triggered if there
-     * is an error retrieving the new purchaser info for the new user.
-     */
-    static identify(newAppUserID: string, callback: (customerInfo: CustomerInfo) => void, errorCallback: (error: PurchasesError) => void): void;
-    /**
-     * @deprecated, use logOut instead.
-     * Resets the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
-     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after resetting
-     * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem resetting the SDK. This gets normally triggered if there
-     * is an error retrieving the new purchaser info for the new user.
-     */
-    static reset(callback: (customerInfo: CustomerInfo) => void, errorCallback: (error: PurchasesError) => void): void;
     /**
      * Gets the current customer info. This call will return the cached customer info unless the cache is stale, in which case,
      * it will make a network call to retrieve it from the servers.

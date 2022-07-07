@@ -139,6 +139,10 @@ var INTRO_ELIGIBILITY_STATUS;
      * The user is eligible for a free trial or intro pricing for this product.
      */
     INTRO_ELIGIBILITY_STATUS[INTRO_ELIGIBILITY_STATUS["INTRO_ELIGIBILITY_STATUS_ELIGIBLE"] = 2] = "INTRO_ELIGIBILITY_STATUS_ELIGIBLE";
+    /**
+     * There is no free trial or intro pricing for this product.
+     */
+    INTRO_ELIGIBILITY_STATUS[INTRO_ELIGIBILITY_STATUS["INTRO_ELIGIBILITY_STATUS_NO_INTRO_OFFER_EXISTS"] = 3] = "INTRO_ELIGIBILITY_STATUS_NO_INTRO_OFFER_EXISTS";
 })(INTRO_ELIGIBILITY_STATUS = exports.INTRO_ELIGIBILITY_STATUS || (exports.INTRO_ELIGIBILITY_STATUS = {}));
 var shouldPurchasePromoProductListeners = [];
 var Purchases = /** @class */ (function () {

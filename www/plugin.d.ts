@@ -123,7 +123,11 @@ export declare enum INTRO_ELIGIBILITY_STATUS {
     /**
      * The user is eligible for a free trial or intro pricing for this product.
      */
-    INTRO_ELIGIBILITY_STATUS_ELIGIBLE = 2
+    INTRO_ELIGIBILITY_STATUS_ELIGIBLE = 2,
+    /**
+     * There is no free trial or intro pricing for this product.
+     */
+    INTRO_ELIGIBILITY_STATUS_NO_INTRO_OFFER_EXISTS = 3
 }
 /**
  * The EntitlementInfo object gives you access to all of the information about the status of a user entitlement.
@@ -203,17 +207,17 @@ export interface PurchasesEntitlementInfos {
     /**
      * Dictionary of active ``EntitlementInfo`` objects keyed by their identifiers.
      * @ Note: When queried from the sandbox environment, it only returns entitlements active in sandbox.
-     * When queried from production, this only returns entitlements active in production. 
+     * When queried from production, this only returns entitlements active in production.
      */
-    readonly activeInCurrentEnvironment: { 
-        [key: string]: PurchasesEntitlementInfo 
+    readonly activeInCurrentEnvironment: {
+        [key: string]: PurchasesEntitlementInfo;
     };
     /**
      * Dictionary of active ``EntitlementInfo`` objects keyed by their identifiers.
      * @note: these can be active on any environment.
      */
-    readonly activeInAnyEnvironment: { 
-        [key: string]: PurchasesEntitlementInfo 
+    readonly activeInAnyEnvironment: {
+        [key: string]: PurchasesEntitlementInfo;
     };
 }
 export interface PurchasesStoreTransaction {

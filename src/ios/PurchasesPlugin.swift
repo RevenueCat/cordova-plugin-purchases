@@ -71,7 +71,7 @@ extension CDVPurchasesPlugin {
     }
 
     var platformFlavorVersion: String {
-        return "3.0.1-beta"
+        return "3.0.0-beta"
     }
 
 }

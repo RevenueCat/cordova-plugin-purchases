@@ -9,8 +9,11 @@ gem install bundler
 
 2. Prepare workspace with API key and StoreKit config file
 
+Pass `ios`, `android`, or `all`, to control which projects get configured, saving you a few seconds of time if you need to `setup.sh` a lot.
+Alternatively, you can leave this arg off and it will default to `all`
+
 ```bash
-sh bin/setup.sh <your_api_key>
+sh bin/setup.sh <your_api_key> [ios|android|all]
 ```
 
 3. Coreutils

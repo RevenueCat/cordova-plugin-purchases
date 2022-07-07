@@ -28,6 +28,11 @@
             </feature>
         </config-file>
         <source-file src="src/ios/PurchasesPlugin.swift" />
+        <source-file src="src/ios/PurchasesPlugin+APIHelpers.swift" />
+        <source-file src="src/ios/PurchasesPlugin+Attribution.swift" />
+        <source-file src="src/ios/PurchasesPlugin+PurchasesDelegate.swift" />
+        <source-file src="src/ios/PurchasesPlugin+Purchasing.swift" />
+        <source-file src="src/ios/PurchasesPlugin+Users.swift" />
         <podspec>
             <config>
                 <source url="https://github.com/CocoaPods/Specs.git"/>

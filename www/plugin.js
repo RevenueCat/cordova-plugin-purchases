@@ -243,9 +243,9 @@ var Purchases = /** @class */ (function () {
     };
     /**
      * Restores a user's previous purchases and links their appUserIDs to any user's also using those purchases.
-     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after restoring transactions.
+     * @param {function(CustomerInfo):void} callback Callback that will receive the new customer info after restoring transactions.
      * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem restoring the user transactions. This gets normally triggered if there
-     * is an error retrieving the new purchaser info for the new user or the user cancelled the restore
+     * is an error retrieving the new customer info for the new user or the user cancelled the restore
      */
     Purchases.restorePurchases = function (callback, errorCallback) {
         window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "restorePurchases", []);
@@ -277,7 +277,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Logs out the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
      * If the current user is already anonymous, this will produce a PurchasesError.
-     * @param {function(CustomerInfo):void} callback Callback that will receive the new purchaser info after resetting
+     * @param {function(CustomerInfo):void} callback Callback that will receive the new customer info after resetting
      * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is an error when logging out.
      * This could happen for example if logOut is called but the current user is anonymous.
      */
@@ -287,7 +287,7 @@ var Purchases = /** @class */ (function () {
     /**
      * Gets the current customer info. This call will return the cached customer info unless the cache is stale, in which case,
      * it will make a network call to retrieve it from the servers.
-     * @param {function(CustomerInfo):void} callback Callback that will receive the purchaser info
+     * @param {function(CustomerInfo):void} callback Callback that will receive the customer info
      * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem retrieving the customer info
      */
     Purchases.getCustomerInfo = function (callback, errorCallback) {
@@ -387,7 +387,7 @@ var Purchases = /** @class */ (function () {
      * Refer to https://docs.revenuecat.com/docs/customer-info#section-get-user-information for more information on
      * using the cache properly.
      *
-     * This is useful for cases where purchaser information might have been updated outside of the
+     * This is useful for cases where customer information might have been updated outside of the
      * app, like if a promotional subscription is granted through the RevenueCat dashboard.
      */
     Purchases.invalidateCustomerInfoCache = function () {

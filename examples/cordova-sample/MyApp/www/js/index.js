@@ -82,9 +82,6 @@ const app = {
         }
     );
 
-    // TODO: Used during development of next major, remove before release.
-    Purchases.invalidateCustomerInfoCache();
-
     Purchases.getOfferings(
       offerings => {
         Purchases.checkTrialOrIntroductoryPriceEligibility([offerings.current.lifetime.product.identifier, "some_offering"],

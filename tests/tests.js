@@ -21,7 +21,7 @@ exports.defineAutoTests = function() {
       );
     });
 
-    it("should get purchaser info", function(done) {
+    it("should get customer info", function(done) {
       Purchases.getCustomerInfo(
         info => {
           expect(info).toBeTruthy();

@@ -44,7 +44,10 @@ commands:
   npm-ios-dependencies:
     description: "Install all ios global and local npm dependencies"
     steps:
-      - run: npm install -g ios-deploy
+      - run: 
+        name: install ios dependencies
+        command: npm install -g ios-deploy
+        no_output_timeout: 30m
       - run: npm install --legacy-peer-deps
     
   replace-api-key-linux:
@@ -128,7 +131,6 @@ jobs:
       - npm-ios-dependencies
       - replace-api-key
       - run: npm run test:ios
-          no_output_timeout: 30m
 
   runtest:
     docker:

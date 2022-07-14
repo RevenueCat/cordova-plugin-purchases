@@ -7,7 +7,7 @@ release-tags-and-branches: &release-tags-and-branches
 
 version: 2.1
 orbs:
-  android: circleci/android@1.0
+  android: circleci/android@2.1.2
 
 commands:
   android-sdk-dependencies:

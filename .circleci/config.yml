@@ -45,9 +45,9 @@ commands:
     description: "Install all ios global and local npm dependencies"
     steps:
       - run: 
-        name: install ios dependencies
-        command: npm install -g ios-deploy
-        no_output_timeout: 30m
+          name: install ios dependencies
+          command: npm install -g ios-deploy
+          no_output_timeout: 30m
       - run: npm install --legacy-peer-deps
     
   replace-api-key-linux:

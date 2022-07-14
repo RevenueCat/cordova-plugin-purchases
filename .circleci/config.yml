@@ -157,15 +157,15 @@ jobs:
 
 workflows:
   version: 2
-  build-test:
-    jobs:
-      - runtest
+  # build-test:
+  #   jobs:
+  #     - runtest
   
   android-integration-test:
     jobs:
       - android-integration-test: *release-tags-and-branches
   
-  ios-integration-test:
-    jobs:
-      - ios-integration-test: *release-tags-and-branches
+  # ios-integration-test:
+  #   jobs:
+  #     - ios-integration-test: *release-tags-and-branches
 

@@ -94,6 +94,7 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: large
+      tag: 2021.10.1
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
@@ -111,7 +112,7 @@ jobs:
       - npm-dependencies
       - replace-api-key-linux
       - run: sudo apt-get update
-      - run: sudo apt-get install gradle
+      - run: sudo apt-get install gradle@7.3.3
       - run: rm -rf ~/.gradle/caches/
       - run: npm run test:android
     environment:

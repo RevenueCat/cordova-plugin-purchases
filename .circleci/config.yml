@@ -113,12 +113,12 @@ jobs:
       - run: npm run test:android
     environment:
       JVM_OPTS: -Xmx6g
-      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 --warning-mode all"
 
   ios-integration-test:
     description: "Run iOS integration tests for Cordova"
     macos:
-      xcode: 13.1.0
+      xcode: 13.4.1
     steps:
       - checkout
       - run:

@@ -26,10 +26,10 @@ common_configure() {
   if [ $PLATFORM == "ios" ]; then
     cordova platform add ios
   elif [ $PLATFORM == "android" ]; then
-    cordova platform add android
+    cordova platform add android@11.0.0
   else
     cordova platform add ios
-    cordova platform add android
+    cordova platform add android@11.0.0
   fi
 
   cordova plugin remove cordova-plugin-purchases

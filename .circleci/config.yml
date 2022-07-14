@@ -111,12 +111,12 @@ jobs:
       - npm-dependencies
       - replace-api-key-linux
       - run: sudo apt-get update
-      - run: sudo apt-get install gradle=4.4.1-10
+      - run: sudo apt-get install gradle
       - run: rm -rf ~/.gradle/caches/
       - run: npm run test:android
     environment:
       JVM_OPTS: -Xmx6g
-      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.warning.mode=all"
 
   ios-integration-test:
     description: "Run iOS integration tests for Cordova"

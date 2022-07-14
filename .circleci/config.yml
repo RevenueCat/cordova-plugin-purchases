@@ -38,7 +38,7 @@ commands:
     description: "Install all global and local npm dependencies"
     steps:
       - run: npm install -g cordova
-      - run: npm install -g github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
+      - run: npm install -g github:apache/cordova-paramedic#955f6fbfb060173430b4e621788699d9c9ef5891
       - run: npm install --legacy-peer-deps
 
   npm-ios-dependencies:
@@ -80,12 +80,12 @@ commands:
       - run:
           name: Install node 16.13.1
           command: |
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
             echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> $BASH_ENV
             echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
-      - run: nvm install 16.13.1
-      - run: nvm use 16.13.1
-      - run: echo 'nvm use 16.13.1' >> $BASH_ENV
+      - run: nvm install 16.16.0
+      - run: nvm use 16.16.0
+      - run: echo 'nvm use 16.16.0' >> $BASH_ENV
       - run: node -v
 
 jobs:

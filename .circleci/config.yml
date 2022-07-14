@@ -128,6 +128,7 @@ jobs:
       - npm-ios-dependencies
       - replace-api-key
       - run: npm run test:ios
+          no_output_timeout: 30m
 
   runtest:
     docker:

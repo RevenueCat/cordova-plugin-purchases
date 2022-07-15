@@ -113,7 +113,7 @@ jobs:
       - replace-api-key-linux
       - run: sdk install gradle 7.5
       - run: rm -rf ~/.gradle/caches/
-      - run: npm run test:android
+      - run: npm run test:android --loglevel=error
     environment:
       JVM_OPTS: -Xmx6g
       GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.warning.mode=all"

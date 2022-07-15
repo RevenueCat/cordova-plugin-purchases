@@ -116,7 +116,7 @@ jobs:
       - run: npm run test:android --loglevel=error
     environment:
       JVM_OPTS: -Xmx6g
-      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.warning.mode=all"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.warning.mode=error"
 
   ios-integration-test:
     description: "Run iOS integration tests for Cordova"

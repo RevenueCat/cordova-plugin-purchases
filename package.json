@@ -32,7 +32,7 @@
   "author": "RevenueCat, Inc.",
   "license": "MIT",
   "dependencies": {
-    "cordova-annotated-plugin-android": "1.0.4"
+    "cordova-annotated-plugin-android": "^1.0.4"
   },
   "devDependencies": {
     "@types/jest": "^27.1.5",

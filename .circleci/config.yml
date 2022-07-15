@@ -44,10 +44,7 @@ commands:
   npm-ios-dependencies:
     description: "Install all ios global and local npm dependencies"
     steps:
-      - run: 
-          name: install ios dependencies
-          command: npm install -g ios-deploy
-          no_output_timeout: 30m
+      - run: npm install -g ios-deploy
       - run: npm install --legacy-peer-deps
     
   replace-api-key-linux:
@@ -110,8 +107,7 @@ jobs:
       - install-nvm
       - npm-dependencies
       - replace-api-key-linux
-      - run: sudo apt-get update
-      - run: sudo apt-get install gradle=4.4.1-10
+      - run: sdk install gradle 7.5
       - run: rm -rf ~/.gradle/caches/
       - run: npm run test:android
     environment:

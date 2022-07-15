@@ -107,7 +107,6 @@ jobs:
       - install-nvm
       - npm-dependencies
       - replace-api-key-linux
-      - run: sudo apt-get update
       - run: sdk install gradle 7.5
       - run: rm -rf ~/.gradle/caches/
       - run: npm run test:android

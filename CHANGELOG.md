@@ -1,3 +1,29 @@
+## 3.0.0-rc.1
+### Updating plugin for the most recent RevenueCat frameworks released!
+#### StoreKit 2 support
+This version of the SDK automatically uses StoreKit 2 APIs under the hood only for APIs that the RevenueCat team has determined work better than StoreKit 1.
+
+#### New types and cleaned up naming
+New types that wrap native types from Apple, Google and Amazon, and we cleaned up the naming of other types and methods for a more consistent experience.
+
+### Removed APIs
+- `identify` and `createAlias` have been removed in favor of `logIn`.
+- `reset` has been removed in favor of `logOut`.
+- `getEntitlements` has been removed in favor of `getOfferings`.
+- `attributionKey` and `Purchases.addAttributionData` have been removed in favor of `set<NetworkID> methods`.
+
+### Renamed APIs
+**Note:** These still might change between `3.0.0-rc.x` and the final release of `3.0.0`
+
+| 2.x | 3.0.0 |
+| :-: | :-: |
+| `PurchaserInfo` | `CustomerInfo` |
+| `PurchasesTransaction` | `PurchasesStoreTransaction` |
+| `PurchasesProduct` | `PurchasesStoreProduct` |
+| `Purchases.RestoreTransactions` | `Purchases.restorePurchases` |
+| `Purchases.GetPaymentDiscount` | `Purchases.getPromotionalOffer` |
+| `Purchases.UpdatedPurchaserInfoListener` | `Purchases.updatedCustomerInfoListener` |
+
 ## 2.4.0
 
 - Bump`purchases-hybrid-common` to `1.10.0` [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/1.10.0)

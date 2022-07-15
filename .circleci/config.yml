@@ -7,7 +7,7 @@ release-tags-and-branches: &release-tags-and-branches
 
 version: 2.1
 orbs:
-  android: circleci/android@1.0
+  android: circleci/android@2.1.2
 
 commands:
   android-sdk-dependencies:
@@ -38,13 +38,16 @@ commands:
     description: "Install all global and local npm dependencies"
     steps:
       - run: npm install -g cordova
-      - run: npm install -g github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
+      - run: npm install -g github:apache/cordova-paramedic#955f6fbfb060173430b4e621788699d9c9ef5891
       - run: npm install --legacy-peer-deps
 
   npm-ios-dependencies:
     description: "Install all ios global and local npm dependencies"
     steps:
-      - run: npm install -g ios-deploy
+      - run: 
+          name: install ios dependencies
+          command: npm install -g ios-deploy
+          no_output_timeout: 30m
       - run: npm install --legacy-peer-deps
     
   replace-api-key-linux:
@@ -77,12 +80,12 @@ commands:
       - run:
           name: Install node 16.13.1
           command: |
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
             echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> $BASH_ENV
             echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
-      - run: nvm install 16.13.1
-      - run: nvm use 16.13.1
-      - run: echo 'nvm use 16.13.1' >> $BASH_ENV
+      - run: nvm install 16.16.0
+      - run: nvm use 16.16.0
+      - run: echo 'nvm use 16.16.0' >> $BASH_ENV
       - run: node -v
 
 jobs:
@@ -91,6 +94,7 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: large
+      tag: 2021.10.1
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
@@ -112,17 +116,17 @@ jobs:
       - run: npm run test:android
     environment:
       JVM_OPTS: -Xmx6g
-      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2 -Dorg.gradle.warning.mode=all"
 
   ios-integration-test:
     description: "Run iOS integration tests for Cordova"
     macos:
-      xcode: 13.1.0
+      xcode: 13.3.1
     steps:
       - checkout
       - run:
           name: Start simulator
-          command: xcrun instruments -w "iPhone 11 Pro (13.3) [" || true
+          command: xcrun instruments -w "iPhone 13 (15.4) [" || true
       - npm-dependencies
       - npm-ios-dependencies
       - replace-api-key
@@ -152,15 +156,15 @@ jobs:
 
 workflows:
   version: 2
-  build-test:
-    jobs:
-      - runtest
+  # build-test:
+  #   jobs:
+  #     - runtest
   
   android-integration-test:
     jobs:
       - android-integration-test: *release-tags-and-branches
   
-  ios-integration-test:
-    jobs:
-      - ios-integration-test: *release-tags-and-branches
+  # ios-integration-test:
+  #   jobs:
+  #     - ios-integration-test: *release-tags-and-branches
 

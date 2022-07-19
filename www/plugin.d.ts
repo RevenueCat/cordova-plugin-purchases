@@ -49,6 +49,13 @@ export declare enum BILLING_FEATURE {
      */
     PRICE_CHANGE_CONFIRMATION = 4
 }
+export interface PurchasesPromotionalOffer {
+    readonly identifier: string;
+    readonly keyIdentifier: string;
+    readonly nonce: string;
+    readonly signature: string;
+    readonly timestamp: number;
+}
 export declare enum PRORATION_MODE {
     UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY = 0,
     /**
@@ -303,6 +310,62 @@ export interface CustomerInfo {
      */
     readonly managementURL: string | null;
 }
+export interface PurchasesIntroPrice {
+    /**
+     * Price in the local currency.
+     */
+    readonly price: number;
+    /**
+     * Formatted price, including its currency sign, such as €3.99.
+     */
+    readonly priceString: string;
+    /**
+     * Number of subscription billing periods for which the user will be given the discount, such as 3.
+     */
+    readonly cycles: number;
+    /**
+     * Billing period of the discount, specified in ISO 8601 format.
+     */
+    readonly period: string;
+    /**
+     * Unit for the billing period of the discount, can be DAY, WEEK, MONTH or YEAR.
+     */
+    readonly periodUnit: string;
+    /**
+     * Number of units for the billing period of the discount.
+     */
+    readonly periodNumberOfUnits: number;
+}
+export interface PurchasesStoreProductDiscount {
+    /**
+     * Identifier of the discount.
+     */
+    readonly identifier: string;
+    /**
+     * Price in the local currency.
+     */
+    readonly price: number;
+    /**
+     * Formatted price, including its currency sign, such as €3.99.
+     */
+    readonly priceString: string;
+    /**
+     * Number of subscription billing periods for which the user will be given the discount, such as 3.
+     */
+    readonly cycles: number;
+    /**
+     * Billing period of the discount, specified in ISO 8601 format.
+     */
+    readonly period: string;
+    /**
+     * Unit for the billing period of the discount, can be DAY, WEEK, MONTH or YEAR.
+     */
+    readonly periodUnit: string;
+    /**
+     * Number of units for the billing period of the discount.
+     */
+    readonly periodNumberOfUnits: number;
+}
 export interface PurchasesStoreProduct {
     /**
      * Product Id.
@@ -329,29 +392,13 @@ export interface PurchasesStoreProduct {
      */
     readonly currency_code: string;
     /**
-     * Introductory price of a subscription in the local currency.
+     * Introductory price.
      */
-    readonly intro_price: number | null;
+    readonly intro_price: PurchasesIntroPrice | null;
     /**
-     * Formatted introductory price of a subscription, including its currency sign, such as €3.99.
+     * Collection of discount offers for a product. Null for Android.
      */
-    readonly intro_price_string: string | null;
-    /**
-     * Billing period of the introductory price, specified in ISO 8601 format.
-     */
-    readonly intro_price_period: string | null;
-    /**
-     * Number of subscription billing periods for which the user will be given the introductory price, such as 3.
-     */
-    readonly intro_price_cycles: number | null;
-    /**
-     * Unit for the billing period of the introductory price, can be DAY, WEEK, MONTH or YEAR.
-     */
-    readonly intro_price_period_unit: string | null;
-    /**
-     * Number of units for the billing period of the introductory price.
-     */
-    readonly intro_price_period_number_of_units: number | null;
+    readonly discounts: PurchasesStoreProductDiscount[] | null;
 }
 /**
  * Contains information about the product available for the user to purchase.

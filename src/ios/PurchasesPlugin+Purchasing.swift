@@ -16,8 +16,8 @@ import PurchasesHybridCommon
         CommonFunctionality.getOfferings(completion: self.responseCompletion(forCommand: command))
     }
 
-    @objc(getProductInfo:)
-    func getProductInfo(command: CDVInvokedUrlCommand) {
+    @objc(getProducts:)
+    func getProducts(command: CDVInvokedUrlCommand) {
         guard let products = command.arguments[0] as? [String] else {
             self.sendBadParameterFor(command: command, parameterNamed: "products", expectedType: NSArray.self)
             return

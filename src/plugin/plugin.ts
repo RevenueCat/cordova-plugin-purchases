@@ -668,7 +668,7 @@ class Purchases {
       callback,
       errorCallback,
       PLUGIN_NAME,
-      "getProductInfo",
+      "getProducts",
       [productIdentifiers, type]
     );
   }

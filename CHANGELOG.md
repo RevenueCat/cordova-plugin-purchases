@@ -1,3 +1,30 @@
+## 3.0.0-rc.2
+### Updating plugin for the most recent RevenueCat frameworks released!
+#### StoreKit 2 support
+
+### Adds:
+
+- `PurchasesPromotionalOffer`
+- `PurchasesIntroPrice`
+- `PurchasesStoreProductDiscount`
+
+### Renames:
+- `Purchases.getProductInfo` renamed `Purchases.getProducts`
+
+### Property updates:
+#### PurchasesStoreProduct
+- Removed `readonly intro_price_string: string | null;` 
+- Removed `readonly intro_price_period: string | null;`
+- Removed `readonly intro_price_cycles: number | null;`
+- Updated `readonly intro_price: number | null;` to `readonly intro_price: PurchasesIntroPrice | null;`
+
+*See previous 3.0.0-rc.x notes for a complete log.*
+
+- Bump `purchases-android` to 5.3.0
+    [5.3.0 changelog here](https://github.com/RevenueCat/purchases-android/releases/tag/5.3.0)
+- Bump`purchases-hybrid-common` to `3.3.0` 
+    [3.3.0 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/3.3.0)
+
 ## 3.0.0-rc.1
 ### Updating plugin for the most recent RevenueCat frameworks released!
 #### StoreKit 2 support

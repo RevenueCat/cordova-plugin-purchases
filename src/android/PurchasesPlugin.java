@@ -58,8 +58,8 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         CommonKt.getOfferings(getOnResult(callbackContext));
     }
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "getProductInfo", isAutofinish = false)
-    private void getProductInfo(JSONArray productIDs, String type, CallbackContext callbackContext) {
+    @PluginAction(thread = ExecutionThread.UI, actionName = "getProducts", isAutofinish = false)
+    private void getProducts(JSONArray productIDs, String type, CallbackContext callbackContext) {
         List<String> productIDList = new ArrayList<>();
         for (int i = 0; i < productIDs.length(); i++) {
             try {

@@ -183,7 +183,7 @@ var Purchases = /** @class */ (function () {
      */
     Purchases.getProducts = function (productIdentifiers, callback, errorCallback, type) {
         if (type === void 0) { type = PURCHASE_TYPE.SUBS; }
-        window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "getProductInfo", [productIdentifiers, type]);
+        window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "getProducts", [productIdentifiers, type]);
     };
     /**
      * Make a purchase

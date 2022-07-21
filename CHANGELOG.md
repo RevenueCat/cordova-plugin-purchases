@@ -8,6 +8,9 @@
 - `PurchasesIntroPrice`
 - `PurchasesStoreProductDiscount`
 
+### Renames:
+- `Purchases.getProductInfo` renamed `Purchases.getProducts`
+
 ### Property updates:
 #### PurchasesStoreProduct
 - Removed `readonly intro_price_string: string | null;` 

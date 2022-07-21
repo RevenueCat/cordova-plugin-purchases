@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-purchases" version="3.0.0-amazon.alpha.1">
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0" id="cordova-plugin-purchases" version="3.0.0-rc.1">
 
     <dependency id="cordova-annotated-plugin-android" />
 
@@ -16,25 +16,29 @@
                 <param name="android-package" value="com.revenuecat.purchases.PurchasesPlugin" />
             </feature>
         </config-file>
-        <framework src="com.revenuecat.purchases:purchases-hybrid-common:2.0.0-amazon.alpha.4" />
-        <framework src="androidx.annotation:annotation:[1.2.0]"/>
+        <framework src="com.revenuecat.purchases:purchases-hybrid-common:3.2.4" />
+        <framework src="androidx.annotation:annotation:[1.4.0]"/>
         <source-file src="src/android/PurchasesPlugin.java" target-dir="src/com/revenuecat/purchases"/>
     </platform>
     <platform name="ios">
+        <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/>
         <config-file target="config.xml" parent="/*">
             <feature name="PurchasesPlugin">
                 <param name="ios-package" value="CDVPurchasesPlugin"/>
             </feature>
         </config-file>
-        <header-file src="src/ios/CDVPurchasesPlugin.h" />
-        <source-file src="src/ios/CDVPurchasesPlugin.m" />
         <source-file src="src/ios/PurchasesPlugin.swift" />
+        <source-file src="src/ios/PurchasesPlugin+APIHelpers.swift" />
+        <source-file src="src/ios/PurchasesPlugin+Attribution.swift" />
+        <source-file src="src/ios/PurchasesPlugin+PurchasesDelegate.swift" />
+        <source-file src="src/ios/PurchasesPlugin+Purchasing.swift" />
+        <source-file src="src/ios/PurchasesPlugin+Users.swift" />
         <podspec>
             <config>
                 <source url="https://github.com/CocoaPods/Specs.git"/>
             </config>
             <pods use-frameworks="true">
-                <pod name="PurchasesHybridCommon" spec="1.9.1"/>
+                <pod name="PurchasesHybridCommon" spec="3.2.4"/>
             </pods>
         </podspec>
     </platform>

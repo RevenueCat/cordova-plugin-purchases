@@ -1,3 +1,49 @@
+## 3.0.0-rc.1
+### Updating plugin for the most recent RevenueCat frameworks released!
+#### StoreKit 2 support
+This version of the SDK automatically uses StoreKit 2 APIs under the hood only for APIs that the RevenueCat team has determined work better than StoreKit 1.
+
+#### New types and cleaned up naming
+New types that wrap native types from Apple, Google and Amazon, and we cleaned up the naming of other types and methods for a more consistent experience.
+
+### Removed APIs
+- `identify` and `createAlias` have been removed in favor of `logIn`.
+- `reset` has been removed in favor of `logOut`.
+- `getEntitlements` has been removed in favor of `getOfferings`.
+- `attributionKey` and `Purchases.addAttributionData` have been removed in favor of `set<NetworkID> methods`.
+
+### Renamed APIs
+**Note:** These still might change between `3.0.0-rc.x` and the final release of `3.0.0`
+
+| 2.x | 3.0.0 |
+| :-: | :-: |
+| `PurchaserInfo` | `CustomerInfo` |
+| `PurchasesTransaction` | `PurchasesStoreTransaction` |
+| `PurchasesProduct` | `PurchasesStoreProduct` |
+| `Purchases.RestoreTransactions` | `Purchases.restorePurchases` |
+| `Purchases.GetPaymentDiscount` | `Purchases.getPromotionalOffer` |
+| `Purchases.UpdatedPurchaserInfoListener` | `Purchases.updatedCustomerInfoListener` |
+
+## 2.4.0
+
+- Bump`purchases-hybrid-common` to `1.10.0` [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/1.10.0)
+- Bump `purchases-ios` to `3.13.0` ([Changelog here](https://github.com/RevenueCat/purchases-ios/releases/3.13.0))
+- Bump `purchases-android` to `4.4.0` ([Changelog here](https://github.com/RevenueCat/purchases-android/releases/4.4.0))
+- Added support for Airship integration via `setAirshipChannelID`
+    https://github.com/RevenueCat/cordova-plugin-purchases/pull/113
+
+## 2.3.2
+
+- Bump `purchases-ios` to 3.12.8
+    [3.12.8 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/tag/3.12.8)
+    [3.12.7 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/tag/3.12.7)
+    [3.12.6 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/tag/3.12.6)
+    [3.12.5 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/tag/3.12.5)
+    [3.12.4 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/tag/3.12.4)
+ - Bump `purchases-android` to 4.3.3
+    [4.3.3 Changelog here](https://github.com/RevenueCat/purchases-android/releases/tag/4.3.3)
+    [4.3.2 Changelog here](https://github.com/RevenueCat/purchases-android/releases/tag/4.3.2)
+
 ## 2.3.1
 
 - Bumped purchases-android to 4.3.1 [Changelog here](https://github.com/RevenueCat/purchases-android/releases/4.3.1), 

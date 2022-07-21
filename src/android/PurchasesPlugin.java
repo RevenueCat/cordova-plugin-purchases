@@ -14,8 +14,8 @@ import com.revenuecat.purchases.hybridcommon.OnResultList;
 import com.revenuecat.purchases.hybridcommon.OnResultAny;
 import com.revenuecat.purchases.common.PlatformInfo;
 import com.revenuecat.purchases.hybridcommon.SubscriberAttributesKt;
-import com.revenuecat.purchases.hybridcommon.mappers.PurchaserInfoMapperKt;
-import com.revenuecat.purchases.interfaces.UpdatedPurchaserInfoListener;
+import com.revenuecat.purchases.hybridcommon.mappers.CustomerInfoMapperKt;
+import com.revenuecat.purchases.interfaces.UpdatedCustomerInfoListener;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
@@ -33,7 +33,7 @@ import java.util.Map;
 public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     public static final String PLATFORM_NAME = "cordova";
-    public static final String PLUGIN_VERSION = "3.0.0-amazon.alpha.1";
+    public static final String PLUGIN_VERSION = "3.0.0-rc.1";
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "setupPurchases", isAutofinish = false)
     private void setupPurchases(String apiKey, @Nullable String appUserID, boolean observerMode,
@@ -45,10 +45,10 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             store = Store.AMAZON;
         }
         CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, observerMode, platformInfo, store);
-        Purchases.getSharedInstance().setUpdatedPurchaserInfoListener(new UpdatedPurchaserInfoListener() {
+        Purchases.getSharedInstance().setUpdatedCustomerInfoListener(new UpdatedCustomerInfoListener() {
             @Override
-            public void onReceived(@NonNull PurchaserInfo purchaserInfo) {
-                PluginResult result = new PluginResult(PluginResult.Status.OK, convertMapToJson(PurchaserInfoMapperKt.map(purchaserInfo)));
+            public void onReceived(@NonNull CustomerInfo customerInfo) {
+                PluginResult result = new PluginResult(PluginResult.Status.OK, convertMapToJson(CustomerInfoMapperKt.map(customerInfo)));
                 result.setKeepCallback(true);
                 callbackContext.sendPluginResult(result);
             }
@@ -56,19 +56,6 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         result.setKeepCallback(true);
         callbackContext.sendPluginResult(result);
-    }
-
-    @PluginAction(thread = ExecutionThread.UI, actionName = "setAllowSharingStoreAccount")
-    public void setAllowSharingStoreAccount(boolean allowSharingStoreAccount, CallbackContext callbackContext) {
-        CommonKt.setAllowSharingAppStoreAccount(allowSharingStoreAccount);
-        callbackContext.success();
-    }
-
-    @PluginAction(thread = ExecutionThread.UI, actionName = "addAttributionData")
-    public void addAttributionData(JSONObject data, Integer network, @Nullable String networkUserId,
-                                   CallbackContext callbackContext) {
-        SubscriberAttributesKt.addAttributionData(data, network, networkUserId);
-        callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "getOfferings", isAutofinish = false)
@@ -143,9 +130,9 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success(CommonKt.getAppUserID());
     }
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "restoreTransactions", isAutofinish = false)
-    private void restoreTransactions(CallbackContext callbackContext) {
-        CommonKt.restoreTransactions(getOnResult(callbackContext));
+    @PluginAction(thread = ExecutionThread.UI, actionName = "restorePurchases", isAutofinish = false)
+    private void restorePurchases(CallbackContext callbackContext) {
+        CommonKt.restorePurchases(getOnResult(callbackContext));
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "logIn", isAutofinish = false)
@@ -158,24 +145,9 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         CommonKt.logOut(getOnResult(callbackContext));
     }
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "reset", isAutofinish = false)
-    private void reset(CallbackContext callbackContext) {
-        CommonKt.reset(getOnResult(callbackContext));
-    }
-
-    @PluginAction(thread = ExecutionThread.UI, actionName = "identify", isAutofinish = false)
-    private void identify(String appUserID, CallbackContext callbackContext) {
-        CommonKt.identify(appUserID, getOnResult(callbackContext));
-    }
-
-    @PluginAction(thread = ExecutionThread.UI, actionName = "createAlias", isAutofinish = false)
-    private void createAlias(String newAppUserID, CallbackContext callbackContext) {
-        CommonKt.createAlias(newAppUserID, getOnResult(callbackContext));
-    }
-
-    @PluginAction(thread = ExecutionThread.UI, actionName = "getPurchaserInfo", isAutofinish = false)
-    private void getPurchaserInfo(CallbackContext callbackContext) {
-        CommonKt.getPurchaserInfo(getOnResult(callbackContext));
+    @PluginAction(thread = ExecutionThread.UI, actionName = "getCustomerInfo", isAutofinish = false)
+    private void getCustomerInfo(CallbackContext callbackContext) {
+        CommonKt.getCustomerInfo(getOnResult(callbackContext));
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setDebugLogsEnabled")
@@ -218,9 +190,9 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success(convertMapToJson(map));
     }
     
-    @PluginAction(thread = ExecutionThread.WORKER, actionName = "invalidatePurchaserInfoCache")
-    private void invalidatePurchaserInfoCache(CallbackContext callbackContext) {
-        CommonKt.invalidatePurchaserInfoCache();
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "invalidateCustomerInfoCache")
+    private void invalidateCustomerInfoCache(CallbackContext callbackContext) {
+        CommonKt.invalidateCustomerInfoCache();
         callbackContext.success();
     }
     
@@ -318,6 +290,12 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setOnesignalID")
     private void setOnesignalID(String onesignalID, CallbackContext callbackContext) { 
         SubscriberAttributesKt.setOnesignalID(onesignalID);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAirshipChannelID")
+    private void setAirshipChannelID(String airshipChannelID, CallbackContext callbackContext) { 
+        SubscriberAttributesKt.setAirshipChannelID(airshipChannelID);
         callbackContext.success();
     }
 

@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-purchases",
-  "version": "3.0.0-amazon.alpha.1",
+  "version": "3.0.0-rc.1",
   "description": "Purchases Cordova Plugin",
   "types": "./www/plugin.d.ts",
   "cordova": {
@@ -31,14 +31,17 @@
   },
   "author": "RevenueCat, Inc.",
   "license": "MIT",
+  "dependencies": {
+    "cordova-annotated-plugin-android": "^1.0.4"
+  },
   "devDependencies": {
-    "@types/jest": "^26.0.24",
+    "@types/jest": "^27.1.5",
     "@types/node": "^12.6.8",
     "jest": "^27.0.0",
     "prettier": "1.18.2",
     "ts-jest": "^27.0.0-next.12",
-    "tslint": "^5.18.0",
+    "tslint": "^5.20.1",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.5.3"
+    "typescript": "^4.2.0"
   }
 }

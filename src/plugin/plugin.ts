@@ -59,6 +59,15 @@ export enum PURCHASE_TYPE {
    */
   PRICE_CHANGE_CONFIRMATION,
 }
+
+export interface PurchasesPromotionalOffer {
+  readonly identifier: string;
+  readonly keyIdentifier: string;
+  readonly nonce: string;
+  readonly signature: string;
+  readonly timestamp: number;
+}
+
 export enum PRORATION_MODE {
   UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY = 0,
 
@@ -148,7 +157,11 @@ export enum INTRO_ELIGIBILITY_STATUS {
   /**
    * The user is eligible for a free trial or intro pricing for this product.
    */
-  INTRO_ELIGIBILITY_STATUS_ELIGIBLE
+  INTRO_ELIGIBILITY_STATUS_ELIGIBLE,
+  /**
+   * There is no free trial or intro pricing for this product.
+   */
+  INTRO_ELIGIBILITY_STATUS_NO_INTRO_OFFER_EXISTS,
 }
 
 /**
@@ -165,7 +178,6 @@ export interface PurchasesEntitlementInfo {
   readonly isActive: boolean;
   /**
    * True if the underlying subscription is set to renew at the end of the billing period (expirationDate).
-   * Will always be True if entitlement is for lifetime access.
    */
   readonly willRenew: boolean;
   /**
@@ -224,26 +236,37 @@ export interface PurchasesEntitlementInfos {
    * Map of active EntitlementInfo (`PurchasesEntitlementInfo`) objects keyed by entitlement identifier.
    */
   readonly active: { [key: string]: PurchasesEntitlementInfo };
+  /**
+   * Dictionary of active ``EntitlementInfo`` objects keyed by their identifiers.
+   * @ Note: When queried from the sandbox environment, it only returns entitlements active in sandbox.
+   * When queried from production, this only returns entitlements active in production. 
+   */
+  readonly activeInCurrentEnvironment: { [key: string]: PurchasesEntitlementInfo };
+  /**
+   * Dictionary of active ``EntitlementInfo`` objects keyed by their identifiers.
+   * @note: these can be active on any environment.
+   */
+  readonly activeInAnyEnvironment: { [key: string]: PurchasesEntitlementInfo };
 }
 
-export interface PurchasesTransaction { 
+export interface PurchasesStoreTransaction { 
   /**
    * RevenueCat Id associated to the transaction.
    */
-  readonly revenueCatId: string;
+  readonly transactionIdentifier: string;
   /**
    * Product Id associated with the transaction.
    */
-  readonly productId: string;
+  readonly productIdentifier: string;
   /**
    * Purchase date of the transaction in ISO 8601 format.
    */
   readonly purchaseDate: string;
 }
 
-export interface PurchaserInfo {
+export interface CustomerInfo {
   /**
-   * Entitlements attached to this purchaser info
+   * Entitlements attached to this customer info
    */
   readonly entitlements: PurchasesEntitlementInfos;
   /**
@@ -258,7 +281,7 @@ export interface PurchaserInfo {
    * Returns all the non-subscription purchases a user has made.
    * The purchases are ordered by purchase date in ascending order.
    */
-  readonly nonSubscriptionTransactions: PurchasesTransaction[];
+  readonly nonSubscriptionTransactions: PurchasesStoreTransaction[];
   /**
    * The latest expiration date of all purchased skus
    */
@@ -307,7 +330,65 @@ export interface PurchaserInfo {
   readonly managementURL: string | null;
 }
 
-export interface PurchasesProduct {
+export interface PurchasesIntroPrice {
+  /**
+   * Price in the local currency.
+   */
+  readonly price: number;
+  /**
+   * Formatted price, including its currency sign, such as €3.99.
+   */
+  readonly priceString: string;
+  /**
+   * Number of subscription billing periods for which the user will be given the discount, such as 3.
+   */
+  readonly cycles: number;
+  /**
+   * Billing period of the discount, specified in ISO 8601 format.
+   */
+  readonly period: string;
+  /**
+   * Unit for the billing period of the discount, can be DAY, WEEK, MONTH or YEAR.
+   */
+  readonly periodUnit: string;
+  /**
+   * Number of units for the billing period of the discount.
+   */
+  readonly periodNumberOfUnits: number;
+}
+
+export interface PurchasesStoreProductDiscount {
+  /**
+   * Identifier of the discount.
+   */
+  readonly identifier: string;
+  /**
+   * Price in the local currency.
+   */
+  readonly price: number;
+  /**
+   * Formatted price, including its currency sign, such as €3.99.
+   */
+  readonly priceString: string;
+  /**
+   * Number of subscription billing periods for which the user will be given the discount, such as 3.
+   */
+  readonly cycles: number;
+  /**
+   * Billing period of the discount, specified in ISO 8601 format.
+   */
+  readonly period: string;
+  /**
+   * Unit for the billing period of the discount, can be DAY, WEEK, MONTH or YEAR.
+   */
+  readonly periodUnit: string;
+  /**
+   * Number of units for the billing period of the discount.
+   */
+  readonly periodNumberOfUnits: number;
+}
+
+export interface PurchasesStoreProduct {
   /**
    * Product Id.
    */
@@ -333,29 +414,13 @@ export interface PurchasesProduct {
    */
   readonly currency_code: string;
   /**
-   * Introductory price of a subscription in the local currency.
+   * Introductory price.
    */
-  readonly intro_price: number | null;
+  readonly intro_price: PurchasesIntroPrice | null;
   /**
-   * Formatted introductory price of a subscription, including its currency sign, such as €3.99.
+   * Collection of discount offers for a product. Null for Android.
    */
-  readonly intro_price_string: string | null;
-  /**
-   * Billing period of the introductory price, specified in ISO 8601 format.
-   */
-  readonly intro_price_period: string | null;
-  /**
-   * Number of subscription billing periods for which the user will be given the introductory price, such as 3.
-   */
-  readonly intro_price_cycles: number | null;
-  /**
-   * Unit for the billing period of the introductory price, can be DAY, WEEK, MONTH or YEAR.
-   */
-  readonly intro_price_period_unit: string | null;
-  /**
-   * Number of units for the billing period of the introductory price.
-   */
-  readonly intro_price_period_number_of_units: number | null;
+  readonly discounts: PurchasesStoreProductDiscount[] | null;
 }
 
 /**
@@ -374,7 +439,7 @@ export interface PurchasesPackage {
   /**
    * Product assigned to this package.
    */
-  readonly product: PurchasesProduct;
+  readonly product: PurchasesStoreProduct;
   /**
    * Offering this package belongs to.
    */
@@ -483,9 +548,9 @@ export interface IntroEligibility {
  */
 export interface LogInResult {
   /**
-   * The Purchaser Info for the user.
+   * The Customer Info for the user.
    */
-  readonly purchaserInfo: PurchaserInfo;
+  readonly customerInfo: CustomerInfo;
   /**
    * True if the call resulted in a new user getting created in the RevenueCat backend.
    */
@@ -505,14 +570,6 @@ let shouldPurchasePromoProductListeners: ShouldPurchasePromoProductListener[] = 
 
 class Purchases {
 
-  /**
-   * @deprecated use ATTRIBUTION_NETWORK instead
-   *
-   * Enum for attribution networks
-   * @readonly
-   * @enum {Number}
-   */
-  public static ATTRIBUTION_NETWORKS = ATTRIBUTION_NETWORK;
   /**
    * Enum for attribution networks
    * @readonly
@@ -574,8 +631,8 @@ class Purchases {
     useAmazon = false
   }: PurchasesConfiguration): void {
     window.cordova.exec(
-      (purchaserInfo: any) => {
-        window.cordova.fireWindowEvent("onPurchaserInfoUpdated", purchaserInfo);
+      (customerInfo: any) => {
+        window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
       },
       null,
       PLUGIN_NAME,
@@ -583,44 +640,6 @@ class Purchases {
       [apiKey, appUserID, observerMode, userDefaultsSuiteName || null, useAmazon]
     );
     this.setupShouldPurchasePromoProductCallback();
-  }
-
-  /**
-   * @deprecated, configure behavior through the RevenueCat dashboard instead.
-   * Set this to true if you are passing in an appUserID but it is anonymous, this is true by default if you didn't pass an appUserID
-   * If a user tries to purchase a product that is active on the current app store account, we will treat it as a restore and alias
-   * the new ID with the previous id.
-   * @param {boolean} allowSharing true if enabled, false to disabled
-   */
-  public static setAllowSharingStoreAccount(allowSharing: boolean): void {
-    window.cordova.exec(
-      null,
-      null,
-      PLUGIN_NAME,
-      "setAllowSharingStoreAccount",
-      [allowSharing]
-    );
-  }
-
-  /**
-   * Add a dict of attribution information
-   *
-   * @deprecated Use the set<NetworkId> functions instead.
-   *
-   * @param {object} data Attribution data from any of the attribution networks in Purchases.ATTRIBUTION_NETWORKS
-   * @param {ATTRIBUTION_NETWORK} network Which network, see Purchases.ATTRIBUTION_NETWORK
-   * @param {string?} networkUserId An optional unique id for identifying the user. Needs to be a string.
-   */
-  public static addAttributionData(
-    data: { [key: string]: any },
-    network: ATTRIBUTION_NETWORK,
-    networkUserId?: string
-  ): void {
-    window.cordova.exec(null, null, PLUGIN_NAME, "addAttributionData", [
-      data,
-      network,
-      networkUserId,
-    ]);
   }
 
   /**
@@ -644,13 +663,13 @@ class Purchases {
   /**
    * Fetch the product info
    * @param {[string]} productIdentifiers Array of product identifiers
-   * @param {function(PurchasesProduct[]):void} callback Callback triggered after a successful getProducts call. It will receive an array of product objects.
+   * @param {function(PurchasesStoreProduct[]):void} callback Callback triggered after a successful getProducts call. It will receive an array of product objects.
    * @param {function(PurchasesError):void} errorCallback Callback triggered after an error or when retrieving products
    * @param {PURCHASE_TYPE} type Optional type of products to fetch, can be inapp or subs. Subs by default
    */
   public static getProducts(
     productIdentifiers: string[],
-    callback: (products: PurchasesProduct[]) => void,
+    callback: (products: PurchasesStoreProduct[]) => void,
     errorCallback: (error: PurchasesError) => void,
     type: PURCHASE_TYPE = PURCHASE_TYPE.SUBS
   ) {
@@ -667,7 +686,7 @@ class Purchases {
    * Make a purchase
    *
    * @param {string} productIdentifier The product identifier of the product you want to purchase.
-   * @param {function(string, PurchaserInfo):void} callback Callback triggered after a successful purchase.
+   * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchase.
    * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error or when the user cancels the purchase.
    * If user cancelled, userCancelled will be true
    * @param {UpgradeInfo} upgradeInfo Android only. Optional UpgradeInfo you wish to upgrade from containing the oldSKU
@@ -676,7 +695,7 @@ class Purchases {
    */
   public static purchaseProduct(
     productIdentifier: string,
-    callback: ({productIdentifier, purchaserInfo,}: { productIdentifier: string; purchaserInfo: PurchaserInfo; }) => void,
+    callback: ({productIdentifier, customerInfo,}: { productIdentifier: string; customerInfo: CustomerInfo; }) => void,
     errorCallback: ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => void,
     upgradeInfo?: UpgradeInfo | null,
     type: PURCHASE_TYPE = PURCHASE_TYPE.SUBS
@@ -707,7 +726,7 @@ class Purchases {
    * Make a purchase
    *
    * @param {PurchasesPackage} aPackage The Package you wish to purchase. You can get the Packages by calling getOfferings
-   * @param {function(string, PurchaserInfo):void} callback Callback triggered after a successful purchase.
+   * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchase.
    * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error or when the user cancels the purchase.
    * If user cancelled, userCancelled will be true
    * @param {UpgradeInfo} upgradeInfo Android only. Optional UpgradeInfo you wish to upgrade from containing the oldSKU
@@ -715,7 +734,7 @@ class Purchases {
    */
   public static purchasePackage(
     aPackage: PurchasesPackage,
-    callback: ({productIdentifier, purchaserInfo,}: { productIdentifier: string; purchaserInfo: PurchaserInfo; }) => void,
+    callback: ({productIdentifier, customerInfo,}: { productIdentifier: string; customerInfo: CustomerInfo; }) => void,
     errorCallback: ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => void,
     upgradeInfo?: UpgradeInfo | null
   ) {
@@ -745,19 +764,19 @@ class Purchases {
 
   /**
    * Restores a user's previous purchases and links their appUserIDs to any user's also using those purchases.
-   * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after restoring transactions.
+   * @param {function(CustomerInfo):void} callback Callback that will receive the new customer info after restoring transactions.
    * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem restoring the user transactions. This gets normally triggered if there
-   * is an error retrieving the new purchaser info for the new user or the user cancelled the restore
+   * is an error retrieving the new customer info for the new user or the user cancelled the restore
    */
-  public static restoreTransactions(
-    callback: (purchaserInfo: PurchaserInfo) => void,
+  public static restorePurchases(
+    callback: (customerInfo: CustomerInfo) => void,
     errorCallback: (error: PurchasesError) => void
   ) {
     window.cordova.exec(
       callback,
       errorCallback,
       PLUGIN_NAME,
-      "restoreTransactions",
+      "restorePurchases",
       []
     );
   }
@@ -774,7 +793,7 @@ class Purchases {
    * This function will logIn the current user with an appUserID. Typically this would be used after a log in 
    * to identify a user without calling configure.
    * @param {String} appUserID The appUserID that should be linked to the currently user
-   * @param {function(LogInResult):void} callback Callback that will receive an object that contains the purchaserInfo after logging in, as well as a boolean indicating 
+   * @param {function(LogInResult):void} callback Callback that will receive an object that contains the customerInfo after logging in, as well as a boolean indicating 
    * whether the user has just been created for the first time in the RevenueCat backend. 
    * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem logging in.
    */
@@ -795,91 +814,31 @@ class Purchases {
   /**
    * Logs out the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
    * If the current user is already anonymous, this will produce a PurchasesError.
-   * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after resetting
+   * @param {function(CustomerInfo):void} callback Callback that will receive the new customer info after resetting
    * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is an error when logging out. 
    * This could happen for example if logOut is called but the current user is anonymous.
    */
   public static logOut(
-    callback: (purchaserInfo: PurchaserInfo) => void,
+    callback: (customerInfo: CustomerInfo) => void,
     errorCallback: (error: PurchasesError) => void
   ) {
     window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "logOut", []);
   }
-
-
   /**
-   * @deprecated, use logIn instead.
-   * This function will alias two appUserIDs together.
-   * @param {string} newAppUserID The new appUserID that should be linked to the currently identified appUserID. Needs to be a string.
-   * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after creating the alias
-   * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is any problem creating the alias. This gets normally triggered if there
-   * is an error retrieving the new purchaser info for the new user or there is an error creating the alias.
-   */
-  public static createAlias(
-    newAppUserID: string,
-    callback: (purchaserInfo: PurchaserInfo) => void,
-    errorCallback: (error: PurchasesError) => void
-  ) {
-    // noinspection SuspiciousTypeOfGuard
-    if (typeof newAppUserID !== "string" || newAppUserID === "") {
-      throw new Error("newAppUserID is a required string and cannot be empty");
-    }
-    window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "createAlias", [
-      newAppUserID,
-    ]);
-  }
-
-  /**
-   * @deprecated, use logIn instead.
-   * This function will identify the current user with an appUserID. Typically this would be used after a logout to identify a new user without calling configure
-   * @param {string} newAppUserID The appUserID that should be linked to the currently user
-   * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after identifying.
-   * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem identifying the new user. This gets normally triggered if there
-   * is an error retrieving the new purchaser info for the new user.
-   */
-  public static identify(
-    newAppUserID: string,
-    callback: (purchaserInfo: PurchaserInfo) => void,
-    errorCallback: (error: PurchasesError) => void
-  ) {
-    // noinspection SuspiciousTypeOfGuard
-    if (typeof newAppUserID !== "string" || newAppUserID === "") {
-      throw new Error("newAppUserID is a required string and cannot be empty");
-    }
-    window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "identify", [
-      newAppUserID,
-    ]);
-  }
-
-  /**
-   * @deprecated, use logOut instead.
-   * Resets the Purchases client clearing the saved appUserID. This will generate a random user id and save it in the cache.
-   * @param {function(PurchaserInfo):void} callback Callback that will receive the new purchaser info after resetting
-   * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem resetting the SDK. This gets normally triggered if there
-   * is an error retrieving the new purchaser info for the new user.
-   */
-  public static reset(
-    callback: (purchaserInfo: PurchaserInfo) => void,
-    errorCallback: (error: PurchasesError) => void
-  ) {
-    window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "reset", []);
-  }
-
-  /**
-   * Gets the current purchaser info. This call will return the cached purchaser info unless the cache is stale, in which case,
+   * Gets the current customer info. This call will return the cached customer info unless the cache is stale, in which case,
    * it will make a network call to retrieve it from the servers.
-   * @param {function(PurchaserInfo):void} callback Callback that will receive the purchaser info
-   * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem retrieving the purchaser info
+   * @param {function(CustomerInfo):void} callback Callback that will receive the customer info
+   * @param {function(PurchasesError, boolean):void} errorCallback Callback that will be triggered whenever there is any problem retrieving the customer info
    */
-  public static getPurchaserInfo(
-    callback: (purchaserInfo: PurchaserInfo) => void,
+  public static getCustomerInfo(
+    callback: (customerInfo: CustomerInfo) => void,
     errorCallback: (error: PurchasesError) => void
   ) {
     window.cordova.exec(
       callback,
       errorCallback,
       PLUGIN_NAME,
-      "getPurchaserInfo",
+      "getCustomerInfo",
       []
     );
   }
@@ -989,21 +948,21 @@ class Purchases {
     return false;
   }
   /**
-   * Invalidates the cache for purchaser information.
+   * Invalidates the cache for customer information.
    * 
    * Most apps will not need to use this method; invalidating the cache can leave your app in an invalid state.
-   * Refer to https://docs.revenuecat.com/docs/purchaserinfo#section-get-user-information for more information on
+   * Refer to https://docs.revenuecat.com/docs/customer-info#section-get-user-information for more information on
    * using the cache properly.
    * 
-   * This is useful for cases where purchaser information might have been updated outside of the
+   * This is useful for cases where customer information might have been updated outside of the
    * app, like if a promotional subscription is granted through the RevenueCat dashboard.
    */
-  public static invalidatePurchaserInfoCache(): void {
+  public static invalidateCustomerInfoCache(): void {
     window.cordova.exec(
       null,
       null,
       PLUGIN_NAME,
-      "invalidatePurchaserInfoCache",
+      "invalidateCustomerInfoCache",
       []
     );
   }
@@ -1176,6 +1135,22 @@ class Purchases {
     )
   }
   
+  /**
+   * Subscriber attribute associated with the Airship Channel Id for the user
+   * Required for the RevenueCat Airship integration
+   *
+   * @param airshipChannelID Empty String or null will delete the subscriber attribute.
+   */
+  public static setAirshipChannelID(airshipChannelID: string | null) : void {
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setAirshipChannelID",
+      [airshipChannelID]
+    )
+  }
+
   /**
    * Subscriber attribute associated with the install media source for the user
    *

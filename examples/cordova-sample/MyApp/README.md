@@ -3,33 +3,42 @@
 1. cd into the root of the example project, then:
 
 ```bash
-sh bin/setup.sh
-```
 
-2. api key
+gem install bundler
+````
 
-Edit the api key in index.js
+2. Prepare workspace with API key and StoreKit config file
+
+Pass `ios`, `android`, or `all`, to control which projects get configured, saving you a few seconds of time if you need to `setup.sh` a lot.
+Alternatively, you can leave this arg off and it will default to `all`
 
 ```bash
-sed -i .bck s/api_key/<your_api_key>/ www/js/index.js
+sh bin/setup.sh <your_api_key> [ios|android|all]
 ```
 
+3. Coreutils
 
-2. iOS
+Use homebrew to install coreutils
+
+```bash
+brew install coreutils
+```
+
+4. iOS
 
 Edit the project settings in Xcode: 
 Add a Run Script Build Phase, name it "Refresh Javascript Sources"
 Add the following code: 
 
 ```bash
-sh ../../bin/refresh_javascript_sources_ios.sh
+sh $PROJECT_DIR/../../bin/refresh_javascript_sources_ios.sh
 ```
 
 You're ready to go! 
 
 #### when making changes: 
 
-##### In Obj-C code:
+##### In Swift code:
 
 You can just make the edits straight from Xcode or AppCode, then build and you're good. 
 
@@ -42,3 +51,9 @@ You can just make the edits straight from Xcode or AppCode, then build and you'r
 Unfortunately, the only way to reflect the changes at the time of this writing seems to be to remove the plugin and re-add it. 
 
 The build step will transpile the typescript files into js, however. So you can make the updates from Xcode, but you'll have to remove and add the plugin manually after any changes. 
+
+
+#### Troubleshooting iOS
+
+If the setup doesn't work, it might because the pod spec repo is out of date.
+cd into the iOS platform folder `platforms/ios` where `Podfile` lives, and run `pod install --repo-update`

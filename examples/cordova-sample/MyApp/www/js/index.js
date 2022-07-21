@@ -25,7 +25,7 @@ const app = {
       this.onDeviceReady.bind(this),
       false
     );
-    window.addEventListener("onPurchaserInfoUpdated", (info) => {
+    window.addEventListener("onCustomerInfoUpdated", (info) => {
 
     });
   },
@@ -64,7 +64,7 @@ const app = {
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
     Purchases.setup({apiKey: "api_key",  useAmazon: true});
-    Purchases.getPurchaserInfo(
+    Purchases.getCustomerInfo(
       info => {
         const isPro = typeof info.entitlements.active.pro_cat !== "undefined";
         console.log("isPro " + JSON.stringify(isPro));

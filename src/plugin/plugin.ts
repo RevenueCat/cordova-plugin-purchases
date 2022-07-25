@@ -627,7 +627,7 @@ class Purchases {
       },
       null,
       PLUGIN_NAME,
-      "setupPurchases",
+      "configure",
       [apiKey, appUserID, observerMode, userDefaultsSuiteName]
     );
     this.setupShouldPurchasePromoProductCallback();

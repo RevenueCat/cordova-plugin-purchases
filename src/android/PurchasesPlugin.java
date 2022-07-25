@@ -35,9 +35,9 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     public static final String PLATFORM_NAME = "cordova";
     public static final String PLUGIN_VERSION = "3.0.0-rc.2";
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "setupPurchases", isAutofinish = false)
-    private void setupPurchases(String apiKey, @Nullable String appUserID, boolean observerMode,
-                                @Nullable String userDefaultsSuiteName, CallbackContext callbackContext) {
+    @PluginAction(thread = ExecutionThread.UI, actionName = "configure", isAutofinish = false)
+    private void configure(String apiKey, @Nullable String appUserID, boolean observerMode,
+                           @Nullable String userDefaultsSuiteName, CallbackContext callbackContext) {
         PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
         CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, observerMode, platformInfo);
         Purchases.getSharedInstance().setUpdatedCustomerInfoListener(new UpdatedCustomerInfoListener() {

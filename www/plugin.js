@@ -163,7 +163,7 @@ var Purchases = /** @class */ (function () {
         if (observerMode === void 0) { observerMode = false; }
         window.cordova.exec(function (customerInfo) {
             window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
-        }, null, PLUGIN_NAME, "setupPurchases", [apiKey, appUserID, observerMode, userDefaultsSuiteName]);
+        }, null, PLUGIN_NAME, "configure", [apiKey, appUserID, observerMode, userDefaultsSuiteName]);
         this.setupShouldPurchasePromoProductCallback();
     };
     /**

@@ -1,6 +1,6 @@
 {
   "name": "cordova-plugin-purchases",
-  "version": "3.0.0-rc.2",
+  "version": "3.0.0-rc.3",
   "description": "Purchases Cordova Plugin",
   "types": "./www/plugin.d.ts",
   "cordova": {

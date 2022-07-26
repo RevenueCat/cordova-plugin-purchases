@@ -1,3 +1,17 @@
+## 3.0.0-rc.3
+### Updating plugin for the most recent RevenueCat frameworks released!
+#### StoreKit 2 support
+
+### Renames:
+- `Purchases.setup` renamed `Purchases.configure`, this makes it consistent with our native SDKs.
+
+*See previous 3.0.0-rc.x notes for a complete log.*
+
+- Bump `purchases-android` to 5.3.0
+    [5.3.0 changelog here](https://github.com/RevenueCat/purchases-android/releases/tag/5.3.0)
+- Bump`purchases-hybrid-common` to `3.3.0` 
+    [3.3.0 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/3.3.0)
+
 ## 3.0.0-rc.2
 ### Updating plugin for the most recent RevenueCat frameworks released!
 #### StoreKit 2 support

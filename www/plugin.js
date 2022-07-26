@@ -159,11 +159,11 @@ var Purchases = /** @class */ (function () {
      * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults
      * suite, otherwise it will use standardUserDefaults. Default is null, which will make the SDK use standardUserDefaults.
      */
-    Purchases.setup = function (apiKey, appUserID, observerMode, userDefaultsSuiteName) {
+    Purchases.configure = function (apiKey, appUserID, observerMode, userDefaultsSuiteName) {
         if (observerMode === void 0) { observerMode = false; }
         window.cordova.exec(function (customerInfo) {
             window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
-        }, null, PLUGIN_NAME, "setupPurchases", [apiKey, appUserID, observerMode, userDefaultsSuiteName]);
+        }, null, PLUGIN_NAME, "configure", [apiKey, appUserID, observerMode, userDefaultsSuiteName]);
         this.setupShouldPurchasePromoProductCallback();
     };
     /**

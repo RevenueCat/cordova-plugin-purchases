@@ -7,40 +7,40 @@ window.cordova = {
 };
 
 describe("Purchases", () => {
-  it("setup fires PurchasesPlugin with the correct arguments", () => {
-    Purchases.setup("api_key", "app_user_id");
+  it("configure fires PurchasesPlugin with the correct arguments", () => {
+    Purchases.configure("api_key", "app_user_id");
 
     expect(execFn).toHaveBeenCalledWith(
       expect.any(Function),
       null,
       "PurchasesPlugin",
-      "setupPurchases",
+      "configure",
       ["api_key", "app_user_id", false, undefined]
     );
   });
 
-  it("setup fires PurchasesPlugin with the correct arguments when specifying observermode", () => {
-    Purchases.setup("api_key", "app_user_id", true);
+  it("configure fires PurchasesPlugin with the correct arguments when specifying observermode", () => {
+    Purchases.configure("api_key", "app_user_id", true);
 
     expect(execFn).toHaveBeenCalledWith(
       expect.any(Function),
       null,
       "PurchasesPlugin",
-      "setupPurchases",
+      "configure",
       ["api_key", "app_user_id", true, undefined]
     );
   });
 
-  it("setup fires PurchasesPlugin with the correct arguments when setting user defaults suite name", () => {
+  it("configure fires PurchasesPlugin with the correct arguments when setting user defaults suite name", () => {
     const expected = "suite-name";
 
-    Purchases.setup("api_key", "app_user_id", false, expected);
+    Purchases.configure("api_key", "app_user_id", false, expected);
 
     expect(execFn).toHaveBeenCalledWith(
       expect.any(Function),
       null,
       "PurchasesPlugin",
-      "setupPurchases",
+      "configure",
       ["api_key", "app_user_id", false, expected]
     );
   });

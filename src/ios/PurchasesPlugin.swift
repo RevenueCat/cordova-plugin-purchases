@@ -21,8 +21,8 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
     private var purchases: Purchases!
 
-    @objc(setupPurchases:)
-    func setupPurchases(command: CDVInvokedUrlCommand) {
+    @objc(configure:)
+    func configure(command: CDVInvokedUrlCommand) {
         guard let apiKey = command.arguments[0] as? String else {
             self.sendBadParameterFor(command: command, parameterNamed: "apiKey", expectedType: String.self)
             return

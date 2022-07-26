@@ -1,7 +1,7 @@
 exports.defineAutoTests = function() {
   describe("Purchases (Purchases)", function() {
     beforeAll(function() {
-      Purchases.setup("api_key");
+      Purchases.configure("api_key");
     });
 
     it("should exist", function() {

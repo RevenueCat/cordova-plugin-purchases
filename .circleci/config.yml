@@ -48,6 +48,22 @@ commands:
       - run: npm install -g cordova
       - run: npm install -g github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
       - run: npm install --legacy-peer-deps
+      - run: npm install --global yarn
+
+  yarn-dependencies:
+    description: "Install yarn dependencies"
+    steps:
+       - install-nvm
+       - npm-dependencies
+       - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+       - run: yarn
+       - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
 
   npm-ios-dependencies:
     description: "Install all ios global and local npm dependencies"
@@ -138,19 +154,11 @@ jobs:
 
   runtest:
     docker:
-      - image: circleci/node:lts
+      - image: cimg/ruby:2.6
 
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-      - run: yarn
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+      - yarn-dependencies
       - run: yarn test
       - run: yarn tslint
       - run:
@@ -159,9 +167,12 @@ jobs:
             yarn build
 
   docs-deploy:
+    docker:
+      - image: cimg/ruby:2.6
+          
     steps:
       - checkout
-      - npm-dependencies
+      - yarn-dependencies
       # Bundler
       - restore_cache:
           keys: 

@@ -34,11 +34,10 @@ lane :generate_docs do
             FileUtils.cp docs_index_path, index_destination_path
 
             # using sh instead of fastlane commands because fastlane would run from the repo root
-            sh("git", "checkout", "-b", "release/#{version_number}") # TODO: delete
             sh("git", "add", docs_destination_folder)
             sh("git", "add", index_destination_path)
             sh("git", "commit", "-m", "Update documentation for #{version_number}")
-            sh("git", "push", "--set-upstream", "origin", "release/#{version_number}") # TODO: delete
+            sh("git", "push")
           end
         end
       end

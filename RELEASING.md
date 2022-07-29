@@ -1,7 +1,7 @@
 1. Create a release branch- `release/x.y.z`
 1. Update versions in `VERSIONS.md`
 1. Update to the latest purchases-hybrid-common version in `plugin.xml`
-1. Update version in `package.json`, `plugin.xml`, `PurchasesPlugin.java`, and `PurchasesPlugin.swift`.
+1. Update version in `package.json`, `plugin.xml`, `PurchasesPlugin.java`, `PurchasesPlugin.swift`, and `scripts/docs/index.html`.
 1. Run `npm run build`
 1. Add an entry to CHANGELOG.md
 1. Create a PR with the changes - "Preparing for version x.y.z" and include the new contents of `CHANGELOG.md` as the description.

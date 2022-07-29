@@ -1,13 +1,21 @@
-release-tags-and-branches: &release-tags-and-branches
-  filters:
-    tags:
-      ignore: /^.*-SNAPSHOT/
-    branches:
-      only: /^release\/.*/
-
 version: 2.1
 orbs:
   android: circleci/android@1.0
+
+aliases:
+  release-tags: &release-tags
+    filters: 
+      tags:
+        ignore: /^.*-SNAPSHOT/
+      branches:
+        ignore: /.*/
+        
+  release-tags-and-branches: &release-tags-and-branches
+    filters:
+      tags:
+        ignore: /^.*-SNAPSHOT/
+      branches:
+        only: /^release\/.*/
 
 commands:
   android-sdk-dependencies:
@@ -40,6 +48,22 @@ commands:
       - run: npm install -g cordova
       - run: npm install -g github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
       - run: npm install --legacy-peer-deps
+      - run: npm install --global yarn
+
+  yarn-dependencies:
+    description: "Install yarn dependencies"
+    steps:
+       - install-nvm
+       - npm-dependencies
+       - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+       - run: yarn
+       - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
 
   npm-ios-dependencies:
     description: "Install all ios global and local npm dependencies"
@@ -84,6 +108,12 @@ commands:
       - run: nvm use 16.13.1
       - run: echo 'nvm use 16.13.1' >> $BASH_ENV
       - run: node -v
+
+  set_up_git_user:
+    description: Set git config parameters
+    steps:
+      - run: git config --global user.email "dev+ci@revenuecat.com"
+      - run: git config --global user.name "RevenueCat CI"
 
 jobs:
   android-integration-test:
@@ -130,19 +160,11 @@ jobs:
 
   runtest:
     docker:
-      - image: circleci/node:lts
+      - image: cimg/ruby:2.6
 
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-      - run: yarn
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+      - yarn-dependencies
       - run: yarn test
       - run: yarn tslint
       - run:
@@ -150,12 +172,42 @@ jobs:
           command: |
             yarn build
 
+  docs-deploy:
+    docker:
+      - image: cimg/ruby:2.6
+          
+    steps:
+      - checkout
+      - yarn-dependencies
+      # Bundler
+      - restore_cache:
+          keys: 
+            - v1-gem-cache-{{ checksum "Gemfile.lock" }}
+      - run: 
+          name: Bundle install
+          command: |
+              bundle config set --local clean 'true'
+              bundle config set --local path 'vendor/bundle'
+              bundle install
+      - save_cache:
+          key: v1-gem-cache-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - set_up_git_user
+      - run:
+          name: Build docs
+          command: bundle exec fastlane generate_docs
+
 workflows:
   version: 2
   build-test:
     jobs:
       - runtest
   
+  deploy:
+    jobs:
+      - docs-deploy: *release-tags
+
   android-integration-test:
     jobs:
       - android-integration-test: *release-tags-and-branches

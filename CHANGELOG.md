@@ -1,3 +1,18 @@
+## 3.0.0-rc.4
+### Updating plugin for the most recent RevenueCat frameworks released!
+#### StoreKit 2 support
+
+### Property rename:
+#### PurchasesStoreProduct
+- Updated `readonly intro_price: PurchasesIntroPrice | null;` to `readonly introPrice: PurchasesIntroPrice | null;`
+- Updated `readonly price_string: string;` to `readonly priceString: string;`
+- Updated `readonly currency_code: string;` to `readonly currencyCode: string;`
+
+*See previous 3.0.0-rc.x notes for a complete log.*
+
+- Bump`purchases-hybrid-common` to `4.0.0` 
+    [4.0.0 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/4.0.0)
+
 ## 3.0.0-rc.3
 ### Updating plugin for the most recent RevenueCat frameworks released!
 #### StoreKit 2 support

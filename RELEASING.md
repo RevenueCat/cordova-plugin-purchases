@@ -8,6 +8,6 @@
 1. Once approved, merge.
 1. From the updated `main` branch, create a tag `git tag x.y.z`
 1. `git push origin <tag name>`
-1. Create a new release in github and upload the output from the build.
+1. Create a new release in github and upload the output from the build. If this is a beta/release candidate, make sure to check `This is a pre-release`
 1. `npm publish`
 1. Update the version in `package.json` and `plugin.xml` to x.y.z-SNAPSHOT, with x.y.z being the next version

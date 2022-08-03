@@ -12,6 +12,8 @@
 
 - Bump`purchases-hybrid-common` to `4.0.0` 
     [4.0.0 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/4.0.0)
+- Bump `purchases-ios` to `4.9.1` 
+    [4.9.1 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/4.9.1)
 
 ## 3.0.0-rc.3
 ### Updating plugin for the most recent RevenueCat frameworks released!

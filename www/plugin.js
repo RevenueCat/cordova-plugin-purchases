@@ -330,6 +330,12 @@ var Purchases = /** @class */ (function () {
         window.cordova.exec(null, null, PLUGIN_NAME, "setAutomaticAppleSearchAdsAttributionCollection", [enabled]);
     };
     /**
+     * Enable automatic collection of Apple Search Ads attribution using AdServices. Disabled by default.
+     */
+    Purchases.enableAdServicesAttributionTokenCollection = function () {
+        window.cordova.exec(null, null, PLUGIN_NAME, "enableAdServicesAttributionTokenCollection", []);
+    };
+    /**
      * @param {function(boolean):void} callback Will be sent a boolean indicating if the `appUserID` has been generated
      * by RevenueCat or not.
      */

@@ -64,6 +64,7 @@ const app = {
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
     Purchases.configure("api_key");
+    Purchases.enableAdServicesAttributionTokenCollection();
     Purchases.getCustomerInfo(
       info => {
         const isPro = typeof info.entitlements.active.pro_cat !== "undefined";

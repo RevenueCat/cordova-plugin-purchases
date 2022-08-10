@@ -881,6 +881,21 @@ class Purchases {
   }
 
   /**
+   * Enable automatic collection of Apple Search Ads attribution using AdServices. Disabled by default.
+   *
+   * @param {boolean} enabled Enable or not automatic collection
+   */
+     public static enableAdServicesAttributionTokenCollection(): void {
+      window.cordova.exec(
+        null,
+        null,
+        PLUGIN_NAME,
+        "enableAdServicesAttributionTokenCollection",
+        []
+      );
+    }
+
+  /**
    * @param {function(boolean):void} callback Will be sent a boolean indicating if the `appUserID` has been generated
    * by RevenueCat or not.
    */

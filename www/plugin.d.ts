@@ -689,6 +689,12 @@ declare class Purchases {
      */
     static setAutomaticAppleSearchAdsAttributionCollection(enabled: boolean): void;
     /**
+     * Enable automatic collection of Apple Search Ads attribution using AdServices. Disabled by default.
+     *
+     * @param {boolean} enabled Enable or not automatic collection
+     */
+    static enableAdServicesAttributionTokenCollection(): void;
+    /**
      * @param {function(boolean):void} callback Will be sent a boolean indicating if the `appUserID` has been generated
      * by RevenueCat or not.
      */

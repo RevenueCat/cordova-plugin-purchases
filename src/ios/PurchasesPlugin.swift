@@ -71,7 +71,7 @@ extension CDVPurchasesPlugin {
     }
 
     var platformFlavorVersion: String {
-        return "3.0.0-rc.4"
+        return "3.0.0-rc.5"
     }
 
 }

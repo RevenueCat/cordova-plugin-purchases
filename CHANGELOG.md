@@ -1,3 +1,14 @@
+## 3.0.0-rc.5
+### Apple AdServices support
+New method for automatic collecting of attribution tokens on iOS using AdServices - `Purchases.enableAdServicesAttributionTokenCollection()`
+
+*See previous 3.0.0-rc.x notes for a complete log.*
+
+- Bump`purchases-hybrid-common` to `4.1.0` 
+    [4.1.0 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/4.1.0)
+- Bump `purchases-ios` to `4.10.0` 
+    [4.10.0 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/4.10.0)
+
 ## 3.0.0-rc.4
 ### Updating plugin for the most recent RevenueCat frameworks released!
 #### StoreKit 2 support

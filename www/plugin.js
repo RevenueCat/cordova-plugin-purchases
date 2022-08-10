@@ -331,8 +331,6 @@ var Purchases = /** @class */ (function () {
     };
     /**
      * Enable automatic collection of Apple Search Ads attribution using AdServices. Disabled by default.
-     *
-     * @param {boolean} enabled Enable or not automatic collection
      */
     Purchases.enableAdServicesAttributionTokenCollection = function () {
         window.cordova.exec(null, null, PLUGIN_NAME, "enableAdServicesAttributionTokenCollection", []);

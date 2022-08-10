@@ -882,8 +882,6 @@ class Purchases {
 
   /**
    * Enable automatic collection of Apple Search Ads attribution using AdServices. Disabled by default.
-   *
-   * @param {boolean} enabled Enable or not automatic collection
    */
      public static enableAdServicesAttributionTokenCollection(): void {
       window.cordova.exec(

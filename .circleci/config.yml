@@ -139,7 +139,6 @@ jobs:
       - replace-api-key-linux
       - run: sdk install gradle 7.5
       - run: rm -rf ~/.gradle/caches/
-      - run: rm -rf examples
       - run: npm run test:android
     environment:
       JVM_OPTS: -Xmx6g

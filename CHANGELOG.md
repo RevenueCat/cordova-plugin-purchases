@@ -2,15 +2,6 @@
 ### Apple AdServices support
 New method for automatic collecting of attribution tokens on iOS using AdServices - `Purchases.enableAdServicesAttributionTokenCollection()`
 
-### Updating plugin for the most recent RevenueCat frameworks released!
-#### StoreKit 2 support
-
-### Property rename:
-#### PurchasesStoreProduct
-- Updated `readonly intro_price: PurchasesIntroPrice | null;` to `readonly introPrice: PurchasesIntroPrice | null;`
-- Updated `readonly price_string: string;` to `readonly priceString: string;`
-- Updated `readonly currency_code: string;` to `readonly currencyCode: string;`
-
 *See previous 3.0.0-rc.x notes for a complete log.*
 
 - Bump`purchases-hybrid-common` to `4.1.0` 

@@ -74,6 +74,7 @@ function checkConfigure() {
   Purchases.setProxyURL("");
   Purchases.setDebugLogsEnabled(true);
   Purchases.setSimulatesAskToBuyInSandbox(true);
+  Purchases.presentCodeRedemptionSheet();
 }
 
 

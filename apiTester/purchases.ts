@@ -74,9 +74,12 @@ function checkConfigure() {
   Purchases.setProxyURL("");
   Purchases.setDebugLogsEnabled(true);
   Purchases.setSimulatesAskToBuyInSandbox(true);
-  Purchases.presentCodeRedemptionSheet();
 }
 
+function checkMisc() {
+  Purchases.presentCodeRedemptionSheet();
+  Purchases.invalidateCustomerInfoCache();
+}
 
 function checkListeners() {
   const shouldPurchaseListener: ShouldPurchasePromoProductListener = deferredPurchase => {};

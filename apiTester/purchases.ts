@@ -1,5 +1,6 @@
 import {
   CustomerInfo,
+  IntroEligibility,
   LogInResult,
   PurchasesError,
   PurchasesOfferings,
@@ -51,6 +52,9 @@ function checkPurchasing(purchases: Purchases,
 
   Purchases.canMakePayments(features, callback => { const canMakePayments: boolean = callback; }, errorCallback);
   Purchases.getOfferings(offerings => { const offeringsData: PurchasesOfferings = offerings; }, errorCallback);
+
+  const eligibilityCallback = (map: { [productId:string]:IntroEligibility; }) => {};
+  Purchases.checkTrialOrIntroductoryPriceEligibility([""], eligibilityCallback);
 }
 
 function checkConfigure() {

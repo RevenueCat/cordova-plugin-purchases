@@ -172,6 +172,17 @@ jobs:
           command: |
             yarn build
 
+  api-tester:
+    executor:
+      name: rn/linux_js
+      node_version: '12'
+    steps:
+      - checkout
+      - npm-dependencies
+      - run:
+          name: Compile API Tester
+          command: yarn tsc -p apiTester
+
   docs-deploy:
     docker:
       - image: cimg/ruby:2.6
@@ -215,4 +226,8 @@ workflows:
   ios-integration-test:
     jobs:
       - ios-integration-test: *release-tags-and-branches
+
+  api-tester-check:
+    jobs:
+      - api-tester
 

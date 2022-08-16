@@ -50,6 +50,16 @@ commands:
       - run: npm install --legacy-peer-deps
       - run: npm install --global yarn
 
+  api-tester-dependencies:
+    description: "Install API Tester dependencies"
+    steps:
+       - install-nvm
+       - run: npm install typescript -g
+       - save_cache:
+          paths:
+            - node_modules
+          key: api-tester-dependencies-{{ checksum "package.json" }}
+
   yarn-dependencies:
     description: "Install yarn dependencies"
     steps:
@@ -173,15 +183,18 @@ jobs:
             yarn build
 
   api-tester:
-    executor:
-      name: rn/linux_js
-      node_version: '12'
+    docker:
+      - image: cimg/ruby:2.6
+
     steps:
       - checkout
-      - npm-dependencies
+      - api-tester-dependencies
+      - restore_cache:
+          keys:
+            - api-tester-dependencies-{{ checksum "package.json" }}
       - run:
           name: Compile API Tester
-          command: yarn tsc -p apiTester
+          command: tsc -p apiTester
 
   docs-deploy:
     docker:

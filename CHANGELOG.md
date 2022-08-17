@@ -1,3 +1,15 @@
+## 3.0.0-rc.6
+### Apple AdServices support
+
+*See previous 3.0.0-rc.x notes for a complete log.*
+
+- Bump`purchases-hybrid-common` to `4.1.2` 
+    [4.1.2 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/4.1.2)
+- Bump `purchases-ios` to `4.10.1` 
+    [4.10.1 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/4.10.1)
+- Bump `purchases-android` to 5.4.1
+    [5.4.1 changelog here](https://github.com/RevenueCat/purchases-android/releases/tag/5.4.1)
+
 ## 3.0.0-rc.5
 ### Apple AdServices support
 New method for automatic collecting of attribution tokens on iOS using AdServices - `Purchases.enableAdServicesAttributionTokenCollection()`

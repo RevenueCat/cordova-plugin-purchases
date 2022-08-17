@@ -99,7 +99,7 @@ storekit_file_path_for_xcproject = '../../RevenueCatTest.storekit'
 
 modified = add_store_kit_to_project_if_needed(project=project, storekit_file_path_for_xcproject)
 modified = add_build_phase_run_script_if_needed(project) || modified
-modified = add_swift_version_if_needed(project, save=true) || modified
+modified = add_swift_version_if_needed(project) || modified
 save_project_if_needed(project, modified)
 update_scheme_with_store_kit_file_if_needed(workspace_path, storekit_file_path_for_xcproject)
 

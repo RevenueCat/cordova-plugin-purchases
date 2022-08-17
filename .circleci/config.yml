@@ -46,7 +46,7 @@ commands:
     description: "Install all global and local npm dependencies"
     steps:
       - run: npm install -g cordova
-      - run: npm install -g github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
+      - run: npm install -g github:apache/cordova-paramedic#0bcf4af5d160573a18f201b39bd25dcce3ccc074
       - run: npm install --legacy-peer-deps
       - run: npm install --global yarn
 

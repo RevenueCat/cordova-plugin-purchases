@@ -38,8 +38,8 @@ public class CDVPurchasesPlugin : CDVPlugin {
                                              platformFlavor: self.platformFlavor,
                                              platformFlavorVersion: self.platformFlavorVersion,
                                              dangerousSettings: nil)
-        self.purchases.delegate = self
         self.updatedCustomerInfoCallbackID = command.callbackId
+        self.purchases.delegate = self
         let pluginResult = CDVPluginResult(status: .noResult)
         pluginResult?.setKeepCallbackAs(true)
         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)

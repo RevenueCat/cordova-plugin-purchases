@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  android: circleci/android@1.0
+  android: circleci/android@2.1.2
 
 aliases:
   release-tags: &release-tags
@@ -131,6 +131,7 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: large
+      tag: 2021.10.1
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout

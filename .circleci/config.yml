@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  android: circleci/android@2.1.2
+  android: circleci/android@1.0
 
 aliases:
   release-tags: &release-tags
@@ -46,7 +46,7 @@ commands:
     description: "Install all global and local npm dependencies"
     steps:
       - run: npm install -g cordova
-      - run: npm install -g github:apache/cordova-paramedic#0bcf4af5d160573a18f201b39bd25dcce3ccc074
+      - run: npm install -g github:taquitos/cordova-paramedic#bcada91048bb510b50978cc85653994849c8fd4d
       - run: npm install --legacy-peer-deps
       - run: npm install --global yarn
 
@@ -131,7 +131,6 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: large
-      tag: 2021.10.1
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
@@ -144,6 +143,7 @@ jobs:
       - android/start-emulator:
           avd-name: myavd
           no-window: true
+          wait-for-emulator: false
           post-emulator-launch-assemble-command: ""
       - install-nvm
       - npm-dependencies
@@ -225,6 +225,9 @@ jobs:
 
 workflows:
   version: 2
+  # build-test:
+  #   jobs:
+  #     - runtest
   
   deploy:
     jobs:
@@ -238,4 +241,7 @@ workflows:
     jobs:
       - ios-integration-test: *release-tags-and-branches
 
+  # api-tester-check:
+  #   jobs:
+  #     - api-tester
 

@@ -224,9 +224,6 @@ jobs:
 
 workflows:
   version: 2
-  build-test:
-    jobs:
-      - runtest
   
   deploy:
     jobs:
@@ -234,7 +231,7 @@ workflows:
 
   android-integration-test:
     jobs:
-      - android-integration-test: *release-tags-and-branches
+      - android-integration-test
   
   ios-integration-test:
     jobs:

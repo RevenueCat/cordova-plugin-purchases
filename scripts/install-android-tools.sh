@@ -6,7 +6,7 @@ fi
 
 mkdir -p $ANDROID_SDK_ROOT
 cd $ANDROID_SDK_ROOT
-curl https://dl.google.com/android/repository/sdk-tools-darwin-4333796.zip -o sdk-tools.zip
+curl https://dl.google.com/android/repository/commandlinetools-mac-8512546_latest.zip -o sdk-tools.zip
 
 unzip sdk-tools.zip
 
@@ -19,10 +19,10 @@ echo "d975f751698a77b662f1254ddbeed3901e976f5a" > "$ANDROID_SDK_ROOT/licenses/in
 SDKMANAGER=$ANDROID_SDK_ROOT/tools/bin/sdkmanager
 
 $SDKMANAGER "platform-tools"
-$SDKMANAGER "platforms;android-29"
-$SDKMANAGER "build-tools;29.0.2"
+$SDKMANAGER "platforms;android-32"
+$SDKMANAGER "build-tools;30.0.2"
 $SDKMANAGER "ndk-bundle"
-$SDKMANAGER "system-images;android-26;google_apis_playstore;x86"
+$SDKMANAGER "system-images;android-32;google_apis;x86_64"
 $SDKMANAGER "emulator"
 
-echo "y" | sudo $SDKMANAGER --install "ndk;21.0.6113669" --sdk_root=${ANDROID_SDK_ROOT}
+echo "y" | sudo $SDKMANAGER --install "ndk;25.0.8775105" --sdk_root=${ANDROID_SDK_ROOT}

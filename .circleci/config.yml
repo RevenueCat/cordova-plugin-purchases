@@ -136,6 +136,8 @@ jobs:
     steps:
       - checkout
       - install-sdkman
+      - run: sdkmanager "platforms;android-32"
+      - run: sdkmanager --update
       - android/create-avd:
           avd-name: myavd
           system-image: system-images;android-32;google_apis;x86_64
@@ -148,7 +150,6 @@ jobs:
       - install-nvm
       - npm-dependencies
       - replace-api-key-linux
-      - run: sdkmanager "platforms;android-32"
       - run: sdk install gradle 7.5
       - run: rm -rf ~/.gradle/caches/
       - run: npm run test:android

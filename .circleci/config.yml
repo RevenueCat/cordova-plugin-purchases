@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  android: circleci/android@1.0
+  android: circleci/android@2.1.2
 
 aliases:
   release-tags: &release-tags
@@ -131,11 +131,11 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: large
+      tag: 2021.10.1
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
       - install-sdkman
-      - android/accept-licenses
       - android/create-avd:
           avd-name: myavd
           system-image: system-images;android-32;google_apis;x86_64
@@ -148,7 +148,6 @@ jobs:
       - install-nvm
       - npm-dependencies
       - replace-api-key-linux
-      - run: sdkmanager "platforms;android-32"
       - run: sdk install gradle 7.5
       - run: rm -rf ~/.gradle/caches/
       - run: npm run test:android

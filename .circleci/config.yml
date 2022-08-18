@@ -143,7 +143,7 @@ jobs:
       - android/start-emulator:
           avd-name: myavd
           no-window: true
-          wait-for-emulator: false
+          wait-for-emulator: true
           post-emulator-launch-assemble-command: ""
       - install-nvm
       - npm-dependencies

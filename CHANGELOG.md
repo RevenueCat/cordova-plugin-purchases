@@ -1,5 +1,4 @@
 ## 3.0.0-rc.7
-### Apple AdServices support
 
 *See previous 3.0.0-rc.x notes for a complete log.*
 

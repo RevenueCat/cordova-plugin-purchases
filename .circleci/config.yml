@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  android: circleci/android@2.1.2
+  android: circleci/android@1.0
 
 aliases:
   release-tags: &release-tags
@@ -18,11 +18,35 @@ aliases:
         only: /^release\/.*/
 
 commands:
+  android-sdk-dependencies:
+    description: "Install and set android SDK"
+    steps:
+      - run:
+          name: set ANDROID_SDK_ROOT
+          command: |
+            echo 'export ANDROID_SDK_ROOT=$HOME/android-tools'  >> $BASH_ENV
+      - restore_cache:
+          key: android=tools-v1-{{ checksum "scripts/install-android-tools.sh" }}-{{ arch }}
+
+      - run:
+          name: install android tools
+          command: |
+            sh scripts/install-android-tools.sh
+            echo 'export PATH=$ANDROID_SDK_ROOT/tools/bin:$PATH'  >> $BASH_ENV
+            echo 'export PATH=$ANDROID_SDK_ROOT/tools:$PATH'  >> $BASH_ENV
+            echo 'export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH'  >> $BASH_ENV
+            echo 'export PATH=$ANDROID_SDK_ROOT/emulator:$PATH'  >> $BASH_ENV
+            source $BASH_ENV
+      - save_cache:
+          key: android=tools-v1-{{ checksum "scripts/install-android-tools.sh" }}-{{ arch }}
+          paths:
+            - ~/android-tools
+  
   npm-dependencies:
     description: "Install all global and local npm dependencies"
     steps:
       - run: npm install -g cordova
-      - run: npm install -g github:taquitos/cordova-paramedic#dc1e4dca8a8ae33d577932737c34b643cbfe418d
+      - run: npm install -g github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
       - run: npm install --legacy-peer-deps
       - run: npm install --global yarn
 
@@ -107,20 +131,19 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: large
-      tag: 2021.10.1
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
       - install-sdkman
-      - run: sdkmanager "platforms;android-32"
-      - run: sdkmanager --update
+      - android/accept-licenses
       - android/create-avd:
           avd-name: myavd
-          system-image: system-images;android-32;google_apis;x86_64
+          system-image: system-images;android-29;default;x86
           install: true
       - android/start-emulator:
           avd-name: myavd
           no-window: true
+          post-emulator-launch-assemble-command: ""
       - install-nvm
       - npm-dependencies
       - replace-api-key-linux

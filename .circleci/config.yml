@@ -18,30 +18,6 @@ aliases:
         only: /^release\/.*/
 
 commands:
-  android-sdk-dependencies:
-    description: "Install and set android SDK"
-    steps:
-      - run:
-          name: set ANDROID_SDK_ROOT
-          command: |
-            echo 'export ANDROID_SDK_ROOT=$HOME/android-tools'  >> $BASH_ENV
-      - restore_cache:
-          key: android=tools-v1-{{ checksum "scripts/install-android-tools.sh" }}-{{ arch }}
-
-      - run:
-          name: install android tools
-          command: |
-            sh scripts/install-android-tools.sh
-            echo 'export PATH=$ANDROID_SDK_ROOT/tools/bin:$PATH'  >> $BASH_ENV
-            echo 'export PATH=$ANDROID_SDK_ROOT/tools:$PATH'  >> $BASH_ENV
-            echo 'export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH'  >> $BASH_ENV
-            echo 'export PATH=$ANDROID_SDK_ROOT/emulator:$PATH'  >> $BASH_ENV
-            source $BASH_ENV
-      - save_cache:
-          key: android=tools-v1-{{ checksum "scripts/install-android-tools.sh" }}-{{ arch }}
-          paths:
-            - ~/android-tools
-  
   npm-dependencies:
     description: "Install all global and local npm dependencies"
     steps:
@@ -135,7 +111,7 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
-      - install-sdkman
+      # - install-sdkman
       - run: sdkmanager "platforms;android-32"
       - run: sdkmanager --update
       - android/create-avd:
@@ -145,8 +121,6 @@ jobs:
       - android/start-emulator:
           avd-name: myavd
           no-window: true
-          wait-for-emulator: true
-          post-emulator-launch-assemble-command: ""
       - install-nvm
       - npm-dependencies
       - replace-api-key-linux

@@ -1,3 +1,13 @@
+## 3.0.0-rc.7
+### Apple AdServices support
+
+*See previous 3.0.0-rc.x notes for a complete log.*
+
+- Bump`purchases-hybrid-common` to `4.1.4` 
+    [4.1.4 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/4.1.4)
+- Bump `purchases-ios` to `4.10.2` 
+    [4.10.2 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/4.10.2)
+
 ## 3.0.0-rc.6
 ### Apple AdServices support
 

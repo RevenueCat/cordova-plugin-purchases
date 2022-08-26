@@ -201,20 +201,7 @@ jobs:
     steps:
       - checkout
       - yarn-dependencies
-      # Bundler
-      - restore_cache:
-          keys:
-            - v1-gem-cache-{{ checksum "Gemfile.lock" }}
-      - run:
-          name: Bundle install
-          command: |
-              bundle config set --local clean 'true'
-              bundle config set --local path 'vendor/bundle'
-              bundle install
-      - save_cache:
-          key: v1-gem-cache-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
+      - revenuecat/install-gem-unix-dependencies
       - revenuecat/setup-git-credentials
       - run:
           name: Build docs

@@ -1,4 +1,5 @@
 source "https://rubygems.org"
 
-gem "xcodeproj"
-gem "fastlane"
+gem 'xcodeproj'
+gem 'fastlane'
+gem 'danger'

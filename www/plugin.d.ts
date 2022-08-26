@@ -826,6 +826,27 @@ declare class Purchases {
      */
     static setAirshipChannelID(airshipChannelID: string | null): void;
     /**
+     * Subscriber attribute associated with the Firebase App Instance ID for the user
+     * Required for the RevenueCat Firebase integration
+     *
+     * @param firebaseAppInstanceID Empty String or null will delete the subscriber attribute.
+     */
+    static setFirebaseAppInstanceID(firebaseAppInstanceID: string | null): void;
+    /**
+     * Subscriber attribute associated with the Mixpanel Distinct ID for the user
+     * Required for the RevenueCat Mixpanel integration
+     *
+     * @param mixpanelDistinctID Empty String or null will delete the subscriber attribute.
+     */
+    static setMixpanelDistinctID(mixpanelDistinctID: string | null): void;
+    /**
+     * Subscriber attribute associated with the CleverTap ID for the user
+     * Required for the RevenueCat CleverTap integration
+     *
+     * @param cleverTapID Empty String or null will delete the subscriber attribute.
+     */
+    static setCleverTapID(cleverTapID: string | null): void;
+    /**
      * Subscriber attribute associated with the install media source for the user
      *
      * @param mediaSource Empty String or null will delete the subscriber attribute.

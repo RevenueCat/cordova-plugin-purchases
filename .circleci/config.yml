@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   android: circleci/android@1.0
+  revenuecat: revenuecat/sdks-common-config@1.1.0
 
 aliases:
   release-tags: &release-tags
@@ -244,3 +245,6 @@ workflows:
     jobs:
       - api-tester
 
+  danger:
+     jobs:
+       - revenuecat/danger

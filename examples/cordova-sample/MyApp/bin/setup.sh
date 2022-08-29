@@ -43,6 +43,13 @@ common_configure() {
     SK_CONFIG_SCRIPT_PATH=bin/sk_config_setup.rb
     echo "Running ${SK_CONFIG_SCRIPT_PATH}"
     bundle exec ruby $SK_CONFIG_SCRIPT_PATH
+  else
+    cd $OG_DIR
+    mkdir -p platforms/android/gradle/wrapper
+    cd platforms/android/gradle/wrapper
+    GRADLE_VERSION=7.3.3
+    echo "Setting gradle to ${GRADLE_VERSION}"
+    echo "distributionUrl=https\://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip">gradle-wrapper.properties
   fi
 
 }

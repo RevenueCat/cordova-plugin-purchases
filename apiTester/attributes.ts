@@ -15,6 +15,9 @@ function checkAttributes(purchases: Purchases) {
   Purchases.setMparticleID(stringOrNull);
   Purchases.setOnesignalID(stringOrNull);
   Purchases.setAirshipChannelID(stringOrNull);
+  Purchases.setCleverTapID(stringOrNull);
+  Purchases.setMixpanelDistinctID(stringOrNull);
+  Purchases.setFirebaseAppInstanceID(stringOrNull);
   Purchases.setMediaSource(stringOrNull);
   Purchases.setCampaign(stringOrNull);
   Purchases.setAdGroup(stringOrNull);

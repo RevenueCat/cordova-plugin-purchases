@@ -75,6 +75,21 @@ import PurchasesHybridCommon
         self.setSubscriberAttribute(command: command, name: "adjustID", setFunction: CommonFunctionality.setAdjustID)
     }
 
+    @objc(setCleverTapID:)
+    func setCleverTapID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "cleverTapID", setFunction: CommonFunctionality.setCleverTapID)
+    }
+
+    @objc(setFirebaseAppInstanceID:)
+    func setFirebaseAppInstanceID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "firebaseAppInstanceID", setFunction: CommonFunctionality.setFirebaseAppInstanceID)
+    }
+
+    @objc(setMixpanelDistinctID:)
+    func setMixpanelDistinctID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "mixpanelDistinctID", setFunction: CommonFunctionality.setMixpanelDistinctID)
+    }
+
     @objc(setAppsflyerID:)
     func setAppsflyerID(command: CDVInvokedUrlCommand) {
         self.setSubscriberAttribute(command: command,

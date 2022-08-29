@@ -305,6 +305,24 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success();
     }
 
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setFirebaseAppInstanceID")
+    private void setFirebaseAppInstanceID(String firebaseAppInstanceID, CallbackContext callbackContext) {
+        SubscriberAttributesKt.setFirebaseAppInstanceID(firebaseAppInstanceID);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setMixpanelDistinctID")
+    private void setMixpanelDistinctID(String mixpanelDistinctID, CallbackContext callbackContext) {
+        SubscriberAttributesKt.setMixpanelDistinctID(mixpanelDistinctID);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setCleverTapID")
+    private void setCleverTapID(String cleverTapID, CallbackContext callbackContext) {
+        SubscriberAttributesKt.setCleverTapID(cleverTapID);
+        callbackContext.success();
+    }
+
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setCampaign")
     private void setCampaign(String campaign, CallbackContext callbackContext) { 
         SubscriberAttributesKt.setCampaign(campaign);

@@ -136,6 +136,7 @@ jobs:
       - checkout
       - install-sdkman
       - run: sdkmanager "platforms;android-32"
+      - run: sdkmanager "build-tools;32.0.0"
       - run: sdkmanager --update
       - android/accept-licenses
       - android/create-avd:

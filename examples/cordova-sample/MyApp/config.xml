@@ -17,7 +17,6 @@
     <allow-intent href="mailto:*" />
     <allow-intent href="geo:*" />
     <platform name="android">
-        <preference name="GradleVersion" value="7.3.3"/>
         <allow-intent href="market:*" />
     </platform>
     <platform name="ios">

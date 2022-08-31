@@ -1,6 +1,7 @@
 src/plugin/
 .vscode
 .circleci
+.github
 tests
 tsconfig.json
 tslint.json
@@ -9,3 +10,12 @@ src/ios/.framework_version
 RELEASING.md
 jest.config.js
 examples/
+apiTester/
+Dangerfile
+.version
+.npmrc.SAMPLE
+fastlane/
+
+# CircleCI folders
+vendor/
+.bundle/

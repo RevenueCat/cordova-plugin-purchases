@@ -1,3 +1,9 @@
+GIT
+  remote: https://github.com/RevenueCat/fastlane-plugin-revenuecat_internal
+  revision: 562dbc8d71bba33ec58b5c999d15e4c39b09bc7f
+  specs:
+    fastlane-plugin-revenuecat_internal (0.1.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -249,10 +255,12 @@ GEM
 PLATFORMS
   arm64-darwin-20
   arm64-darwin-21
+  x86_64-darwin-21
 
 DEPENDENCIES
   danger
   fastlane
+  fastlane-plugin-revenuecat_internal!
   xcodeproj
 
 BUNDLED WITH

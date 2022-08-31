@@ -219,9 +219,8 @@ jobs:
 
   make-release:
     description: "Publishes the new version and creates a github release"
-    executor:
-      name: rn/macos
-      xcode_version: 13.2.0
+    macos:
+      xcode: 13.3.1
     steps:
       - checkout
       - npm-dependencies

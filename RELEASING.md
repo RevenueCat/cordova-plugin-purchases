@@ -1,6 +1,6 @@
 Automatic Releasing
 =========
-1. Create a `fastlane/.env` file with your GitHub API token (see `fastlane/.env.SAMPLE`). This will be used to create the PR, so you should use your own token so the PR gets assigned to you.
+1. Create a `fastlane/.env` file with your GitHub API token (see `fastlane/.env.SAMPLE`). This will be used to create the PR, so you should use your own token so the PR gets attributed to you.
 1. Run `bundle exec fastlane bump`
  1. Confirm base branch is correct
  2. Input new version number

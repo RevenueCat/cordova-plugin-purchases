@@ -18,6 +18,7 @@
  */
 
 const app = {
+  isInitialized: false,
   // Application Constructor
   initialize: function() {
     document.addEventListener(
@@ -26,8 +27,11 @@ const app = {
       false
     );
     // this method gets called after configure is done
+    // or when the customerInfo is updated from a purchase, restore, login / out or renewal
     window.addEventListener("onCustomerInfoUpdated", (info) => {
-      
+      if (this.isInitialized) { return; }
+      this.isInitialized = true;
+
       this.setupShouldPurchasePromoProductListener();
 
       Purchases.enableAdServicesAttributionTokenCollection();

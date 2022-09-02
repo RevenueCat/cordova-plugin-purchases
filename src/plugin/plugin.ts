@@ -638,17 +638,16 @@ class Purchases {
    * @param {function(PurchasesOfferings):void} callback Callback triggered after a successful getOfferings call.
    * @param {function(PurchasesError):void} errorCallback Callback triggered after an error or when retrieving offerings.
    */
-  public static getOfferings(
-    callback: (offerings: PurchasesOfferings) => void,
-    errorCallback: (error: PurchasesError) => void
-  ) {
-    window.cordova.exec(
-      callback,
-      errorCallback,
+  public static async getOfferings(): Promise<PurchasesOfferings> {
+    return new Promise((resolve, reject) => {
+      window.cordova.exec(
+      (offerings: PurchasesOfferings) => {resolve(offerings);},
+      (error: PurchasesError) => {reject(error);},
       PLUGIN_NAME,
       "getOfferings",
       []
-    );
+      );
+      });
   }
 
   /**

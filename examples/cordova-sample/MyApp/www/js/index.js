@@ -291,7 +291,6 @@ setupShouldPurchasePromoProductListener = function() {
 },
 
 setupPurchaseButtons = function () { 
-  var prototypeButton = document.getElementById("prototype-button");
   const prototypeButton = document.getElementById("prototype-button");
   const parentNode = prototypeButton.parentNode;
   Purchases.getOfferings(

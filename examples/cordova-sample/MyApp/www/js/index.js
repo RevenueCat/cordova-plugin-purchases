@@ -268,6 +268,10 @@ initializePurchasesSDK = function() {
   this.setupShouldPurchasePromoProductListener();
   Purchases.enableAdServicesAttributionTokenCollection();
   this.setupPurchaseButtons();
+  window.addEventListener("onCustomerInfoUpdated", (info) => {
+    console.log("customer info updated!");
+    console.log(info);
+  });
 }
 
 setupShouldPurchasePromoProductListener = function() {

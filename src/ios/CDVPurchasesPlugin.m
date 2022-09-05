@@ -29,7 +29,8 @@
                         observerMode:observerMode
                userDefaultsSuiteName:userDefaultsSuiteName
                       platformFlavor:self.platformFlavor
-               platformFlavorVersion:self.platformFlavorVersion];
+               platformFlavorVersion:self.platformFlavorVersion
+                   dangerousSettings:nil];
     RCPurchases.sharedPurchases.delegate = self;
 
     self.updatedPurchaserInfoCallbackID = command.callbackId;

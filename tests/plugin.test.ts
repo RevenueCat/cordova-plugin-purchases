@@ -8,41 +8,42 @@ window.cordova = {
 
 describe("Purchases", () => {
   it("configure fires PurchasesPlugin with the correct arguments", () => {
-    Purchases.configure("api_key", "app_user_id");
-
-    expect(execFn).toHaveBeenCalledWith(
-      expect.any(Function),
-      null,
-      "PurchasesPlugin",
-      "configure",
-      ["api_key", "app_user_id", false, undefined]
-    );
+    Purchases.configure("api_key", () => {
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        null,
+        "PurchasesPlugin",
+        "configure",
+        ["api_key", "app_user_id", false, undefined]
+      );
+    },
+     "app_user_id");
   });
 
   it("configure fires PurchasesPlugin with the correct arguments when specifying observermode", () => {
-    Purchases.configure("api_key", "app_user_id", true);
-
-    expect(execFn).toHaveBeenCalledWith(
-      expect.any(Function),
-      null,
-      "PurchasesPlugin",
-      "configure",
-      ["api_key", "app_user_id", true, undefined]
-    );
+    Purchases.configure("api_key", () => {
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        null,
+        "PurchasesPlugin",
+        "configure",
+        ["api_key", "app_user_id", true, undefined]
+      );
+    }, "app_user_id", true);
   });
 
   it("configure fires PurchasesPlugin with the correct arguments when setting user defaults suite name", () => {
     const expected = "suite-name";
 
-    Purchases.configure("api_key", "app_user_id", false, expected);
-
-    expect(execFn).toHaveBeenCalledWith(
-      expect.any(Function),
-      null,
-      "PurchasesPlugin",
-      "configure",
-      ["api_key", "app_user_id", false, expected]
-    );
+    Purchases.configure("api_key", () => {
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        null,
+        "PurchasesPlugin",
+        "configure",
+        ["api_key", "app_user_id", false, expected]
+      );
+    }, "app_user_id", false, expected);
   });
 
   it("setProxyURL fires PurchasesPlugin with the correct arguments", () => {

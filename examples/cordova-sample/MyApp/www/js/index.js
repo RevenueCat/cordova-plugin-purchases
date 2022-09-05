@@ -31,7 +31,7 @@ const app = {
     document.getElementById("get-customer-info").addEventListener("click", this.getCustomerInfo);
     document.getElementById("login-random").addEventListener("click", this.loginRandom);
     document.getElementById("login-known").addEventListener("click", this.loginKnown);
-    document.getElementById("log-out").addEventListener("click", this.loginUnknown);
+    document.getElementById("log-out").addEventListener("click", this.logOut);
   },
 
   // deviceready Event Handler
@@ -56,8 +56,7 @@ const app = {
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
     Purchases.configure("api_key");
-  }
-
+  },
   
   getOfferings: function() { 
     Purchases.getOfferings(

@@ -168,18 +168,7 @@ initializePurchasesSDK = function() {
   this.setupShouldPurchasePromoProductListener();
 
   Purchases.enableAdServicesAttributionTokenCollection();
-  Purchases.getCustomerInfo(
-    info => {
-      const isPro = typeof info.entitlements.active.pro_cat !== "undefined";
-      console.log("isPro " + JSON.stringify(isPro));
-      console.log(JSON.stringify(info));
-    },
-    error => {
-      debugger;
-      console.log(JSON.stringify(error));
-    }
-  );
-
+  
   Purchases.isAnonymous(
     isAnonymous => {
       console.log("ISANONYMOUS " + isAnonymous);

@@ -27,7 +27,6 @@ const app = {
     );
     document.getElementById("get-offerings").addEventListener("click", this.getOfferings); 
     document.getElementById("get-products").addEventListener("click", this.getProducts);
-    document.getElementById("get-packages").addEventListener("click", this.getPackages);
     document.getElementById("get-customer-info").addEventListener("click", this.getCustomerInfo);
     document.getElementById("login-random").addEventListener("click", this.loginRandom);
     document.getElementById("login-known").addEventListener("click", this.loginKnown);
@@ -82,14 +81,30 @@ const app = {
   },
 
   getProducts: function() {
-    Purchases.getProducts(
-      products => {
-        setStatusLabelText(products);
+    Purchases.getOfferings(
+      offerings => {
+        var productIdentifiers = [];
+        for (const [key, offering] of Object.entries(offerings.all)) {
+          offering.availablePackages.forEach(package => {
+            productIdentifiers.push(package.product.identifier);
+          });
+        }
+        
+        Purchases.getProducts(
+          productIdentifiers,
+          products => {
+            setStatusLabelText(products);
+          },
+          error => {
+            setStatusLabelText(error);
+          }
+        );
       },
       error => {
         setStatusLabelText(error);
       }
     );
+
   },
 
   getPackages: function() {

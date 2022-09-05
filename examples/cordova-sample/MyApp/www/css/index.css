@@ -41,22 +41,7 @@ body {
     height:100%;
     margin:0px;
     padding:0px;
-    text-transform:uppercase;
     width:100%;
-}
-
-/* Portrait layout (default) */
-.app {
-    background:url(../img/logo.png) no-repeat center top; /* 170px x 200px */
-    position:absolute;             /* position in the center of the screen */
-    left:50%;
-    top:50%;
-    height:50px;                   /* text area height */
-    width:225px;                   /* text area width */
-    text-align:center;
-    padding:180px 0px 0px 0px;     /* image height is 200px (bottom 20px are overlapped with text) */
-    margin:-115px 0px 0px -112px;  /* offset vertical: half of image height and text area height */
-                                   /* offset horizontal: half of text area width */
 }
 
 /* Landscape layout (with min-width) */
@@ -112,4 +97,39 @@ h1 {
 .blink {
     animation:fade 3000ms infinite;
     -webkit-animation:fade 3000ms infinite;
+}
+
+/* p#status { 
+    background-color: #000000;
+    color: #FFFFFF;
+    font-size: 12px;
+    margin: 0px;
+    text-align: left;
+    height: 300px;
+    width:100%;
+    padding: 40px;
+} */
+
+div#status-container {
+    background-color: #000000;
+    color: #FFFFFF;
+    font-size: 12px;
+    margin: 0px;
+    text-align: left;
+    height: 400px;
+    width:100%;
+    padding: 40px;
+    overflow: auto;
+}
+
+.tester-button { 
+    background-color: #454545de;
+    color: #FFFFFF;
+    font-size: 20px;
+    text-align:left;
+    margin:0 auto;
+    display:block;
+    height: 40px;
+    width: 100%;
+    padding: 10px;
 }

@@ -25,6 +25,7 @@ const app = {
       this.onDeviceReady.bind(this),
       false
     );
+    document.getElementById("get-offerings").addEventListener("click", this.getOfferings); 
   },
 
   // deviceready Event Handler
@@ -48,13 +49,30 @@ const app = {
     console.log("Received Event: " + id);
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
-    Purchases.configure("api_key", function() { 
-      console.log("Configured");
-      initializePurchasesSDK();
-    });
-  },
+    Purchases.configure("api_key");
+  }
 
+  
+  getOfferings: function() { 
+    Purchases.getOfferings(
+      offerings => {
+        setStatusLabelText(offerings);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+  },
+  
 };
+
+setStatusLabelText = function(myObject) { 
+  var objectString = JSON.stringify(myObject, null, 4);
+  console.log(objectString);
+
+  document.getElementById("status").innerText = objectString;
+}
+
 
 initializePurchasesSDK = function() {
 

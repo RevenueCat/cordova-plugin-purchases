@@ -292,6 +292,8 @@ setupShouldPurchasePromoProductListener = function() {
 
 setupPurchaseButtons = function () { 
   var prototypeButton = document.getElementById("prototype-button");
+  const prototypeButton = document.getElementById("prototype-button");
+  const parentNode = prototypeButton.parentNode;
   Purchases.getOfferings(
     offerings => {
       const availablePackages = offerings.current.availablePackages;
@@ -301,7 +303,7 @@ setupPurchaseButtons = function () {
         purchaseButton.id = package.product.identifier;
         purchaseButton.textContent = "Buy " + package.identifier + package.product.priceString;
         purchaseButton.style = "";
-        prototypeButton.parentNode.appendChild(purchaseButton);
+        parentNode.appendChild(purchaseButton);
         purchaseButton.addEventListener("click", function() {
           Purchases.purchasePackage(package,
             customerInfo => { 

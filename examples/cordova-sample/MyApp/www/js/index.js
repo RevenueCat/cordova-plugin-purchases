@@ -37,6 +37,9 @@ const app = {
     document.getElementById("set-subs-attributes").addEventListener("click", this.setSubsAttributes);
     document.getElementById("check-intro-eligibility").addEventListener("click", this.checkIntroEligibility);
     document.getElementById("is-anonymous").addEventListener("click", this.isAnonymous);
+    document.getElementById("invalidate-customer-info-cache").addEventListener("click", this.invalidateCustomerInfoCache)
+    document.getElementById("toggle-simulates-ask-to-buy-in-sandbox").addEventListener("click", this.toggleSimulatesAskToBuyInSandbox)
+    document.getElementById("present-code-redemption-sheet").addEventListener("click", this.presentCodeRedemptionSheet)
   },
 
   // deviceready Event Handler
@@ -239,6 +242,24 @@ const app = {
       }
     );
   },
+  
+  invalidateCustomerInfoCache: function() {
+    setStatusLabelText("invalidating customer info cache");
+    Purchases.invalidateCustomerInfoCache();
+  },
+  
+  simulatesAskToBuyInSandbox: false,
+  toggleSimulatesAskToBuyInSandbox: function() {
+    this.simulatesAskToBuyInSandbox = !this.simulatesAskToBuyInSandbox;
+    setStatusLabelText("setting simulatesAskToBuyInSandbox to " + this.simulatesAskToBuyInSandbox);
+    Purchases.setSimulatesAskToBuyInSandbox(simulatesAskToBuyInSandbox);
+  },
+  
+  presentCodeRedemptionSheet: function() {
+    setStatusLabelText("presenting code redemption sheet");
+    Purchases.presentCodeRedemptionSheet();
+  },
+
 };
 
 initializePurchasesSDK = function() {

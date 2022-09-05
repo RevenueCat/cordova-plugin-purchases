@@ -25,9 +25,7 @@ const app = {
       this.onDeviceReady.bind(this),
       false
     );
-    window.addEventListener("onCustomerInfoUpdated", (info) => {
-
-    });
+    document.getElementById("get-offerings").addEventListener("click", this.getOfferings); 
   },
 
   // deviceready Event Handler
@@ -97,6 +95,78 @@ const app = {
       }
     );
   }
+
+  
+  getOfferings: function() { 
+    Purchases.getOfferings(
+      offerings => {
+        setStatusLabelText(offerings);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+  },
+  
 };
+
+setStatusLabelText = function(myObject) { 
+  var objectString = JSON.stringify(myObject, null, 4);
+  console.log(objectString);
+
+  document.getElementById("status").innerText = objectString;
+}
+
+
+initializePurchasesSDK = function() {
+
+  this.setupShouldPurchasePromoProductListener();
+
+  Purchases.enableAdServicesAttributionTokenCollection();
+  Purchases.getCustomerInfo(
+    info => {
+      const isPro = typeof info.entitlements.active.pro_cat !== "undefined";
+      console.log("isPro " + JSON.stringify(isPro));
+      console.log(JSON.stringify(info));
+    },
+    error => {
+      debugger;
+      console.log(JSON.stringify(error));
+    }
+  );
+
+  Purchases.isAnonymous(
+    isAnonymous => {
+      console.log("ISANONYMOUS " + isAnonymous);
+      }
+  );
+
+  Purchases.getOfferings(
+    offerings => {
+      Purchases.checkTrialOrIntroductoryPriceEligibility([offerings.current.lifetime.product.identifier, "some_offering"],
+        map => {
+          console.log(map)
+        }
+      );
+      console.log(JSON.stringify(offerings));
+    },
+    ( error ) => {
+      console.log(JSON.stringify(error));
+    }
+  );
+
+  Purchases.setPhoneNumber("12345678");
+  Purchases.setDisplayName("Garfield");
+  Purchases.setAttributes({ "favorite_cat": "garfield" });
+  Purchases.setEmail("garfield@revenuecat.com");
+}
+
+setupShouldPurchasePromoProductListener = function() {
+  Purchases.addShouldPurchasePromoProductListener((makeDeferredPurchase) => {
+    console.log("This codes executes right before making the purchase");
+    makeDeferredPurchase();
+    console.log("This codes executes right after making the purchase");
+  });
+},
 
 app.initialize();

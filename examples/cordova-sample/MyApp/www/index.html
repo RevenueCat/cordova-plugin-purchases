@@ -37,12 +37,18 @@
     </head>
     <body>
         <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
+            <div id="deviceready" class="blink" hidden="true">
                 <p class="event listening">Connecting to Device</p>
                 <p class="event received">Device is Ready</p>
             </div>
-        </div>
+            <h1>Cordova PurchaseTester</h1>
+            <div>
+                <div id="status-container">
+                <p id="status">Ready</p>
+                </div>
+                <button id="get-offerings" type="button" class="tester-button">Get Offerings</button>
+            </div>
+        </div>        
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
     </body>

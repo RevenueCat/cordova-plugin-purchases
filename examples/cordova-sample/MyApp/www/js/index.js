@@ -63,7 +63,9 @@ const app = {
     console.log("Received Event: " + id);
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
-    Purchases.configure("api_key");
+    Purchases.configure("api_key", () => {
+      initializePurchasesSDK();
+    });
   },
   
   getOfferings: function() { 
@@ -265,6 +267,7 @@ const app = {
 initializePurchasesSDK = function() {
   this.setupShouldPurchasePromoProductListener();
   Purchases.enableAdServicesAttributionTokenCollection();
+  this.setupPurchaseButtons();
 }
 
 setupShouldPurchasePromoProductListener = function() {
@@ -274,6 +277,35 @@ setupShouldPurchasePromoProductListener = function() {
     console.log("This codes executes right after making the purchase");
   });
 },
+
+setupPurchaseButtons = function () { 
+  var prototypeButton = document.getElementById("prototype-button");
+  Purchases.getOfferings(
+    offerings => {
+      const availablePackages = offerings.current.availablePackages;
+      availablePackages.forEach(package => {
+        var purchaseButton = prototypeButton.cloneNode(true);
+        purchaseButton.hidden = false;
+        purchaseButton.id = package.product.identifier;
+        purchaseButton.textContent = "Buy " + package.identifier + package.product.priceString;
+        purchaseButton.style = "";
+        prototypeButton.parentNode.appendChild(purchaseButton);
+        purchaseButton.addEventListener("click", function() {
+          Purchases.purchasePackage(package,
+            customerInfo => { 
+              setStatusLabelText(customerInfo);
+            },
+            error => {
+              setStatusLabelText(error);
+            });
+        });
+      });
+    },
+    error => {
+      setStatusLabelText(error);
+    }
+  );
+}
 
 setStatusLabelText = function(myObject) { 
   var objectString = JSON.stringify(myObject, null, 4);

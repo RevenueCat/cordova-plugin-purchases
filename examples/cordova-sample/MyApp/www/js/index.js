@@ -31,7 +31,7 @@ const app = {
     document.getElementById("get-customer-info").addEventListener("click", this.getCustomerInfo);
     document.getElementById("login-random").addEventListener("click", this.loginRandom);
     document.getElementById("login-known").addEventListener("click", this.loginKnown);
-    document.getElementById("log-out").addEventListener("click", this.loginUnknown);
+    document.getElementById("log-out").addEventListener("click", this.logOut);
   },
 
   // deviceready Event Handler
@@ -68,40 +68,7 @@ const app = {
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
     Purchases.configure("api_key");
-    Purchases.enableAdServicesAttributionTokenCollection();
-    Purchases.getCustomerInfo(
-      info => {
-        const isPro = typeof info.entitlements.active.pro_cat !== "undefined";
-        console.log("isPro " + JSON.stringify(isPro));
-        console.log(JSON.stringify(info));
-      },
-      error => {
-        debugger;
-        console.log(JSON.stringify(error));
-      }
-    );
-
-    Purchases.isAnonymous(
-      isAnonymous => {
-        console.log("ISANONYMOUS " + isAnonymous);
-        }
-    );
-
-    Purchases.getOfferings(
-      offerings => {
-        Purchases.checkTrialOrIntroductoryPriceEligibility([offerings.current.lifetime.product.identifier, "some_offering"],
-          map => {
-            console.log(map)
-          }
-        );
-        console.log(JSON.stringify(offerings));
-      },
-      ( error ) => {
-        console.log(JSON.stringify(error));
-      }
-    );
-  }
-
+  },
   
   getOfferings: function() { 
     Purchases.getOfferings(

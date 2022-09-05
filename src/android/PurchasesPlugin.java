@@ -35,11 +35,8 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     public static final String PLATFORM_NAME = "cordova";
     public static final String PLUGIN_VERSION = "3.0.0-rc.8";
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "configure", isAutofinish = false)
-    private void configure(String apiKey, @Nullable String appUserID, boolean observerMode,
-                           @Nullable String userDefaultsSuiteName, CallbackContext callbackContext) {
-        PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
-        CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, observerMode, platformInfo);
+    @PluginAction(thread = ExecutionThread.UI, actionName = "setupDelegateCallback", isAutofinish = false)
+    private void setupDelegateCallback(CallbackContext callbackContext) {
         Purchases.getSharedInstance().setUpdatedCustomerInfoListener(new UpdatedCustomerInfoListener() {
             @Override
             public void onReceived(@NonNull CustomerInfo customerInfo) {
@@ -51,6 +48,14 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
         result.setKeepCallback(true);
         callbackContext.sendPluginResult(result);
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "configure", isAutofinish = false)
+    private void configure(String apiKey, @Nullable String appUserID, boolean observerMode,
+                           @Nullable String userDefaultsSuiteName, CallbackContext callbackContext) {
+        PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
+        CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, observerMode, platformInfo);
+        callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "getOfferings", isAutofinish = false)

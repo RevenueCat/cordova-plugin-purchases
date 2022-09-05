@@ -625,8 +625,15 @@ class Purchases {
     window.cordova.exec(
       (customerInfo: any) => {
         window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
-        callback();
       },
+      null,
+      PLUGIN_NAME,
+      "setupDelegateCallback",
+      []
+    );
+
+    window.cordova.exec(
+      callback,
       null,
       PLUGIN_NAME,
       "configure",

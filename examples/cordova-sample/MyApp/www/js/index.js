@@ -26,6 +26,12 @@ const app = {
       false
     );
     document.getElementById("get-offerings").addEventListener("click", this.getOfferings); 
+    document.getElementById("get-products").addEventListener("click", this.getProducts);
+    document.getElementById("get-packages").addEventListener("click", this.getPackages);
+    document.getElementById("get-customer-info").addEventListener("click", this.getCustomerInfo);
+    document.getElementById("login-random").addEventListener("click", this.loginRandom);
+    document.getElementById("login-known").addEventListener("click", this.loginKnown);
+    document.getElementById("log-out").addEventListener("click", this.loginUnknown);
   },
 
   // deviceready Event Handler
@@ -101,6 +107,75 @@ const app = {
     Purchases.getOfferings(
       offerings => {
         setStatusLabelText(offerings);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+  },
+
+  getProducts: function() {
+    Purchases.getProducts(
+      products => {
+        setStatusLabelText(products);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+  },
+
+  getPackages: function() {
+    Purchases.getPackages(
+      packages => {
+        setStatusLabelText(packages);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+
+  },
+
+  getCustomerInfo: function() {
+    Purchases.getCustomerInfo(
+      customerInfo => {
+        setStatusLabelText(customerInfo);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+  },
+
+  loginRandom: function() {
+    Purchases.logIn(
+      "random:" + self.crypto.randomUUID(),
+      info => {
+        setStatusLabelText(info);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+  },
+
+  loginKnown: function() {
+    Purchases.logIn(
+      "known",
+      info => {
+        setStatusLabelText(info);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+  },
+
+  logOut: function() {
+    Purchases.logOut(
+      info => {
+        setStatusLabelText(info);
       },
       error => {
         setStatusLabelText(error);

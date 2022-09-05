@@ -617,13 +617,15 @@ class Purchases {
    */
   public static configure(
     apiKey: string,
+    callback: () => void,
     appUserID?: string | null,
     observerMode: boolean = false,
-    userDefaultsSuiteName?: string
+    userDefaultsSuiteName?: string,
   ): void {
     window.cordova.exec(
       (customerInfo: any) => {
         window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
+        callback();
       },
       null,
       PLUGIN_NAME,

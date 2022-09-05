@@ -18,6 +18,7 @@
  */
 
 const app = {
+  isInitialized: false,
   // Application Constructor
   initialize: function() {
     document.addEventListener(
@@ -25,8 +26,51 @@ const app = {
       this.onDeviceReady.bind(this),
       false
     );
+    // this method gets called after configure is done
+    // or when the customerInfo is updated from a purchase, restore, login / out or renewal
     window.addEventListener("onCustomerInfoUpdated", (info) => {
+      if (this.isInitialized) { return; }
+      this.isInitialized = true;
 
+      this.setupShouldPurchasePromoProductListener();
+
+      Purchases.enableAdServicesAttributionTokenCollection();
+      Purchases.getCustomerInfo(
+        info => {
+          const isPro = typeof info.entitlements.active.pro_cat !== "undefined";
+          console.log("isPro " + JSON.stringify(isPro));
+          console.log(JSON.stringify(info));
+        },
+        error => {
+          debugger;
+          console.log(JSON.stringify(error));
+        }
+      );
+  
+      Purchases.isAnonymous(
+        isAnonymous => {
+          console.log("ISANONYMOUS " + isAnonymous);
+          }
+      );
+  
+      Purchases.getOfferings(
+        offerings => {
+          Purchases.checkTrialOrIntroductoryPriceEligibility([offerings.current.lifetime.product.identifier, "some_offering"],
+            map => {
+              console.log(map)
+            }
+          );
+          console.log(JSON.stringify(offerings));
+        },
+        ( error ) => {
+          console.log(JSON.stringify(error));
+        }
+      );
+
+      Purchases.setPhoneNumber("12345678");
+      Purchases.setDisplayName("Garfield");
+      Purchases.setAttributes({ "favorite_cat": "garfield" });
+      Purchases.setEmail("garfield@revenuecat.com");
     });
   },
 
@@ -36,11 +80,6 @@ const app = {
   // 'pause', 'resume', etc.
   onDeviceReady: function() {
     this.receivedEvent("deviceready");
-    this.setupShouldPurchasePromoProductListener();
-    Purchases.setPhoneNumber("12345678");
-    Purchases.setDisplayName("Garfield");
-    Purchases.setAttributes({ "favorite_cat": "garfield" });
-    Purchases.setEmail("garfield@revenuecat.com");
   },
 
   setupShouldPurchasePromoProductListener: function() {
@@ -64,38 +103,6 @@ const app = {
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
     Purchases.configure("api_key");
-    Purchases.enableAdServicesAttributionTokenCollection();
-    Purchases.getCustomerInfo(
-      info => {
-        const isPro = typeof info.entitlements.active.pro_cat !== "undefined";
-        console.log("isPro " + JSON.stringify(isPro));
-        console.log(JSON.stringify(info));
-      },
-      error => {
-        debugger;
-        console.log(JSON.stringify(error));
-      }
-    );
-
-    Purchases.isAnonymous(
-      isAnonymous => {
-        console.log("ISANONYMOUS " + isAnonymous);
-        }
-    );
-
-    Purchases.getOfferings(
-      offerings => {
-        Purchases.checkTrialOrIntroductoryPriceEligibility([offerings.current.lifetime.product.identifier, "some_offering"],
-          map => {
-            console.log(map)
-          }
-        );
-        console.log(JSON.stringify(offerings));
-      },
-      ( error ) => {
-        console.log(JSON.stringify(error));
-      }
-    );
   }
 };
 

@@ -31,6 +31,12 @@ const app = {
     document.getElementById("login-random").addEventListener("click", this.loginRandom);
     document.getElementById("login-known").addEventListener("click", this.loginKnown);
     document.getElementById("log-out").addEventListener("click", this.logOut);
+    document.getElementById("sync-purchases").addEventListener("click", this.syncPurchases);
+    document.getElementById("restore-purchases").addEventListener("click", this.restorePurchases);
+    document.getElementById("can-make-payments").addEventListener("click", this.canMakePayments);
+    document.getElementById("set-subs-attributes").addEventListener("click", this.setSubsAttributes);
+    document.getElementById("check-intro-eligibility").addEventListener("click", this.checkIntroEligibility);
+    document.getElementById("is-anonymous").addEventListener("click", this.isAnonymous);
   },
 
   // deviceready Event Handler
@@ -116,7 +122,6 @@ const app = {
         setStatusLabelText(error);
       }
     );
-
   },
 
   getCustomerInfo: function() {
@@ -144,7 +149,7 @@ const app = {
 
   loginKnown: function() {
     Purchases.logIn(
-      "known",
+      "test",
       info => {
         setStatusLabelText(info);
       },
@@ -164,47 +169,93 @@ const app = {
       }
     );
   },
+
+  syncPurchases: function() {
+    Purchases.syncPurchases();
+    setStatusLabelText("Sync Purchases called. This method does not have a callback.");
+  },
+
+  restorePurchases: function() {
+    Purchases.restorePurchases(
+      info => {
+        setStatusLabelText(info);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    )
+  },
+
+  canMakePayments: function() {
+    Purchases.canMakePayments(
+      info => {
+        setStatusLabelText(info);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    )
+  },
+
+  setSubsAttributes: function() {
+    Purchases.setPhoneNumber("12345678");
+    Purchases.setDisplayName("Garfield");
+    Purchases.setAttributes({ "favorite_cat": "garfield" });
+    Purchases.setEmail("garfield@revenuecat.com");  
+    Purchases.setAdjustID("AdjustID");
+    Purchases.setAppsflyerID("AppsflyerID");
+    Purchases.setFBAnonymousID("FBAnonymousID");
+    Purchases.setMparticleID("MparticleID");
+    Purchases.setOnesignalID("OnesignalID");
+    Purchases.setAirshipChannelID("AirshipChannelID");
+    Purchases.setFirebaseAppInstanceID("FirebaseAppInstanceID");
+    Purchases.setMixpanelDistinctID("MixpanelDistinctID");
+    Purchases.setCleverTapID("CleverTapID");
+    Purchases.setMediaSource("MediaSource");
+    Purchases.setCampaign("Campaign");
+    Purchases.setAdGroup("AdGroup");
+    Purchases.setAd("Ad");
+    Purchases.setKeyword("Keyword");
+    Purchases.setCreative("Creative");
+    Purchases.collectDeviceIdentifiers();
+    setStatusLabelText("subscriber attributes set");
+  },
+
+  checkIntroEligibility: function() {
+    Purchases.getOfferings(
+      offerings => {
+        var productIdentifiers = [];
+        for (const [key, offering] of Object.entries(offerings.all)) {
+          offering.availablePackages.forEach(package => {
+            productIdentifiers.push(package.product.identifier);
+          });
+        }
+        
+        Purchases.checkTrialOrIntroductoryPriceEligibility(
+          productIdentifiers,
+          info => {
+            setStatusLabelText(info);
+          }
+        );
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+  },
   
+  isAnonymous: function() { 
+    Purchases.isAnonymous(
+      isAnonymous => {
+        setStatusLabelText(isAnonymous);
+      }
+    );
+  },
 };
 
-setStatusLabelText = function(myObject) { 
-  var objectString = JSON.stringify(myObject, null, 4);
-  console.log(objectString);
-
-  document.getElementById("status").innerText = objectString;
-}
-
-
 initializePurchasesSDK = function() {
-
   this.setupShouldPurchasePromoProductListener();
-
   Purchases.enableAdServicesAttributionTokenCollection();
-  
-  Purchases.isAnonymous(
-    isAnonymous => {
-      console.log("ISANONYMOUS " + isAnonymous);
-      }
-  );
-
-  Purchases.getOfferings(
-    offerings => {
-      Purchases.checkTrialOrIntroductoryPriceEligibility([offerings.current.lifetime.product.identifier, "some_offering"],
-        map => {
-          console.log(map)
-        }
-      );
-      console.log(JSON.stringify(offerings));
-    },
-    ( error ) => {
-      console.log(JSON.stringify(error));
-    }
-  );
-
-  Purchases.setPhoneNumber("12345678");
-  Purchases.setDisplayName("Garfield");
-  Purchases.setAttributes({ "favorite_cat": "garfield" });
-  Purchases.setEmail("garfield@revenuecat.com");
 }
 
 setupShouldPurchasePromoProductListener = function() {
@@ -214,5 +265,12 @@ setupShouldPurchasePromoProductListener = function() {
     console.log("This codes executes right after making the purchase");
   });
 },
+
+setStatusLabelText = function(myObject) { 
+  var objectString = JSON.stringify(myObject, null, 4);
+  console.log(objectString);
+
+  document.getElementById("status").innerText = objectString;
+}
 
 app.initialize();

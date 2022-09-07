@@ -1,16 +1,16 @@
 version: 2.1
 orbs:
   android: circleci/android@1.0
-  revenuecat: revenuecat/sdks-common-config@1.1.0
+  revenuecat: revenuecat/sdks-common-config@2.0.0
 
 aliases:
   release-tags: &release-tags
-    filters: 
+    filters:
       tags:
         ignore: /^.*-SNAPSHOT/
       branches:
         ignore: /.*/
-        
+
   release-tags-and-branches: &release-tags-and-branches
     filters:
       tags:
@@ -18,8 +18,15 @@ aliases:
       branches:
         only: /^release\/.*/
 
+  only-main-branch: &only-main-branch
+    filters:
+      tags:
+        ignore: /.*/
+      branches:
+        only: main
+
 commands:
-  
+
   npm-dependencies:
     description: "Install all global and local npm dependencies"
     steps:
@@ -58,7 +65,7 @@ commands:
     steps:
       - run: npm install -g ios-deploy
       - run: npm install --legacy-peer-deps
-    
+
   replace-api-key-linux:
     description: "Replace API_KEY"
     steps:
@@ -97,11 +104,11 @@ commands:
       - run: echo 'nvm use 16.13.1' >> $BASH_ENV
       - run: node -v
 
-  set_up_git_user:
-    description: Set git config parameters
+  copy-npm-rc:
     steps:
-      - run: git config --global user.email "dev+ci@revenuecat.com"
-      - run: git config --global user.name "RevenueCat CI"
+      - run:
+          name: Copy npmrc sample file to final location
+          command: cp .npmrc.SAMPLE .npmrc
 
 jobs:
   android-integration-test:
@@ -183,15 +190,15 @@ jobs:
   docs-deploy:
     docker:
       - image: cimg/ruby:2.6
-          
+
     steps:
       - checkout
       - yarn-dependencies
       # Bundler
       - restore_cache:
-          keys: 
+          keys:
             - v1-gem-cache-{{ checksum "Gemfile.lock" }}
-      - run: 
+      - run:
           name: Bundle install
           command: |
               bundle config set --local clean 'true'
@@ -201,25 +208,59 @@ jobs:
           key: v1-gem-cache-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-      - set_up_git_user
+      - revenuecat/setup-git-credentials
       - run:
           name: Build docs
           command: bundle exec fastlane generate_docs
+
+  prepare-next-version:
+    description: "Creates a PR with the new snapshot version"
+    docker:
+      - image: cimg/ruby:3.1.2
+    steps:
+      - checkout
+      - revenuecat/install-gem-unix-dependencies:
+          cache-version: v1
+      - revenuecat/trust-github-key
+      - revenuecat/setup-git-credentials
+      - run:
+          name: Prepare next version
+          command: bundle exec fastlane prepare_next_version
+
+  make-release:
+    description: "Publishes the new version and creates a github release"
+    macos:
+      xcode: 13.3.1
+    steps:
+      - checkout
+      - npm-dependencies
+      - revenuecat/install-gem-mac-dependencies:
+          cache-version: v1
+      - revenuecat/trust-github-key
+      - copy-npm-rc
+      - run:
+          name: release
+          command: bundle exec fastlane release
 
 workflows:
   version: 2
   build-test:
     jobs:
       - runtest
-  
+
   deploy:
     jobs:
-      - docs-deploy: *release-tags
+      - make-release:
+          <<: *release-tags
+      - docs-deploy:
+          <<: *release-tags
+          requires:
+            - make-release
 
   android-integration-test:
     jobs:
       - android-integration-test: *release-tags-and-branches
-  
+
   ios-integration-test:
     jobs:
       - ios-integration-test: *release-tags-and-branches
@@ -231,3 +272,11 @@ workflows:
   danger:
      jobs:
        - revenuecat/danger
+
+  snapshot-bump:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+    jobs:
+      - prepare-next-version:
+          <<: *only-main-branch

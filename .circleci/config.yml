@@ -18,6 +18,13 @@ aliases:
       branches:
         only: /^release\/.*/
 
+  only-main-branch: &only-main-branch
+    filters:
+      tags:
+        ignore: /.*/
+      branches:
+        only: main
+
 commands:
 
   npm-dependencies:
@@ -242,10 +249,6 @@ workflows:
     jobs:
       - make-release:
           <<: *release-tags
-      - prepare-next-version:
-          <<: *release-tags
-          requires:
-            - make-release
       - docs-deploy:
           <<: *release-tags
           requires:
@@ -266,3 +269,11 @@ workflows:
   danger:
      jobs:
        - revenuecat/danger
+
+  snapshot-bump:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+    jobs:
+      - prepare-next-version:
+          <<: *only-main-branch

@@ -1,8 +1,8 @@
 ## 2.4.1
 
-- Bump`purchases-hybrid-common` to `2.0.0` [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/2.0.0)
+- Bump`purchases-hybrid-common` to `2.0.1` [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/2.0.1)
 - Bump `purchases-ios` to `3.14.1` ([Changelog here](https://github.com/RevenueCat/purchases-ios/releases/3.14.1))
-- Bump `purchases-android` to `4.6.0` ([Changelog here](https://github.com/RevenueCat/purchases-android/releases/4.6.0))
+- Bump `purchases-android` to `4.6.1` ([Changelog here](https://github.com/RevenueCat/purchases-android/releases/4.6.1))
 
 ## 2.4.0
 

@@ -177,7 +177,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "checkTrialOrIntroductoryPriceEligibility", isAutofinish = false)
-    private void isAnonymous(JSONArray productIDs, CallbackContext callbackContext) {
+    private void checkTrialOrIntroductoryPriceEligibility(JSONArray productIDs, CallbackContext callbackContext) {
         List<String> productIDList = new ArrayList<>();
         for (int i = 0; i < productIDs.length(); i++) {
             try {

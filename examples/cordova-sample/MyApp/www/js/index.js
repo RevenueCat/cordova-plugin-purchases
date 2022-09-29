@@ -300,7 +300,7 @@ setupPurchaseButtons = function () {
         var purchaseButton = prototypeButton.cloneNode(true);
         purchaseButton.hidden = false;
         purchaseButton.id = package.product.identifier;
-        purchaseButton.textContent = "Buy " + package.identifier + package.product.priceString;
+        purchaseButton.textContent = "Buy " + package.identifier + " " + package.product.priceString;
         purchaseButton.style = "";
         parentNode.appendChild(purchaseButton);
         purchaseButton.addEventListener("click", function() {

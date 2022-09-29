@@ -35,7 +35,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     public static final String PLATFORM_NAME = "cordova";
     public static final String PLUGIN_VERSION = "3.0.0-rc.8";
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "configure", isAutofinish = false)
+    @PluginAction(thread = ExecutionThread.MAIN, actionName = "configure", isAutofinish = false)
     private void configure(String apiKey, @Nullable String appUserID, boolean observerMode,
                            @Nullable String userDefaultsSuiteName, CallbackContext callbackContext) {
         PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);

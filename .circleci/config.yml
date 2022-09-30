@@ -208,7 +208,11 @@ jobs:
           key: v1-gem-cache-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
-      - revenuecat/setup-git-credentials
+      - run:
+          name: Setup Git config
+          command: |
+            git config --global user.email "$GIT_EMAIL"
+            git config --global user.name "$GIT_USERNAME"
       - run:
           name: Build docs
           command: bundle exec fastlane generate_docs
@@ -252,10 +256,10 @@ workflows:
     jobs:
       - make-release:
           <<: *release-tags
-      - docs-deploy:
-          <<: *release-tags
-          requires:
-            - make-release
+      - docs-deploy
+          # <<: *release-tags
+          # requires:
+            # - make-release
 
   android-integration-test:
     jobs:

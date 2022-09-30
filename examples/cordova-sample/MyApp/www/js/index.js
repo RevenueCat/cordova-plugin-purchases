@@ -75,9 +75,8 @@ const app = {
     console.log("Received Event: " + id);
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
-    Purchases.configure("api_key", () => {
-      initializePurchasesSDK();
-    });
+    Purchases.configure("api_key");
+    initializePurchasesSDK();
   },
   
   getOfferings: function() { 

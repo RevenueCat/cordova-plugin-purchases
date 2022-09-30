@@ -1,163 +1,11 @@
 ## 3.0.0
-### Bugfixes
-* Configure should be called in the current thread and not in a UI thread (#193) via Cesar de la Vega (@vegaro)
-### New Features
-* Add support for Firebase, Mixpanel, and CleverTap integrations (#177) via Joshua Liebowitz (@taquitos)
-### Other Changes
-* Improve purchase tester (#186) via Andy Boedo (@aboedo)
-* Fix prepare_next_version job in CircleCI machines (#189) via Toni Rico (@tonidero)
-* Automate releases using the fastlane plugin (#182) via Toni Rico (@tonidero)
-* add SDK reference docs link (#179) via Andy Boedo (@aboedo)
-* fix: race conditions in example app (#183) via Andy Boedo (@aboedo)
-* Increase timeout for pod command (#180) via Joshua Liebowitz (@taquitos)
-* Fix tests (#173) via Joshua Liebowitz (@taquitos)
-* Configures danger (#176) via Cesar de la Vega (@vegaro)
-* Prepping for 3.0.0-rc.7 (#175) via Joshua Liebowitz (@taquitos)
-* Preparing for version 3.0.0-rc.6 (#172) via Joshua Liebowitz (@taquitos)
-* Set delegate after setting callback id (#171) via Joshua Liebowitz (@taquitos)
-* Set swift version to number, not true. (#170) via Joshua Liebowitz (@taquitos)
-* Add APITester (#169) via Joshua Liebowitz (@taquitos)
-* Preparing for version 3.0.0-rc.5 (#168) via Josh Holtz (@joshdholtz)
-* Update Hybrid Common 4.1.0 and add AdServices (#167) via Josh Holtz (@joshdholtz)
-* Update deployment (#166) via Joshua Liebowitz (@taquitos)
-* Preparing for version 3.0.0-rc.4 (#165) via Joshua Liebowitz (@taquitos)
-* Rename remaining snake_case items to camelCase (#164) via Joshua Liebowitz (@taquitos)
-* Documentation generation (#159) via NachoSoto (@NachoSoto)
-* `README`: fixed minimum Xcode / iOS version (#160) via NachoSoto (@NachoSoto)
-* Prepare for 3.0.0-rc.3 (#158) via Joshua Liebowitz (@taquitos)
-* Update Purchases.setup to Purchases.configure (#157) via Joshua Liebowitz (@taquitos)
-* Preparing for version 3.0.0-rc.2 (#155) via Joshua Liebowitz (@taquitos)
-* getProductInfo renamed getProducts (#156) via Joshua Liebowitz (@taquitos)
-* Update data model for iOS RCv4, Android v5 (#154) via Joshua Liebowitz (@taquitos)
-* Update VERSIONS.md (#153) via Joshua Liebowitz (@taquitos)
-* Preparing for version 3.0.0-rc.1 (#148) via Joshua Liebowitz (@taquitos)
-* Adds cordova-annotated-plugin-android dependency to package.json (#152) via Cesar de la Vega (@vegaro)
-* Final cleanup before prerelease (#147) via Joshua Liebowitz (@taquitos)
-* Bump PHC to 3.2.2 (#146) via Joshua Liebowitz (@taquitos)
-* Phase 1 of update/add/remove api (#145) via Joshua Liebowitz (@taquitos)
-* Group logic together in extensions (#143) via Joshua Liebowitz (@taquitos)
-* Update Purchaser/Customer related naming -> Rename of old API before adding in new API. (#141) via Joshua Liebowitz (@taquitos)
-* Update project setup script and Swift to 5.0 (#140) via Joshua Liebowitz (@taquitos)
-* Update to most phc 3.2.1, add iOS troubleshooting instructions (#139) via Joshua Liebowitz (@taquitos)
-* iOS: Add "Refresh js resources" build phase run script (#138) via Joshua Liebowitz (@taquitos)
-* Android: Adopt purchases-hybrid-common:3.2.0 (#137) via Joshua Liebowitz (@taquitos)
-* Adopt PurchasesHybridCommon 3.2.0 (#136) via Joshua Liebowitz (@taquitos)
-* Swift Migration (#134) via Joshua Liebowitz (@taquitos)
-* Add StoreKit config file to xcproj (#135) via Joshua Liebowitz (@taquitos)
-* Automatically add StoreKit config into project (#133) via Joshua Liebowitz (@taquitos)
-* Optional API key for setup.bin (#132) via Joshua Liebowitz (@taquitos)
-* Dependency broke us, update TypeScript (#131) via Joshua Liebowitz (@taquitos)
-* Update willRenew comment - will be false for lifetime (#129) via Josh Holtz (@joshdholtz)
-* Remove issue bot (#126) via beylmk (@beylmk)
-* Adds more exempt labels to stale bot (#125) via Cody Kerns (@codykerns)
-* Update xcode for Android tests, rename Flutter to Cordova in description, uncomment out Android workflow so it runs (#123) via Josh Holtz (@joshdholtz)
-* [github] update issue templates with emojis, same feature request url (#118) via Josh Holtz (@joshdholtz)
-* bot updates (#116) via Jazmine McGinnis (@JazmineMT)
-* unversion `package-lock.json` (#115) via aboedo (@aboedo)
 
-## 3.0.0-rc.8
+RevenueCat for Cordova v3 is here!! 
 
-- Added attribution methods for CleverTap, Mixpanel, and Firebase.
-      `Purchases.setCleverTapID`, `Purchases.setMixpanelDistinctID`, and `Purchases.setFirebaseAppInstanceID`
+![Dancing cats](https://media.giphy.com/media/lkbNG2zqzHZUA/giphy.gif)
 
-*See previous 3.0.0-rc.x notes for a complete log.*
+[Full Changelog](https://github.com/revenuecat/cordova-plugin-purchases/compare/2.4.1...3.0.0)
 
-- Bump`purchases-hybrid-common` to `4.2.0` 
-    [4.2.0 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/4.2.0)
-- Bump `purchases-android` to `5.6.0` 
-    [5.6.0 Changelog here](https://github.com/RevenueCat/purchases-android/releases/5.6.0)
-
-## 3.0.0-rc.7
-
-*See previous 3.0.0-rc.x notes for a complete log.*
-
-- Bump`purchases-hybrid-common` to `4.1.4` 
-    [4.1.4 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/4.1.4)
-- Bump `purchases-ios` to `4.10.2` 
-    [4.10.2 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/4.10.2)
-
-## 3.0.0-rc.6
-### Apple AdServices support
-
-*See previous 3.0.0-rc.x notes for a complete log.*
-
-- Bump`purchases-hybrid-common` to `4.1.2` 
-    [4.1.2 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/4.1.2)
-- Bump `purchases-ios` to `4.10.1` 
-    [4.10.1 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/4.10.1)
-- Bump `purchases-android` to 5.4.1
-    [5.4.1 changelog here](https://github.com/RevenueCat/purchases-android/releases/tag/5.4.1)
-
-## 3.0.0-rc.5
-### Apple AdServices support
-New method for automatic collecting of attribution tokens on iOS using AdServices - `Purchases.enableAdServicesAttributionTokenCollection()`
-
-*See previous 3.0.0-rc.x notes for a complete log.*
-
-- Bump`purchases-hybrid-common` to `4.1.0` 
-    [4.1.0 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/4.1.0)
-- Bump `purchases-ios` to `4.10.0` 
-    [4.10.0 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/4.10.0)
-
-## 3.0.0-rc.4
-### Updating plugin for the most recent RevenueCat frameworks released!
-#### StoreKit 2 support
-
-### Property rename:
-#### PurchasesStoreProduct
-- Updated `readonly intro_price: PurchasesIntroPrice | null;` to `readonly introPrice: PurchasesIntroPrice | null;`
-- Updated `readonly price_string: string;` to `readonly priceString: string;`
-- Updated `readonly currency_code: string;` to `readonly currencyCode: string;`
-
-*See previous 3.0.0-rc.x notes for a complete log.*
-
-- Bump`purchases-hybrid-common` to `4.0.0` 
-    [4.0.0 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/4.0.0)
-- Bump `purchases-ios` to `4.9.1` 
-    [4.9.1 Changelog here](https://github.com/RevenueCat/purchases-ios/releases/4.9.1)
-
-## 3.0.0-rc.3
-### Updating plugin for the most recent RevenueCat frameworks released!
-#### StoreKit 2 support
-
-### Renames:
-- `Purchases.setup` renamed `Purchases.configure`, this makes it consistent with our native SDKs.
-
-*See previous 3.0.0-rc.x notes for a complete log.*
-
-- Bump `purchases-android` to 5.3.0
-    [5.3.0 changelog here](https://github.com/RevenueCat/purchases-android/releases/tag/5.3.0)
-- Bump`purchases-hybrid-common` to `3.3.0` 
-    [3.3.0 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/3.3.0)
-
-## 3.0.0-rc.2
-### Updating plugin for the most recent RevenueCat frameworks released!
-#### StoreKit 2 support
-
-### Adds:
-
-- `PurchasesPromotionalOffer`
-- `PurchasesIntroPrice`
-- `PurchasesStoreProductDiscount`
-
-### Renames:
-- `Purchases.getProductInfo` renamed `Purchases.getProducts`
-
-### Property updates:
-#### PurchasesStoreProduct
-- Removed `readonly intro_price_string: string | null;` 
-- Removed `readonly intro_price_period: string | null;`
-- Removed `readonly intro_price_cycles: number | null;`
-- Updated `readonly intro_price: number | null;` to `readonly intro_price: PurchasesIntroPrice | null;`
-
-*See previous 3.0.0-rc.x notes for a complete log.*
-
-- Bump `purchases-android` to 5.3.0
-    [5.3.0 changelog here](https://github.com/RevenueCat/purchases-android/releases/tag/5.3.0)
-- Bump`purchases-hybrid-common` to `3.3.0` 
-    [3.3.0 Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/3.3.0)
-
-## 3.0.0-rc.1
 ### Updating plugin for the most recent RevenueCat frameworks released!
 #### StoreKit 2 support
 This version of the SDK automatically uses StoreKit 2 APIs under the hood only for APIs that the RevenueCat team has determined work better than StoreKit 1.
@@ -172,8 +20,6 @@ New types that wrap native types from Apple, Google and Amazon, and we cleaned u
 - `attributionKey` and `Purchases.addAttributionData` have been removed in favor of `set<NetworkID> methods`.
 
 ### Renamed APIs
-**Note:** These still might change between `3.0.0-rc.x` and the final release of `3.0.0`
-
 | 2.x | 3.0.0 |
 | :-: | :-: |
 | `PurchaserInfo` | `CustomerInfo` |
@@ -182,6 +28,20 @@ New types that wrap native types from Apple, Google and Amazon, and we cleaned u
 | `Purchases.RestoreTransactions` | `Purchases.restorePurchases` |
 | `Purchases.GetPaymentDiscount` | `Purchases.getPromotionalOffer` |
 | `Purchases.UpdatedPurchaserInfoListener` | `Purchases.updatedCustomerInfoListener` |
+| `Purchases.getProductInfo` | `Purchases.getProducts` |
+| `Purchases.setup` | `Purchases.configure` |
+| `PurchasesStoreProduct.intro_price` | `PurchasesStoreProduct.introPrice` |
+| `PurchasesStoreProduct.price_string` | `PurchasesStoreProduct.priceString` |
+| `PurchasesStoreProduct.currency_code` | `PurchasesStoreProduct.currencyCode` |
+
+### Bugfixes
+* Configure should be called in the current thread and not in a UI thread (#193) via Cesar de la Vega (@vegaro)
+### New Features
+* Add support for Firebase, Mixpanel, and CleverTap integrations (#177) via Joshua Liebowitz (@taquitos)
+* Apple AdServices support (#167)
+### Other Changes
+* Improve purchase tester (#186) via Andy Boedo (@aboedo)
+* cordova-plugin-purchases requires Xcode 13.0+ and minimum targets iOS 11.0+ and macOS 10.13+ (#160) via NachoSoto (@NachoSoto)
 
 ## 2.4.0
 

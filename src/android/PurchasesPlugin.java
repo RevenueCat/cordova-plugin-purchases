@@ -35,7 +35,11 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     public static final String PLATFORM_NAME = "cordova";
     public static final String PLUGIN_VERSION = "3.0.0-SNAPSHOT";
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "configure", isAutofinish = false)
+    // Needs to run on ExecutionThread.MAIN so it blocks the JavaBridge thread created by Cordova
+    // That way we guarantee any other call to the plugin happen after configure has completed
+    // Otherwise, the configure plugin call will complete before configure finishes, and
+    // other calls to the plugin will fail with UninitializedPropertyAccessException
+    @PluginAction(thread = ExecutionThread.MAIN, actionName = "configure", isAutofinish = false)
     private void configure(String apiKey, @Nullable String appUserID, boolean observerMode,
                            @Nullable String userDefaultsSuiteName, CallbackContext callbackContext) {
         PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
@@ -177,7 +181,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "checkTrialOrIntroductoryPriceEligibility", isAutofinish = false)
-    private void isAnonymous(JSONArray productIDs, CallbackContext callbackContext) {
+    private void checkTrialOrIntroductoryPriceEligibility(JSONArray productIDs, CallbackContext callbackContext) {
         List<String> productIDList = new ArrayList<>();
         for (int i = 0; i < productIDs.length(); i++) {
             try {

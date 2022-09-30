@@ -5,7 +5,6 @@ import {
   PurchasesError,
   PurchasesOfferings,
   PurchasesPackage,
-  PurchasesPromotionalOffer,
   PurchasesStoreProduct,
   UpgradeInfo,
   PURCHASE_TYPE, 
@@ -37,7 +36,6 @@ function checkUsers(purchases: Purchases) {
 function checkPurchasing(purchases: Purchases,
                          product: PurchasesStoreProduct,
                          discount: PurchasesStoreProductDiscount,
-                         paymentDiscount: PurchasesPromotionalOffer,
                          pack: PurchasesPackage) {
   const productId: string = "";
   const upgradeInfo: UpgradeInfo | null = null;

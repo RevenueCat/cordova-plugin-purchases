@@ -22,12 +22,12 @@
 }
 
 body {
-    -webkit-touch-callout: none;
     /* prevent callout to copy image, etc when tap to hold */
-    -webkit-text-size-adjust: none;
+    -webkit-touch-callout: none;
     /* prevent webkit from resizing text to fit */
-    -webkit-user-select: none;
+    -webkit-text-size-adjust: none;
     /* prevent copy paste, to allow, change 'none' to 'text' */
+    -webkit-user-select: none;
     background-color: #E4E4E4;
     background-image: linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
     background-image: -webkit-linear-gradient(top, #A7A7A7 0%, #E4E4E4 51%);
@@ -50,8 +50,8 @@ body {
 @media screen and (min-aspect-ratio: 1/1) and (min-width:400px) {
     .app {
         background-position: left center;
-        padding: 75px 0px 75px 170px;
         /* padding-top + padding-bottom + text area = image height */
+        padding: 75px 0px 75px 170px;
         margin: -90px 0px 0px -198px;
         /* offset vertical: half of image height */
         /* offset horizontal: half of image width and text area width */

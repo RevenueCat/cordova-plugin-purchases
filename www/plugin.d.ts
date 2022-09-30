@@ -49,13 +49,6 @@ export declare enum BILLING_FEATURE {
      */
     PRICE_CHANGE_CONFIRMATION = 4
 }
-export interface PurchasesPromotionalOffer {
-    readonly identifier: string;
-    readonly keyIdentifier: string;
-    readonly nonce: string;
-    readonly signature: string;
-    readonly timestamp: number;
-}
 export declare enum PRORATION_MODE {
     UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY = 0,
     /**

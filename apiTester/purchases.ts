@@ -5,7 +5,6 @@ import {
   PurchasesError,
   PurchasesOfferings,
   PurchasesPackage,
-  PurchasesPromotionalOffer,
   PurchasesStoreProduct,
   UpgradeInfo,
   PURCHASE_TYPE, 

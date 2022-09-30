@@ -16,21 +16,24 @@ New types that wrap native types from Apple, Google and Amazon, and we cleaned u
 - `reset` has been removed in favor of `logOut`.
 - `getEntitlements` has been removed in favor of `getOfferings`.
 - `attributionKey` and `Purchases.addAttributionData` have been removed in favor of `set<NetworkID> methods`.
+- `setAllowSharingStoreAccount` has been removed. Configure behavior through the RevenueCat dashboard instead.
 
 ### Renamed APIs
 | 2.x | 3.0.0 |
 | :-: | :-: |
 | `PurchaserInfo` | `CustomerInfo` |
+| `Purchases.getPurchaserInfo` | `Purchases.getCustomerInfo` |
+| `Purchases.invalidatePurchaserInfoCache` | `Purchases.invalidateCustomerInfoCache` |
 | `PurchasesTransaction` | `PurchasesStoreTransaction` |
+| `PurchasesTransaction.revenueCatId` | `PurchasesStoreTransaction.transactionIdentifier` |
+| `PurchasesTransaction.productId` | `PurchasesStoreTransaction.productIdentifier` |
 | `PurchasesProduct` | `PurchasesStoreProduct` |
-| `Purchases.RestoreTransactions` | `Purchases.restorePurchases` |
-| `Purchases.GetPaymentDiscount` | `Purchases.getPromotionalOffer` |
-| `Purchases.UpdatedPurchaserInfoListener` | `Purchases.updatedCustomerInfoListener` |
-| `Purchases.getProductInfo` | `Purchases.getProducts` |
+| `PurchasesProduct.intro_price` (`number`) | `PurchasesStoreProduct.introPrice` (`PurchasesIntroPrice`) |
+| `PurchasesProduct.price_string` | `PurchasesStoreProduct.priceString` |
+| `PurchasesProduct.currency_code` | `PurchasesStoreProduct.currencyCode` |
+| `Purchases.restoreTransactions` | `Purchases.restorePurchases` |
+| `Purchases.updatedPurchaserInfoListener` | `Purchases.updatedCustomerInfoListener` |
 | `Purchases.setup` | `Purchases.configure` |
-| `PurchasesStoreProduct.intro_price` | `PurchasesStoreProduct.introPrice` |
-| `PurchasesStoreProduct.price_string` | `PurchasesStoreProduct.priceString` |
-| `PurchasesStoreProduct.currency_code` | `PurchasesStoreProduct.currencyCode` |
 
 ### Bugfixes
 * Configure should be called in the current thread and not in a UI thread (#193) via Cesar de la Vega (@vegaro)

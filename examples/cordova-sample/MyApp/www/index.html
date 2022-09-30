@@ -37,12 +37,34 @@
     </head>
     <body>
         <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
+            <div id="deviceready" class="blink" hidden="true">
                 <p class="event listening">Connecting to Device</p>
                 <p class="event received">Device is Ready</p>
             </div>
-        </div>
+            <h1>Cordova PurchaseTester</h1>
+            <div>
+                <div id="status-container">
+                <p id="status">Ready</p>
+                </div>
+                <button id="get-offerings" type="button" class="tester-button">Get Offerings</button>
+                <button id="get-products" type="button" class="tester-button">Get Products</button>
+                <button id="get-customer-info" type="button" class="tester-button">Get Customer Info</button>
+                <button id="login-random" type="button" class="tester-button">Log in as random user</button>
+                <button id="login-known" type="button" class="tester-button">Log in as "test"</button>
+                <button id="log-out" type="button" class="tester-button">Log out</button>
+                <button id="sync-purchases" type="button" class="tester-button">Sync Purchases</button>
+                <button id="restore-purchases" type="button" class="tester-button">Restore Purchases</button>
+                <button id="can-make-payments" type="button" class="tester-button">Can Make Payments</button>
+                <button id="set-subs-attributes" type="button" class="tester-button">Set Subs Attributes</button>
+                <button id="check-intro-eligibility" type="button" class="tester-button">Check Intro Eligibility</button>
+                <button id="is-anonymous" type="button" class="tester-button">Is Anonymous</button>
+                <button id="invalidate-customer-info-cache" type="button" class="tester-button">Invalidate Customer Info Cache</button>
+                <button id="toggle-simulates-ask-to-buy-in-sandbox" type="button" class="tester-button">Toggle Simulates Ask to Buy in Sandbox</button>
+                <button id="present-code-redemption-sheet" type="button" class="tester-button">Present Code Redemption Sheet</button>
+
+                <button id="prototype-button" type="button" class="tester-button" style="display:none">Prototype Button</button>
+            </div>
+        </div>        
         <script type="text/javascript" src="cordova.js"></script>
         <script type="text/javascript" src="js/index.js"></script>
     </body>

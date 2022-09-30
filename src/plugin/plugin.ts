@@ -60,14 +60,6 @@ export enum PURCHASE_TYPE {
   PRICE_CHANGE_CONFIRMATION,
 }
 
-export interface PurchasesPromotionalOffer {
-  readonly identifier: string;
-  readonly keyIdentifier: string;
-  readonly nonce: string;
-  readonly signature: string;
-  readonly timestamp: number;
-}
-
 export enum PRORATION_MODE {
   UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY = 0,
 

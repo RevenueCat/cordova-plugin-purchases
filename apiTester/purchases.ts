@@ -5,7 +5,6 @@ import {
   PurchasesError,
   PurchasesOfferings,
   PurchasesPackage,
-  PurchasesPromotionalOffer,
   PurchasesStoreProduct,
   UpgradeInfo,
   PURCHASE_TYPE, 
@@ -32,29 +31,6 @@ function checkUsers(purchases: Purchases) {
   Purchases.logOut(callback => { const customerInfo: CustomerInfo = callback; }, errorCallback);
   Purchases.getCustomerInfo(callback => { const customerInfo: CustomerInfo = callback; }, errorCallback);
   Purchases.isAnonymous(callback => { const isAnonymous: boolean = callback; });
-}
-
-function checkPurchasing(purchases: Purchases,
-                         product: PurchasesStoreProduct,
-                         discount: PurchasesStoreProductDiscount,
-                         paymentDiscount: PurchasesPromotionalOffer,
-                         pack: PurchasesPackage) {
-  const productId: string = "";
-  const upgradeInfo: UpgradeInfo | null = null;
-  const features: BILLING_FEATURE[] = [];
-  
-  const purchaseCallback = ({productIdentifier, customerInfo,}: { productIdentifier: string; customerInfo: CustomerInfo; }) => {};
-  const errorCallbackUserCancelled = ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => {};
-
-  Purchases.purchaseProduct(productId, purchaseCallback, errorCallbackUserCancelled, upgradeInfo, PURCHASE_TYPE.INAPP);
-  Purchases.purchasePackage(pack, purchaseCallback, errorCallbackUserCancelled, upgradeInfo);
-  Purchases.syncPurchases();
-
-  Purchases.canMakePayments(features, callback => { const canMakePayments: boolean = callback; }, errorCallback);
-  Purchases.getOfferings(offerings => { const offeringsData: PurchasesOfferings = offerings; }, errorCallback);
-
-  const eligibilityCallback = (map: { [productId:string]:IntroEligibility; }) => {};
-  Purchases.checkTrialOrIntroductoryPriceEligibility([""], eligibilityCallback);
 }
 
 function checkConfigure() {

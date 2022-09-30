@@ -126,6 +126,12 @@ New types that wrap native types from Apple, Google and Amazon, and we cleaned u
 | `Purchases.GetPaymentDiscount` | `Purchases.getPromotionalOffer` |
 | `Purchases.UpdatedPurchaserInfoListener` | `Purchases.updatedCustomerInfoListener` |
 
+## 2.4.1
+
+- Bump`purchases-hybrid-common` to `2.0.1` [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/2.0.1)
+- Bump `purchases-ios` to `3.14.1` ([Changelog here](https://github.com/RevenueCat/purchases-ios/releases/3.14.1))
+- Bump `purchases-android` to `4.6.1` ([Changelog here](https://github.com/RevenueCat/purchases-android/releases/4.6.1))
+
 ## 2.4.0
 
 - Bump`purchases-hybrid-common` to `1.10.0` [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/1.10.0)

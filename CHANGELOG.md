@@ -45,6 +45,7 @@ New types that wrap native types from Apple, Google and Amazon, and we cleaned u
 ### Other Changes
 * Improve purchase tester (#186) via Andy Boedo (@aboedo)
 * cordova-plugin-purchases requires Xcode 13.0+ and minimum targets iOS 11.0+ and macOS 10.13+ (#160) via NachoSoto (@NachoSoto)
+* Lots of other under-the-hood improvements. For a full overview of the changes take a look at the [full Changelog](https://github.com/revenuecat/cordova-plugin-purchases/compare/2.4.1...3.0.0)
 
 ## 2.4.1
 

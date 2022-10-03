@@ -14,7 +14,7 @@
 ➡️ | [Webhooks](https://docs.revenuecat.com/docs/webhooks) - enhanced server-to-server communication with events for purchases, renewals, cancellations, and more  
 🎯 | Subscription status tracking - know whether a user is subscribed whether they're on iOS, Android or web  
 📊 | Analytics - automatic calculation of metrics like conversion, mrr, and churn  
-📝 | [Online documentation](https://docs.revenuecat.com/docs) up to date  
+📝 | [Online documentation](https://docs.revenuecat.com/docs) and [SDK Reference](http://revenuecat.github.io/cordova-plugin-purchases-docs) up to date  
 🔀 | [Integrations](https://www.revenuecat.com/integrations) - over a dozen integrations to easily send purchase data where you need it  
 💯 | Well maintained - [frequent releases](https://github.com/RevenueCat/cordova-plugin-purchases/releases)  
 📮 | Great support - [Help Center](https://revenuecat.zendesk.com/)
@@ -22,8 +22,10 @@
 
 
 ## Installation
-
 Please follow the [Quickstart Guide](https://docs.revenuecat.com/docs/) for more information on how to use the SDK
 
 ### Requirements
-*cordova-plugin-purchases* requires XCode 10.2+ and minimum targets iOS 9.0+ and macOS 10.12+
+*cordova-plugin-purchases* requires Xcode 13.0+ and minimum targets iOS 11.0+ and macOS 10.13+
+
+## SDK Reference
+Our full SDK reference [can be found here](https://revenuecat.github.io/cordova-plugin-purchases-docs).

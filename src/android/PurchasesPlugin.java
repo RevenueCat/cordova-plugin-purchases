@@ -33,12 +33,15 @@ import java.util.Map;
 public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     public static final String PLATFORM_NAME = "cordova";
-    public static final String PLUGIN_VERSION = "3.0.0-rc.1";
+    public static final String PLUGIN_VERSION = "3.1.0-SNAPSHOT";
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "setupPurchases", isAutofinish = false)
-    private void setupPurchases(String apiKey, @Nullable String appUserID, boolean observerMode,
-                                @Nullable String userDefaultsSuiteName, boolean useAmazon, 
-                                CallbackContext callbackContext) {
+    // Needs to run on ExecutionThread.MAIN so it blocks the JavaBridge thread created by Cordova
+    // That way we guarantee any other call to the plugin happen after configure has completed
+    // Otherwise, the configure plugin call will complete before configure finishes, and
+    // other calls to the plugin will fail with UninitializedPropertyAccessException
+    @PluginAction(thread = ExecutionThread.MAIN, actionName = "configure", isAutofinish = false)
+    private void configure(String apiKey, @Nullable String appUserID, boolean observerMode,
+                           @Nullable String userDefaultsSuiteName, boolean useAmazon, CallbackContext callbackContext) {
         PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
         Store store = Store.PLAY_STORE;
         if (useAmazon) {
@@ -63,8 +66,8 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         CommonKt.getOfferings(getOnResult(callbackContext));
     }
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "getProductInfo", isAutofinish = false)
-    private void getProductInfo(JSONArray productIDs, String type, CallbackContext callbackContext) {
+    @PluginAction(thread = ExecutionThread.UI, actionName = "getProducts", isAutofinish = false)
+    private void getProducts(JSONArray productIDs, String type, CallbackContext callbackContext) {
         List<String> productIDList = new ArrayList<>();
         for (int i = 0; i < productIDs.length(); i++) {
             try {
@@ -166,6 +169,11 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         // NOOP
     }
 
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "enableAdServicesAttributionTokenCollection")
+    private void enableAdServicesAttributionTokenCollection(CallbackContext callbackContext) {
+        // NOOP
+    }
+
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setupShouldPurchasePromoProductCallback")
     private void setupShouldPurchasePromoProductCallback(CallbackContext callbackContext) {
         // NOOP
@@ -177,7 +185,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "checkTrialOrIntroductoryPriceEligibility", isAutofinish = false)
-    private void isAnonymous(JSONArray productIDs, CallbackContext callbackContext) {
+    private void checkTrialOrIntroductoryPriceEligibility(JSONArray productIDs, CallbackContext callbackContext) {
         List<String> productIDList = new ArrayList<>();
         for (int i = 0; i < productIDs.length(); i++) {
             try {
@@ -302,6 +310,24 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setMediaSource")
     private void setMediaSource(String mediaSource, CallbackContext callbackContext) { 
         SubscriberAttributesKt.setMediaSource(mediaSource);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setFirebaseAppInstanceID")
+    private void setFirebaseAppInstanceID(String firebaseAppInstanceID, CallbackContext callbackContext) {
+        SubscriberAttributesKt.setFirebaseAppInstanceID(firebaseAppInstanceID);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setMixpanelDistinctID")
+    private void setMixpanelDistinctID(String mixpanelDistinctID, CallbackContext callbackContext) {
+        SubscriberAttributesKt.setMixpanelDistinctID(mixpanelDistinctID);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setCleverTapID")
+    private void setCleverTapID(String cleverTapID, CallbackContext callbackContext) {
+        SubscriberAttributesKt.setCleverTapID(cleverTapID);
         callbackContext.success();
     }
 

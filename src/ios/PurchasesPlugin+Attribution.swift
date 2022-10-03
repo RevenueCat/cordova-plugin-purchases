@@ -23,6 +23,16 @@ import PurchasesHybridCommon
         self.sendOKFor(command: command)
     }
 
+    @objc(enableAdServicesAttributionTokenCollection:)
+    func enableAdServicesAttributionTokenCollection(command: CDVInvokedUrlCommand) {
+        if #available(iOS 14.3, macOS 11.1, macCatalyst 14.3, *) {
+            CommonFunctionality.enableAdServicesAttributionTokenCollection()
+        } else {
+            NSLog("[Purchases] Warning: tried to enable AdServices attribution token collection, but it's only available on iOS 14.3 or greater or macOS 11.1 or greater.");
+        }
+        self.sendOKFor(command: command)
+    }
+
     @objc(setAttributes:)
     func setAttributes(command: CDVInvokedUrlCommand) {
         guard let attributes = command.arguments[0] as? [String: String] else {
@@ -63,6 +73,21 @@ import PurchasesHybridCommon
     @objc(setAdjustID:)
     func setAdjustID(command: CDVInvokedUrlCommand) {
         self.setSubscriberAttribute(command: command, name: "adjustID", setFunction: CommonFunctionality.setAdjustID)
+    }
+
+    @objc(setCleverTapID:)
+    func setCleverTapID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "cleverTapID", setFunction: CommonFunctionality.setCleverTapID)
+    }
+
+    @objc(setFirebaseAppInstanceID:)
+    func setFirebaseAppInstanceID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "firebaseAppInstanceID", setFunction: CommonFunctionality.setFirebaseAppInstanceID)
+    }
+
+    @objc(setMixpanelDistinctID:)
+    func setMixpanelDistinctID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command, name: "mixpanelDistinctID", setFunction: CommonFunctionality.setMixpanelDistinctID)
     }
 
     @objc(setAppsflyerID:)

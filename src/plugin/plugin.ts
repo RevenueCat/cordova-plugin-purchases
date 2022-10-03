@@ -60,14 +60,6 @@ export enum PURCHASE_TYPE {
   PRICE_CHANGE_CONFIRMATION,
 }
 
-export interface PurchasesPromotionalOffer {
-  readonly identifier: string;
-  readonly keyIdentifier: string;
-  readonly nonce: string;
-  readonly signature: string;
-  readonly timestamp: number;
-}
-
 export enum PRORATION_MODE {
   UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY = 0,
 
@@ -408,15 +400,15 @@ export interface PurchasesStoreProduct {
   /**
    * Formatted price of the item, including its currency sign, such as €3.99.
    */
-  readonly price_string: string;
+  readonly priceString: string;
   /**
    * Currency code for price and original price.
    */
-  readonly currency_code: string;
+  readonly currencyCode: string;
   /**
    * Introductory price.
    */
-  readonly intro_price: PurchasesIntroPrice | null;
+  readonly introPrice: PurchasesIntroPrice | null;
   /**
    * Collection of discount offers for a product. Null for Android.
    */
@@ -623,20 +615,20 @@ class Purchases {
    * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults 
    * suite, otherwise it will use standardUserDefaults. Default is null, which will make the SDK use standardUserDefaults.
    */
-  public static setup({
-    apiKey,
-    appUserID = null,
-    observerMode = false,
-    userDefaultsSuiteName,
-    useAmazon = false
-  }: PurchasesConfiguration): void {
+  public static configure(
+    apiKey: string,
+    appUserID?: string | null,
+    observerMode: boolean = false,
+    userDefaultsSuiteName?: string,
+    useAmazon: boolean = false
+  ): void {
     window.cordova.exec(
       (customerInfo: any) => {
         window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
       },
       null,
       PLUGIN_NAME,
-      "setupPurchases",
+      "configure",
       [apiKey, appUserID, observerMode, userDefaultsSuiteName || null, useAmazon]
     );
     this.setupShouldPurchasePromoProductCallback();
@@ -677,7 +669,7 @@ class Purchases {
       callback,
       errorCallback,
       PLUGIN_NAME,
-      "getProductInfo",
+      "getProducts",
       [productIdentifiers, type]
     );
   }
@@ -888,6 +880,19 @@ class Purchases {
       [enabled]
     );
   }
+
+  /**
+   * Enable automatic collection of Apple Search Ads attribution using AdServices. Disabled by default.
+   */
+     public static enableAdServicesAttributionTokenCollection(): void {
+      window.cordova.exec(
+        null,
+        null,
+        PLUGIN_NAME,
+        "enableAdServicesAttributionTokenCollection",
+        []
+      );
+    }
 
   /**
    * @param {function(boolean):void} callback Will be sent a boolean indicating if the `appUserID` has been generated
@@ -1148,6 +1153,54 @@ class Purchases {
       PLUGIN_NAME,
       "setAirshipChannelID",
       [airshipChannelID]
+    )
+  }
+
+  /**
+   * Subscriber attribute associated with the Firebase App Instance ID for the user
+   * Required for the RevenueCat Firebase integration
+   *
+   * @param firebaseAppInstanceID Empty String or null will delete the subscriber attribute.
+   */
+  public static setFirebaseAppInstanceID(firebaseAppInstanceID: string | null) : void {
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setFirebaseAppInstanceID",
+      [firebaseAppInstanceID]
+    )
+  }
+
+  /**
+   * Subscriber attribute associated with the Mixpanel Distinct ID for the user
+   * Required for the RevenueCat Mixpanel integration
+   *
+   * @param mixpanelDistinctID Empty String or null will delete the subscriber attribute.
+   */
+  public static setMixpanelDistinctID(mixpanelDistinctID: string | null) : void {
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setMixpanelDistinctID",
+      [mixpanelDistinctID]
+    )
+  }
+
+  /**
+   * Subscriber attribute associated with the CleverTap ID for the user
+   * Required for the RevenueCat CleverTap integration
+   *
+   * @param cleverTapID Empty String or null will delete the subscriber attribute.
+   */
+  public static setCleverTapID(cleverTapID: string | null) : void {
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setCleverTapID",
+      [cleverTapID]
     )
   }
 

@@ -1,0 +1,168 @@
+files_with_version_number = [
+  './.version',
+  './package.json',
+  './plugin.xml',
+  './src/android/PurchasesPlugin.java',
+  './src/ios/PurchasesPlugin.swift',
+  './scripts/docs/index.html'
+]
+repo_name = 'cordova-plugin-purchases'
+changelog_latest_path = './CHANGELOG.latest.md'
+changelog_path = './CHANGELOG.md'
+
+before_all do
+  setup_circle_ci
+  update_fastlane
+end
+
+desc "Bump version, edit changelog, and create pull request"
+lane :bump do |options|
+  bump_version_update_changelog_create_pr(
+    current_version: current_version_number,
+    changelog_latest_path: changelog_latest_path,
+    changelog_path: changelog_path,
+    files_to_update: files_with_version_number,
+    repo_name: repo_name,
+    github_rate_limit: options[:github_rate_limit],
+    editor: options[:editor],
+    next_version: options[:next_version]
+  )
+  update_hybrids_versions_file(
+    versions_file_path: './VERSIONS.md',
+    new_sdk_version: current_version_number,
+    hybrid_common_version: parse_previous_hybrid_version
+  )
+  commit_current_changes(commit_message: 'Update VERSIONS.md')
+  push_to_git_remote(set_upstream: true)
+end
+
+desc "Make github release"
+lane :github_release do |options|
+  create_github_release(
+    version: options[:version],
+    repo_name: repo_name,
+    github_api_token: ENV["GITHUB_TOKEN"],
+    changelog_latest_path: changelog_latest_path,
+    upload_assets: []
+  )
+end
+
+desc "Creates PR changing version to next minor adding a -SNAPSHOT suffix"
+lane :prepare_next_version do |options|
+  create_next_snapshot_version(
+    current_version: current_version_number,
+    repo_name: repo_name,
+    github_pr_token: ENV["GITHUB_PULL_REQUEST_API_TOKEN"],
+    files_to_update: files_with_version_number
+  )
+end
+
+desc "Creates GitHub release and publishes package"
+lane :release do |options|
+  version_number = current_version_number
+  Dir.chdir(get_root_folder) do
+    sh('npm', 'publish')
+  end
+  github_release(version: version_number)
+end
+
+desc "Update hybrid common version in plugin.xml"
+lane :update_hybrid_common_versions do |options|
+  if options[:dry_run]
+    dry_run = true
+  end
+  if options[:version]
+    new_version_number = options[:version]
+  else
+    UI.user_error!("Missing `version` argument")
+  end
+
+  previous_version_number = parse_previous_hybrid_version
+
+  # Add to options so if we're chaining lanes together, the other lanes get it
+  options[:previous_hybrid_version] = previous_version_number
+
+  UI.message("ℹ️  Current Purchases Hybrid Common version: #{previous_version_number}")
+  UI.message("ℹ️  Setting Purchases Hybrid Common version: #{new_version_number}")
+  files_to_update = [
+    'plugin.xml'
+  ]
+
+  if dry_run
+    UI.message("ℹ️  Nothing more to do, dry_run: true")
+  else
+    replace_text_in_files(
+      previous_text: previous_version_number,
+      new_text: new_version_number,
+      paths_of_files_to_update: files_to_update
+    )
+  end
+end
+
+desc "Generate docs"
+lane :generate_docs do
+  version_number = current_version_number
+  docs_repo_base_url = "https://github.com/RevenueCat/"
+  docs_repo_name = "cordova-plugin-purchases-docs"
+  docs_repo_url = File.join(docs_repo_base_url, docs_repo_name)
+  hosting_base_path = File.join(docs_repo_name, version_number)
+
+  Dir.mktmpdir do |docs_generation_folder|
+    # Must be run from the root dir
+    Dir.chdir("..") do
+      sh(
+        "npx",
+        "typedoc",
+        "--out",
+        docs_generation_folder
+      )
+
+      docs_index_path = File.join(Dir.pwd, "scripts/docs/index.html")
+
+      # clone docs repo
+      Dir.mktmpdir do |docs_repo_clone_dir|
+        Dir.chdir(docs_repo_clone_dir) do
+          sh("git", "clone", docs_repo_url)
+          Dir.chdir(docs_repo_name) do
+            # copy docs generated in the previous step into the docs folder and push the changes
+            docs_destination_folder = "docs/#{version_number}"
+            index_destination_path = "docs/index.html"
+            FileUtils.cp_r docs_generation_folder, docs_destination_folder
+            FileUtils.cp docs_index_path, index_destination_path
+
+            # using sh instead of fastlane commands because fastlane would run from the repo root
+            sh("git", "add", docs_destination_folder)
+            sh("git", "add", index_destination_path)
+            sh("git", "commit", "-m", "Update documentation for #{version_number}")
+            sh("git", "push")
+          end
+        end
+      end
+    end
+  end
+end
+
+###############################################################################
+# Helper functions 🤜🤛                                                      #
+###############################################################################
+
+def parse_previous_hybrid_version
+  file_contents = File.read('../plugin.xml')
+  # This will parse the PHC version for iOS and android from within the plugin.xml file
+  # iOS appears in the form: <pod name="PurchasesHybridCommon" spec="4.2.0"/>
+  ios_phc_version = file_contents.split("<pod name=\"PurchasesHybridCommon\" spec=")[1].split('"')[1]
+  # Android appears in the form: <framework src="com.revenuecat.purchases:purchases-hybrid-common:4.2.0" />
+  android_phc_version = file_contents.split("<framework src=\"com.revenuecat.purchases:purchases-hybrid-common:")[1].split('"')[0]
+
+  UI.error("PHC version does not match between iOS and android in plugin.xml. Please check those values") if ios_phc_version != android_phc_version
+
+  ios_phc_version
+end
+
+def get_root_folder
+  return File.expand_path('../../', __FILE__)
+end
+
+def current_version_number
+  File.read("../.version")
+end

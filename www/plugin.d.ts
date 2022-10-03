@@ -49,13 +49,6 @@ export declare enum BILLING_FEATURE {
      */
     PRICE_CHANGE_CONFIRMATION = 4
 }
-export interface PurchasesPromotionalOffer {
-    readonly identifier: string;
-    readonly keyIdentifier: string;
-    readonly nonce: string;
-    readonly signature: string;
-    readonly timestamp: number;
-}
 export declare enum PRORATION_MODE {
     UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY = 0,
     /**
@@ -386,15 +379,15 @@ export interface PurchasesStoreProduct {
     /**
      * Formatted price of the item, including its currency sign, such as €3.99.
      */
-    readonly price_string: string;
+    readonly priceString: string;
     /**
      * Currency code for price and original price.
      */
-    readonly currency_code: string;
+    readonly currencyCode: string;
     /**
      * Introductory price.
      */
-    readonly intro_price: PurchasesIntroPrice | null;
+    readonly introPrice: PurchasesIntroPrice | null;
     /**
      * Collection of discount offers for a product. Null for Android.
      */
@@ -585,7 +578,7 @@ declare class Purchases {
      * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults
      * suite, otherwise it will use standardUserDefaults. Default is null, which will make the SDK use standardUserDefaults.
      */
-    static setup({ apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon }: PurchasesConfiguration): void;
+    static configure(apiKey: string, appUserID?: string | null, observerMode?: boolean, userDefaultsSuiteName?: string, useAmazon?: boolean): void;
     /**
      * Gets the Offerings configured in the RevenueCat dashboard
      * @param {function(PurchasesOfferings):void} callback Callback triggered after a successful getOfferings call.
@@ -695,6 +688,10 @@ declare class Purchases {
      * @param {boolean} enabled Enable or not automatic collection
      */
     static setAutomaticAppleSearchAdsAttributionCollection(enabled: boolean): void;
+    /**
+     * Enable automatic collection of Apple Search Ads attribution using AdServices. Disabled by default.
+     */
+    static enableAdServicesAttributionTokenCollection(): void;
     /**
      * @param {function(boolean):void} callback Will be sent a boolean indicating if the `appUserID` has been generated
      * by RevenueCat or not.
@@ -828,6 +825,27 @@ declare class Purchases {
      * @param airshipChannelID Empty String or null will delete the subscriber attribute.
      */
     static setAirshipChannelID(airshipChannelID: string | null): void;
+    /**
+     * Subscriber attribute associated with the Firebase App Instance ID for the user
+     * Required for the RevenueCat Firebase integration
+     *
+     * @param firebaseAppInstanceID Empty String or null will delete the subscriber attribute.
+     */
+    static setFirebaseAppInstanceID(firebaseAppInstanceID: string | null): void;
+    /**
+     * Subscriber attribute associated with the Mixpanel Distinct ID for the user
+     * Required for the RevenueCat Mixpanel integration
+     *
+     * @param mixpanelDistinctID Empty String or null will delete the subscriber attribute.
+     */
+    static setMixpanelDistinctID(mixpanelDistinctID: string | null): void;
+    /**
+     * Subscriber attribute associated with the CleverTap ID for the user
+     * Required for the RevenueCat CleverTap integration
+     *
+     * @param cleverTapID Empty String or null will delete the subscriber attribute.
+     */
+    static setCleverTapID(cleverTapID: string | null): void;
     /**
      * Subscriber attribute associated with the install media source for the user
      *

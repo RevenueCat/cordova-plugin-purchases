@@ -1,52 +1,71 @@
-release-tags-and-branches: &release-tags-and-branches
-  filters:
-    tags:
-      ignore: /^.*-SNAPSHOT/
-    branches:
-      only: /^release\/.*/
-
 version: 2.1
 orbs:
   android: circleci/android@1.0
+  revenuecat: revenuecat/sdks-common-config@2.0.0
+
+aliases:
+  release-tags: &release-tags
+    filters:
+      tags:
+        ignore: /^.*-SNAPSHOT/
+      branches:
+        ignore: /.*/
+
+  release-tags-and-branches: &release-tags-and-branches
+    filters:
+      tags:
+        ignore: /^.*-SNAPSHOT/
+      branches:
+        only: /^release\/.*/
+
+  only-main-branch: &only-main-branch
+    filters:
+      tags:
+        ignore: /.*/
+      branches:
+        only: main
 
 commands:
-  android-sdk-dependencies:
-    description: "Install and set android SDK"
-    steps:
-      - run:
-          name: set ANDROID_SDK_ROOT
-          command: |
-            echo 'export ANDROID_SDK_ROOT=$HOME/android-tools'  >> $BASH_ENV
-      - restore_cache:
-          key: android=tools-v1-{{ checksum "scripts/install-android-tools.sh" }}-{{ arch }}
 
-      - run:
-          name: install android tools
-          command: |
-            sh scripts/install-android-tools.sh
-            echo 'export PATH=$ANDROID_SDK_ROOT/tools/bin:$PATH'  >> $BASH_ENV
-            echo 'export PATH=$ANDROID_SDK_ROOT/tools:$PATH'  >> $BASH_ENV
-            echo 'export PATH=$ANDROID_SDK_ROOT/platform-tools:$PATH'  >> $BASH_ENV
-            echo 'export PATH=$ANDROID_SDK_ROOT/emulator:$PATH'  >> $BASH_ENV
-            source $BASH_ENV
-      - save_cache:
-          key: android=tools-v1-{{ checksum "scripts/install-android-tools.sh" }}-{{ arch }}
-          paths:
-            - ~/android-tools
-  
   npm-dependencies:
     description: "Install all global and local npm dependencies"
     steps:
       - run: npm install -g cordova
       - run: npm install -g github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
       - run: npm install --legacy-peer-deps
+      - run: npm install --global yarn
+
+  api-tester-dependencies:
+    description: "Install API Tester dependencies"
+    steps:
+       - install-nvm
+       - run: npm install typescript -g
+       - save_cache:
+          paths:
+            - node_modules
+          key: api-tester-dependencies-{{ checksum "package.json" }}
+
+  yarn-dependencies:
+    description: "Install yarn dependencies"
+    steps:
+       - install-nvm
+       - npm-dependencies
+       - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "package.json" }}
+            - v1-dependencies-
+       - run: yarn
+       - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
 
   npm-ios-dependencies:
     description: "Install all ios global and local npm dependencies"
     steps:
       - run: npm install -g ios-deploy
       - run: npm install --legacy-peer-deps
-    
+
   replace-api-key-linux:
     description: "Replace API_KEY"
     steps:
@@ -85,6 +104,12 @@ commands:
       - run: echo 'nvm use 16.13.1' >> $BASH_ENV
       - run: node -v
 
+  copy-npm-rc:
+    steps:
+      - run:
+          name: Copy npmrc sample file to final location
+          command: cp .npmrc.SAMPLE .npmrc
+
 jobs:
   android-integration-test:
     description: "Run Android integration tests for Cordova"
@@ -95,14 +120,17 @@ jobs:
     steps:
       - checkout
       - install-sdkman
+      - run: sdkmanager "platforms;android-32"
+      - run: sdkmanager "build-tools;32.0.0"
       - android/accept-licenses
       - android/create-avd:
           avd-name: myavd
-          system-image: system-images;android-29;default;x86
+          system-image: system-images;android-31;google_apis;x86_64
           install: true
       - android/start-emulator:
           avd-name: myavd
           no-window: true
+          wait-for-emulator: false
           post-emulator-launch-assemble-command: ""
       - install-nvm
       - npm-dependencies
@@ -126,23 +154,18 @@ jobs:
       - npm-dependencies
       - npm-ios-dependencies
       - replace-api-key
-      - run: npm run test:ios
+      - run:
+          name: npm run test:iOS
+          command: npm run test:ios
+          no_output_timeout: 30m
 
   runtest:
     docker:
-      - image: circleci/node:lts
+      - image: cimg/ruby:2.6
 
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-      - run: yarn
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+      - yarn-dependencies
       - run: yarn test
       - run: yarn tslint
       - run:
@@ -150,17 +173,110 @@ jobs:
           command: |
             yarn build
 
+  api-tester:
+    docker:
+      - image: cimg/ruby:2.6
+
+    steps:
+      - checkout
+      - api-tester-dependencies
+      - restore_cache:
+          keys:
+            - api-tester-dependencies-{{ checksum "package.json" }}
+      - run:
+          name: Compile API Tester
+          command: tsc -p apiTester
+
+  docs-deploy:
+    docker:
+      - image: cimg/ruby:2.6
+
+    steps:
+      - checkout
+      - yarn-dependencies
+      # Bundler
+      - restore_cache:
+          keys:
+            - v1-gem-cache-{{ checksum "Gemfile.lock" }}
+      - run:
+          name: Bundle install
+          command: |
+              bundle config set --local clean 'true'
+              bundle config set --local path 'vendor/bundle'
+              bundle install
+      - save_cache:
+          key: v1-gem-cache-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+      - revenuecat/setup-git-credentials
+      - run:
+          name: Build docs
+          command: bundle exec fastlane generate_docs
+
+  prepare-next-version:
+    description: "Creates a PR with the new snapshot version"
+    docker:
+      - image: cimg/ruby:3.1.2
+    steps:
+      - checkout
+      - revenuecat/install-gem-unix-dependencies:
+          cache-version: v1
+      - revenuecat/trust-github-key
+      - revenuecat/setup-git-credentials
+      - run:
+          name: Prepare next version
+          command: bundle exec fastlane prepare_next_version
+
+  make-release:
+    description: "Publishes the new version and creates a github release"
+    macos:
+      xcode: 13.3.1
+    steps:
+      - checkout
+      - npm-dependencies
+      - revenuecat/install-gem-mac-dependencies:
+          cache-version: v1
+      - revenuecat/trust-github-key
+      - copy-npm-rc
+      - run:
+          name: release
+          command: bundle exec fastlane release
+
 workflows:
   version: 2
   build-test:
     jobs:
       - runtest
-  
+
+  deploy:
+    jobs:
+      - make-release:
+          <<: *release-tags
+      - docs-deploy:
+          <<: *release-tags
+          requires:
+            - make-release
+
   android-integration-test:
     jobs:
       - android-integration-test: *release-tags-and-branches
-  
+
   ios-integration-test:
     jobs:
       - ios-integration-test: *release-tags-and-branches
 
+  api-tester-check:
+    jobs:
+      - api-tester
+
+  danger:
+     jobs:
+       - revenuecat/danger
+
+  snapshot-bump:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+    jobs:
+      - prepare-next-version:
+          <<: *only-main-branch

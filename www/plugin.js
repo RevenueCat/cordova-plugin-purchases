@@ -159,11 +159,12 @@ var Purchases = /** @class */ (function () {
      * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults
      * suite, otherwise it will use standardUserDefaults. Default is null, which will make the SDK use standardUserDefaults.
      */
-    Purchases.setup = function (_a) {
-        var apiKey = _a.apiKey, _b = _a.appUserID, appUserID = _b === void 0 ? null : _b, _c = _a.observerMode, observerMode = _c === void 0 ? false : _c, userDefaultsSuiteName = _a.userDefaultsSuiteName, _d = _a.useAmazon, useAmazon = _d === void 0 ? false : _d;
+    Purchases.configure = function (apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon) {
+        if (observerMode === void 0) { observerMode = false; }
+        if (useAmazon === void 0) { useAmazon = false; }
         window.cordova.exec(function (customerInfo) {
             window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
-        }, null, PLUGIN_NAME, "setupPurchases", [apiKey, appUserID, observerMode, userDefaultsSuiteName || null, useAmazon]);
+        }, null, PLUGIN_NAME, "configure", [apiKey, appUserID, observerMode, userDefaultsSuiteName || null, useAmazon]);
         this.setupShouldPurchasePromoProductCallback();
     };
     /**
@@ -183,7 +184,7 @@ var Purchases = /** @class */ (function () {
      */
     Purchases.getProducts = function (productIdentifiers, callback, errorCallback, type) {
         if (type === void 0) { type = PURCHASE_TYPE.SUBS; }
-        window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "getProductInfo", [productIdentifiers, type]);
+        window.cordova.exec(callback, errorCallback, PLUGIN_NAME, "getProducts", [productIdentifiers, type]);
     };
     /**
      * Make a purchase
@@ -328,6 +329,12 @@ var Purchases = /** @class */ (function () {
      */
     Purchases.setAutomaticAppleSearchAdsAttributionCollection = function (enabled) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setAutomaticAppleSearchAdsAttributionCollection", [enabled]);
+    };
+    /**
+     * Enable automatic collection of Apple Search Ads attribution using AdServices. Disabled by default.
+     */
+    Purchases.enableAdServicesAttributionTokenCollection = function () {
+        window.cordova.exec(null, null, PLUGIN_NAME, "enableAdServicesAttributionTokenCollection", []);
     };
     /**
      * @param {function(boolean):void} callback Will be sent a boolean indicating if the `appUserID` has been generated
@@ -498,6 +505,33 @@ var Purchases = /** @class */ (function () {
      */
     Purchases.setAirshipChannelID = function (airshipChannelID) {
         window.cordova.exec(null, null, PLUGIN_NAME, "setAirshipChannelID", [airshipChannelID]);
+    };
+    /**
+     * Subscriber attribute associated with the Firebase App Instance ID for the user
+     * Required for the RevenueCat Firebase integration
+     *
+     * @param firebaseAppInstanceID Empty String or null will delete the subscriber attribute.
+     */
+    Purchases.setFirebaseAppInstanceID = function (firebaseAppInstanceID) {
+        window.cordova.exec(null, null, PLUGIN_NAME, "setFirebaseAppInstanceID", [firebaseAppInstanceID]);
+    };
+    /**
+     * Subscriber attribute associated with the Mixpanel Distinct ID for the user
+     * Required for the RevenueCat Mixpanel integration
+     *
+     * @param mixpanelDistinctID Empty String or null will delete the subscriber attribute.
+     */
+    Purchases.setMixpanelDistinctID = function (mixpanelDistinctID) {
+        window.cordova.exec(null, null, PLUGIN_NAME, "setMixpanelDistinctID", [mixpanelDistinctID]);
+    };
+    /**
+     * Subscriber attribute associated with the CleverTap ID for the user
+     * Required for the RevenueCat CleverTap integration
+     *
+     * @param cleverTapID Empty String or null will delete the subscriber attribute.
+     */
+    Purchases.setCleverTapID = function (cleverTapID) {
+        window.cordova.exec(null, null, PLUGIN_NAME, "setCleverTapID", [cleverTapID]);
     };
     /**
      * Subscriber attribute associated with the install media source for the user

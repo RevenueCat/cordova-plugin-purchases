@@ -164,7 +164,7 @@ var Purchases = /** @class */ (function () {
         if (useAmazon === void 0) { useAmazon = false; }
         window.cordova.exec(function (customerInfo) {
             window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
-        }, null, PLUGIN_NAME, "configure", [apiKey, appUserID, observerMode, userDefaultsSuiteName || null, useAmazon]);
+        }, null, PLUGIN_NAME, "configure", [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]);
         this.setupShouldPurchasePromoProductCallback();
     };
     /**

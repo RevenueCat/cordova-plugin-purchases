@@ -578,7 +578,7 @@ declare class Purchases {
      * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults
      * suite, otherwise it will use standardUserDefaults. Default is null, which will make the SDK use standardUserDefaults.
      */
-    static configure(apiKey: string, appUserID?: string | null, observerMode?: boolean, userDefaultsSuiteName?: string, useAmazon?: boolean): void;
+    static configure(apiKey: string, appUserID?: string | null, observerMode?: boolean, userDefaultsSuiteName?: string | null, useAmazon?: boolean): void;
     /**
      * Gets the Offerings configured in the RevenueCat dashboard
      * @param {function(PurchasesOfferings):void} callback Callback triggered after a successful getOfferings call.

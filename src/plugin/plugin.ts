@@ -619,7 +619,7 @@ class Purchases {
     apiKey: string,
     appUserID?: string | null,
     observerMode: boolean = false,
-    userDefaultsSuiteName?: string,
+    userDefaultsSuiteName?: string | null,
     useAmazon: boolean = false
   ): void {
     window.cordova.exec(
@@ -629,7 +629,7 @@ class Purchases {
       null,
       PLUGIN_NAME,
       "configure",
-      [apiKey, appUserID, observerMode, userDefaultsSuiteName || null, useAmazon]
+      [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]
     );
     this.setupShouldPurchasePromoProductCallback();
   }

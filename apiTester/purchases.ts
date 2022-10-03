@@ -60,6 +60,7 @@ function checkConfigure() {
   const appUserID: string | null = "";
   const observerMode: boolean = false;
   const userDefaultsSuiteName: string = "";
+  const useAmazon: boolean = false;
 
   Purchases.configure(
     apiKey,
@@ -71,6 +72,13 @@ function checkConfigure() {
     appUserID,
     observerMode,
     userDefaultsSuiteName
+  );
+  Purchases.configure(
+    apiKey,
+    appUserID,
+    observerMode,
+    userDefaultsSuiteName,
+    useAmazon
   );
 
   Purchases.setProxyURL("");

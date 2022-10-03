@@ -15,7 +15,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined]
+      ["api_key", "app_user_id", false, null, false]
     );
   });
 
@@ -27,7 +27,19 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", true, undefined]
+      ["api_key", "app_user_id", true, null, false]
+    );
+  });
+
+  it("configure fires PurchasesPlugin with the correct arguments when using Amazon", () => {
+    Purchases.configure("api_key", "app_user_id", true, undefined, true);
+
+    expect(execFn).toHaveBeenCalledWith(
+      expect.any(Function),
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", true, null, true]
     );
   });
 
@@ -41,7 +53,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, expected]
+      ["api_key", "app_user_id", false, expected, false]
     );
   });
 

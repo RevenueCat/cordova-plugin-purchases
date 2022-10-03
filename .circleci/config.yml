@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   android: circleci/android@1.0
-  revenuecat: revenuecat/sdks-common-config@2.0.0
+  revenuecat: revenuecat/sdks-common-config@2.1.0
 
 aliases:
   release-tags: &release-tags

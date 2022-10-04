@@ -11,6 +11,7 @@ import {
   PurchasesStoreProductDiscount, 
   BILLING_FEATURE,
   ShouldPurchasePromoProductListener,
+  PurchasesConfiguration
 } from '../www/plugin';
 
 import Purchases from '../www/plugin';
@@ -73,17 +74,54 @@ function checkConfigure() {
     observerMode,
     userDefaultsSuiteName
   );
-  Purchases.configure(
+
+  Purchases.setProxyURL("");
+  Purchases.setDebugLogsEnabled(true);
+  Purchases.setSimulatesAskToBuyInSandbox(true);
+}
+
+function checkPurchasesConfiguration() {
+  const apiKey: string = "";
+  const appUserID: string | null = "";
+  const observerMode: boolean = false;
+  const userDefaultsSuiteName: string = "";
+  const useAmazon: boolean = false;
+
+  Purchases.configureWith({
+    apiKey,
+    appUserID,
+    observerMode
+  });
+  Purchases.configureWith({
+    apiKey,
+    appUserID,
+    observerMode,
+    userDefaultsSuiteName
+  });
+  Purchases.configureWith({
     apiKey,
     appUserID,
     observerMode,
     userDefaultsSuiteName,
     useAmazon
-  );
+  });
 
-  Purchases.setProxyURL("");
-  Purchases.setDebugLogsEnabled(true);
-  Purchases.setSimulatesAskToBuyInSandbox(true);
+  const configuration: PurchasesConfiguration = {
+    apiKey,
+    appUserID,
+    observerMode,
+    userDefaultsSuiteName,
+    useAmazon
+  }
+  
+  Purchases.configureWith(configuration);
+
+  const simpleAmazonConfiguration: PurchasesConfiguration = {
+    apiKey,
+    useAmazon: true
+  }
+
+  Purchases.configureWith(simpleAmazonConfiguration);
 }
 
 function checkMisc() {

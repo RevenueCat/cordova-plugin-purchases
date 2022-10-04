@@ -627,6 +627,8 @@ class Purchases {
   public static INTRO_ELIGIBILITY_STATUS = INTRO_ELIGIBILITY_STATUS;
 
   /**
+   * @deprecated Use {@link configureWith} instead. It accepts a {@link PurchasesConfiguration} object which offers more flexibility.
+   * 
    * Sets up Purchases with your API key and an app user id.
    * @param {string} apiKey RevenueCat API Key. Needs to be a string
    * @param {string?} appUserID A unique id for identifying the user
@@ -636,25 +638,20 @@ class Purchases {
    * @param {string?} userDefaultsSuiteName An optional string. iOS-only, will be ignored for Android. 
    * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults 
    * suite, otherwise it will use standardUserDefaults. Default is null, which will make the SDK use standardUserDefaults.
-   * @param {boolean} useAmazon Required to configure the plugin to be used in the Amazon Appstore. 
    */
   public static configure(
     apiKey: string,
     appUserID?: string | null,
     observerMode: boolean = false,
-    userDefaultsSuiteName?: string | null,
-    useAmazon: boolean = false
+    userDefaultsSuiteName?: string
   ): void {
-    window.cordova.exec(
-      (customerInfo: any) => {
-        window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
-      },
-      null,
-      PLUGIN_NAME,
-      "configure",
-      [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]
-    );
-    this.setupShouldPurchasePromoProductCallback();
+    this.configureWith({
+      apiKey,
+      appUserID,
+      observerMode,
+      userDefaultsSuiteName,
+      useAmazon: false
+    })
   }
 
   /**
@@ -668,7 +665,16 @@ class Purchases {
     userDefaultsSuiteName,
     useAmazon = false
   }: PurchasesConfiguration): void {
-    this.configure(apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon)
+    window.cordova.exec(
+      (customerInfo: any) => {
+        window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
+      },
+      null,
+      PLUGIN_NAME,
+      "configure",
+      [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]
+    );
+    this.setupShouldPurchasePromoProductCallback();
   }
 
   /**

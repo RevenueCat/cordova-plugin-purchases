@@ -1,3 +1,10 @@
+## 3.1.0
+### New Features
+* Amazon support (#110) via Cesar de la Vega (@vegaro)
+### Other Changes
+* Update orb to fix deploys (#200) via Cesar de la Vega (@vegaro)
+* Update fastlane plugin (#199) via Cesar de la Vega (@vegaro)
+
 ## 3.0.0
 
 RevenueCat for Cordova v3 is here!! 

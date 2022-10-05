@@ -1,46 +1,60 @@
-RevenueCat for Cordova v3 is here!! 
+## 3.1.0
 
-![Dancing cats](https://media.giphy.com/media/lkbNG2zqzHZUA/giphy.gif)
+`Purchases.configure` has been deprecated in favor of `Purchases.configureWith`, which accepts a `PurchasesConfiguration` object. 
 
-[Full Changelog](https://github.com/revenuecat/cordova-plugin-purchases/compare/2.4.1...3.0.0)
+```
+Purchases.configure("api_key", "user_id", true, "user.defaults.suite.name")
+```
 
-### Updating plugin for the most recent RevenueCat frameworks released!
-#### StoreKit 2 support
-This version of the SDK automatically uses StoreKit 2 APIs under the hood only for APIs that the RevenueCat team has determined work better than StoreKit 1.
+has been replaced with:
 
-#### New types and cleaned up naming
-New types that wrap native types from Apple, Google and Amazon, and we cleaned up the naming of other types and methods for a more consistent experience.
+```
+Purchases.configureWith({
+    apiKey: "api_key",
+    appUserID: "user_id",
+    observerMode: true,
+    userDefaultsSuiteName: "user.defaults.suite.name",
+});
+```
 
-### Removed APIs
-- `identify` and `createAlias` have been removed in favor of `logIn`.
-- `reset` has been removed in favor of `logOut`.
-- `getEntitlements` has been removed in favor of `getOfferings`.
-- `attributionKey` and `Purchases.addAttributionData` have been removed in favor of `set<NetworkID> methods`.
-- `setAllowSharingStoreAccount` has been removed. Configure behavior through the RevenueCat dashboard instead.
+This allows for more flexibility since some configuration parameters arguments can now be omitted so the defaults are used. For example:
 
-### Renamed APIs
-| 2.x | 3.0.0 |
-| :-: | :-: |
-| `PurchaserInfo` | `CustomerInfo` |
-| `Purchases.getPurchaserInfo` | `Purchases.getCustomerInfo` |
-| `Purchases.invalidatePurchaserInfoCache` | `Purchases.invalidateCustomerInfoCache` |
-| `PurchasesTransaction` | `PurchasesStoreTransaction` |
-| `PurchasesTransaction.revenueCatId` | `PurchasesStoreTransaction.transactionIdentifier` |
-| `PurchasesTransaction.productId` | `PurchasesStoreTransaction.productIdentifier` |
-| `PurchasesProduct` | `PurchasesStoreProduct` |
-| `PurchasesProduct.intro_price` (`number`) | `PurchasesStoreProduct.introPrice` (`PurchasesIntroPrice`) |
-| `PurchasesProduct.price_string` | `PurchasesStoreProduct.priceString` |
-| `PurchasesProduct.currency_code` | `PurchasesStoreProduct.currencyCode` |
-| `Purchases.restoreTransactions` | `Purchases.restorePurchases` |
-| `Purchases.updatedPurchaserInfoListener` | `Purchases.updatedCustomerInfoListener` |
-| `Purchases.setup` | `Purchases.configure` |
+```
+Purchases.configureWith({
+    apiKey: "api_key",
+    appUserID: "user_id",
+    userDefaultsSuiteName: "user.defaults.suite.name",
+});
+```
 
-### Bugfixes
-* Configure should be called in the current thread and not in a UI thread (#193) via Cesar de la Vega (@vegaro)
-### New Features
-* Add support for Firebase, Mixpanel, and CleverTap integrations (#177) via Joshua Liebowitz (@taquitos)
-* Apple AdServices support (#167)
+Or:
+
+```
+Purchases.configureWith({
+    apiKey: "api_key",
+    observerMode: true,
+});
+```
+
+#### Amazon Appstore Support
+We have introduced support for using the Amazon Appstore. We have extensively tested this, and there are some apps using our pre-release Amazon versions in production.
+
+However, we have found some inconsistencies in the way Amazon Appstore prices are reported. We are actively working on patching these inconsistencies.
+
+Please help us help you by reporting any issues you find. [New RevenueCat Issue](https://github.com/RevenueCat/cordova-plugin-purchases/issues/new/).
+
+You can enable Amazon Appstore support by configuring the SDK using the new `configureWith` function:
+
+```
+Purchases.configureWith({
+    apiKey: "amazon_specific_api_key",
+    useAmazon: true,
+});
+```
+
+For more information around configuration please take a look at the [Amazon Appstore section in our docs](https://docs.revenuecat.com/docs/amazon-platform-resources). The official [Amazon In-App Purchasing docs](https://developer.amazon.com/docs/in-app-purchasing/iap-overview.html) also contains very valuable information, especially around testing and best practices.
+
 ### Other Changes
-* Improve purchase tester (#186) via Andy Boedo (@aboedo)
-* cordova-plugin-purchases requires Xcode 13.0+ and minimum targets iOS 11.0+ and macOS 10.13+ (#160) via NachoSoto (@NachoSoto)
-* Lots of other under-the-hood improvements. For a full overview of the changes take a look at the [full Changelog](https://github.com/revenuecat/cordova-plugin-purchases/compare/2.4.1...3.0.0)
+* Update orb to fix deploys (#200) via Cesar de la Vega (@vegaro)
+* Update fastlane plugin (#199) via Cesar de la Vega (@vegaro)
+* `configure` has been deprecated in favor of `configureWith`, which accepts a `PurchasesConfiguration` object (#110) via Cesar de la Vega (@vegaro)

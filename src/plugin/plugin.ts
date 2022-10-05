@@ -549,6 +549,36 @@ export interface LogInResult {
   readonly created: boolean;
 }
 
+/**
+ * Holds parameters to initialize the SDK.
+ */
+export interface PurchasesConfiguration {
+  /**
+   * RevenueCat API Key. Needs to be a string
+   */
+  apiKey: string;
+  /**
+   * A unique id for identifying the user
+   */
+  appUserID?: string | null;
+  /**
+   * An optional boolean. Set this to TRUE if you have your own IAP implementation and
+   * want to use only RevenueCat's backend. Default is FALSE. If you are on Android and setting this to ON, you will have
+   * to acknowledge the purchases yourself.
+   */
+  observerMode?: boolean;
+  /**
+   * An optional string. iOS-only, will be ignored for Android. 
+   * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults 
+   * suite, otherwise it will use standardUserDefaults. Default is null, which will make the SDK use standardUserDefaults.
+   */
+  userDefaultsSuiteName?: string;
+  /**
+   * An optional boolean. Android only. Required to configure the plugin to be used in the Amazon Appstore.
+   */
+  useAmazon?: boolean;
+}
+
 export type ShouldPurchasePromoProductListener = (deferredPurchase: () => void) => void;
 let shouldPurchasePromoProductListeners: ShouldPurchasePromoProductListener[] = [];
 
@@ -597,6 +627,8 @@ class Purchases {
   public static INTRO_ELIGIBILITY_STATUS = INTRO_ELIGIBILITY_STATUS;
 
   /**
+   * @deprecated Use {@link configureWith} instead. It accepts a {@link PurchasesConfiguration} object which offers more flexibility.
+   * 
    * Sets up Purchases with your API key and an app user id.
    * @param {string} apiKey RevenueCat API Key. Needs to be a string
    * @param {string?} appUserID A unique id for identifying the user
@@ -613,6 +645,26 @@ class Purchases {
     observerMode: boolean = false,
     userDefaultsSuiteName?: string
   ): void {
+    this.configureWith({
+      apiKey,
+      appUserID,
+      observerMode,
+      userDefaultsSuiteName,
+      useAmazon: false
+    })
+  }
+
+  /**
+   * Sets up Purchases with your API key and an app user id.
+   * @param {PurchasesConfiguration} Object containing configuration parameters
+   */
+   public static configureWith({
+    apiKey,
+    appUserID = null,
+    observerMode = false,
+    userDefaultsSuiteName,
+    useAmazon = false
+  }: PurchasesConfiguration): void {
     window.cordova.exec(
       (customerInfo: any) => {
         window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
@@ -620,7 +672,7 @@ class Purchases {
       null,
       PLUGIN_NAME,
       "configure",
-      [apiKey, appUserID, observerMode, userDefaultsSuiteName]
+      [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]
     );
     this.setupShouldPurchasePromoProductCallback();
   }

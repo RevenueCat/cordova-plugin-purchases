@@ -41,9 +41,13 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     // other calls to the plugin will fail with UninitializedPropertyAccessException
     @PluginAction(thread = ExecutionThread.MAIN, actionName = "configure", isAutofinish = false)
     private void configure(String apiKey, @Nullable String appUserID, boolean observerMode,
-                           @Nullable String userDefaultsSuiteName, CallbackContext callbackContext) {
+                           @Nullable String userDefaultsSuiteName, boolean useAmazon, CallbackContext callbackContext) {
         PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
-        CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, observerMode, platformInfo);
+        Store store = Store.PLAY_STORE;
+        if (useAmazon) {
+            store = Store.AMAZON;
+        }
+        CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, observerMode, platformInfo, store);
         Purchases.getSharedInstance().setUpdatedCustomerInfoListener(new UpdatedCustomerInfoListener() {
             @Override
             public void onReceived(@NonNull CustomerInfo customerInfo) {

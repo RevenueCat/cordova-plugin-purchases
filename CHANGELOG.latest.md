@@ -1,3 +1,41 @@
+## 3.1.0
+
+`Purchases.configure` has been deprecated in favor of `Purchases.configureWith`, which accepts a `PurchasesConfiguration` object. 
+
+```
+Purchases.configure("api_key", "user_id", true, "user.defaults.suite.name")
+```
+
+has been replaced with:
+
+```
+Purchases.configureWith({
+    apiKey: "api_key",
+    appUserID: "user_id",
+    observerMode: true,
+    userDefaultsSuiteName: "user.defaults.suite.name",
+});
+```
+
+This allows for more flexibility since some configuration parameters arguments can now be omitted so the defaults are used. For example:
+
+```
+Purchases.configureWith({
+    apiKey: "api_key",
+    appUserID: "user_id",
+    userDefaultsSuiteName: "user.defaults.suite.name",
+});
+```
+
+Or:
+
+```
+Purchases.configureWith({
+    apiKey: "api_key",
+    observerMode: true,
+});
+```
+
 #### Amazon Appstore Support
 We have introduced support for using the Amazon Appstore. We have extensively tested this, and there are some apps using our pre-release Amazon versions in production.
 

@@ -48,7 +48,7 @@ commands:
     steps:
       - run: npm install --location=global cordova
       - run: npm install --legacy-peer-deps
-      - run: npm install --location=global yarn
+      - run: npm install -g yarn
 
   api-tester-dependencies:
     description: "Install API Tester dependencies"

@@ -46,7 +46,7 @@ commands:
   npm-dependencies:
     description: "Install all global and local npm dependencies"
     steps:
-      - run: npm install --location=global cordova
+      - run: npm install -g cordova
       - run: npm install --legacy-peer-deps
       - run: npm install -g yarn
 

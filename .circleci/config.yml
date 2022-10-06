@@ -252,7 +252,7 @@ jobs:
       - image: cimg/ruby:3.1.2
     steps:
       - checkout
-      - npm-dependencies
+      - yarn-dependencies
       - revenuecat/install-gem-unix-dependencies:
           cache-version: v1
       - revenuecat/trust-github-key

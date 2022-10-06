@@ -37,9 +37,12 @@ parameters:
     type: enum
     enum: [build, upgrade-hybrid-common, bump]
     default: build
-  hybrid-common-version:
+  version:
     type: string
     default: ''
+  automatic:
+    type: boolean
+    default: false
 
 commands:
 

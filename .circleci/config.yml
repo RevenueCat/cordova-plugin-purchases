@@ -253,7 +253,7 @@ jobs:
     steps:
       - checkout
       - npm-dependencies
-      - revenuecat/install-gem-unix-dependencies:
+      - revenuecat/install-gem-mac-dependencies:
           cache-version: v1
       - revenuecat/trust-github-key
       - revenuecat/setup-git-credentials

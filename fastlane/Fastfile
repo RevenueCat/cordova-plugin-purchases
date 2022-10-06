@@ -30,10 +30,38 @@ lane :bump do |options|
   update_hybrids_versions_file(
     versions_file_path: './VERSIONS.md',
     new_sdk_version: current_version_number,
-    hybrid_common_version: parse_previous_hybrid_version
+    hybrid_common_version: get_phc_version
   )
   commit_current_changes(commit_message: 'Update VERSIONS.md')
   push_to_git_remote(set_upstream: true)
+end
+
+desc "Automatically bumps version, edit changelog, and create pull request"
+lane :automatic_bump do |options|
+  next_version, type_of_bump = determine_next_version_using_labels(
+    repo_name: repo_name,
+    github_rate_limit: options[:github_rate_limit]
+  )
+  options[:next_version] = next_version
+  options[:automatic_release] = true
+  if type_of_bump == :skip
+    UI.message('Skipping automatic bump since the next version doesn\'t include public facing changes')
+    next
+  end
+  if type_of_bump == :major
+    UI.message('Skipping automatic bump since the next version is a major release')
+    next
+  end
+  bump(options)
+end
+
+desc "Creates GitHub release and publishes package"
+lane :release do |options|
+  version_number = current_version_number
+  Dir.chdir(get_root_folder) do
+    sh('npm', 'publish')
+  end
+  github_release(version: version_number)
 end
 
 desc "Make github release"
@@ -57,13 +85,13 @@ lane :prepare_next_version do |options|
   )
 end
 
-desc "Creates GitHub release and publishes package"
-lane :release do |options|
+desc "Tag current branch with current version number"
+lane :tag_current_branch do |options|
   version_number = current_version_number
-  Dir.chdir(get_root_folder) do
-    sh('npm', 'publish')
-  end
-  github_release(version: version_number)
+  check_no_git_tag_exists(version_number)
+
+  add_git_tag(tag: version_number)
+  push_git_tags(tag: version_number)
 end
 
 desc "Update hybrid common version in plugin.xml"
@@ -77,25 +105,53 @@ lane :update_hybrid_common_versions do |options|
     UI.user_error!("Missing `version` argument")
   end
 
-  previous_version_number = parse_previous_hybrid_version
+  current_phc_version = get_phc_version
 
-  # Add to options so if we're chaining lanes together, the other lanes get it
-  options[:previous_hybrid_version] = previous_version_number
-
-  UI.message("ℹ️  Current Purchases Hybrid Common version: #{previous_version_number}")
+  UI.message("ℹ️  Current Purchases Hybrid Common version: #{current_phc_version}")
   UI.message("ℹ️  Setting Purchases Hybrid Common version: #{new_version_number}")
   files_to_update = [
     'plugin.xml'
   ]
 
   if dry_run
-    UI.message("ℹ️  Nothing more to do, dry_run: true")
+    UI.message('ℹ️  Nothing more to do, dry_run: true')
+    next
+  end
+
+  bump_phc_version(
+    repo_name: repo_name,
+    files_to_update: files_to_update,
+    current_version: current_phc_version,
+    next_version: new_version_number,
+    open_pr: options[:open_pr] || false,
+    automatic_release: options[:automatic_release] || false
+  )
+end
+
+desc "Build hybrid example"
+lane :build_hybrid_example do |options|
+  Dir.chdir(File.expand_path("examples/cordova-sample/MyApp", get_root_folder)) do
+    sh("sh bin/setup.sh")
+  end
+  Dir.chdir(File.expand_path("examples/cordova-sample/MyApp/platforms/ios", get_root_folder)) do
+    sh("pod update PurchasesHybridCommon --repo-update")
+    sh("pod install")
+  end
+end
+
+desc "Update Hybrid Common and builds examples. Calls update_hybrid_common, then build_hybrid_example and pushes changes to a new branch if open_pr option is true"
+lane :update_hybrid_common do |options|
+  update_hybrid_common_versions(options)
+  build_hybrid_example(options)
+
+  return unless options[:open_pr]
+
+  current_branch = sh("git branch --show-current").strip
+  unless current_branch == 'main'
+    commit_current_changes(commit_message: 'Update examples')
+    push_to_git_remote(set_upstream: true)
   else
-    replace_text_in_files(
-      previous_text: previous_version_number,
-      new_text: new_version_number,
-      paths_of_files_to_update: files_to_update
-    )
+    UI.message("Current branch is main. Skipping pushing to branch.")
   end
 end
 
@@ -146,7 +202,7 @@ end
 # Helper functions 🤜🤛                                                      #
 ###############################################################################
 
-def parse_previous_hybrid_version
+def get_phc_version
   file_contents = File.read('../plugin.xml')
   # This will parse the PHC version for iOS and android from within the plugin.xml file
   # iOS appears in the form: <pod name="PurchasesHybridCommon" spec="4.2.0"/>

@@ -32,6 +32,15 @@ aliases:
       branches:
         only: main
 
+parameters:
+  action:
+    type: enum
+    enum: [build, upgrade-hybrid-common, bump]
+    default: build
+  hybrid-common-version:
+    type: string
+    default: ''
+
 commands:
 
   npm-dependencies:
@@ -152,7 +161,7 @@ jobs:
   ios-integration-test:
     description: "Run iOS integration tests for Cordova"
     macos:
-      xcode: 13.3.1
+      xcode: 13.4.0
     steps:
       - checkout
       - run:
@@ -201,7 +210,8 @@ jobs:
     steps:
       - checkout
       - yarn-dependencies
-      - revenuecat/install-gem-unix-dependencies
+      - revenuecat/install-gem-unix-dependencies:
+          cache-version: v1
       - revenuecat/setup-git-credentials
       - run:
           name: Build docs
@@ -224,7 +234,7 @@ jobs:
   make-release:
     description: "Publishes the new version and creates a github release"
     macos:
-      xcode: 13.3.1
+      xcode: 13.4.0
     steps:
       - checkout
       - npm-dependencies
@@ -235,6 +245,21 @@ jobs:
       - run:
           name: release
           command: bundle exec fastlane release
+
+  update-hybrid-common-versions:
+    description: "Creates a PR updating purchases-hybrid-common to latest release"
+    docker:
+      - image: cimg/ruby:3.1.2
+    steps:
+      - checkout
+      - npm-dependencies
+      - revenuecat/install-gem-unix-dependencies:
+          cache-version: v1
+      - revenuecat/trust-github-key
+      - revenuecat/setup-git-credentials
+      - run:
+          name: Prepare next version
+          command: bundle exec fastlane update_hybrid_common version:<< pipeline.parameters.hybrid-common-version >> open_pr:true automatic_release:true
 
 workflows:
   version: 2
@@ -250,12 +275,6 @@ workflows:
       not:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
-      - make-release:
-          <<: *release-tags
-      - docs-deploy:
-          <<: *release-tags
-          requires:
-            - make-release
       - hold:
           type: approval
           <<: *release-branches
@@ -263,7 +282,12 @@ workflows:
           requires:
             - hold
           <<: *release-branches
-      - docs-deploy: *release-tags
+      - make-release:
+          <<: *release-tags
+      - docs-deploy:
+          <<: *release-tags
+          requires:
+            - make-release
 
   android-integration-test:
     when:
@@ -305,3 +329,15 @@ workflows:
         - equal: [ "release-train", << pipeline.schedule.name >> ]
     jobs:
       - revenuecat/automatic-bump
+
+  manual-trigger-bump:
+    when:
+      equal: [ bump, << pipeline.parameters.action >> ]
+    jobs:
+      - revenuecat/automatic-bump
+
+  update-hybrid-common-versions:
+    when:
+      equal: [ upgrade-hybrid-common, << pipeline.parameters.action >> ]
+    jobs:
+      - update-hybrid-common-versions

@@ -84,6 +84,13 @@ commands:
       - run: npm install -g ios-deploy
       - run: npm install --legacy-peer-deps
 
+  npm-install-cordova-paramedic:
+    description: "Install Cordova paramedic"
+    steps:
+      - run:
+          name: Install Cordova Paramedic
+          command: npm install --location=global github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
+
   replace-api-key-linux:
     description: "Replace API_KEY"
     steps:
@@ -152,9 +159,7 @@ jobs:
           post-emulator-launch-assemble-command: ""
       - install-nvm
       - npm-dependencies
-      - run:
-          name: Install Cordova Paramedic
-          command: npm install --location=global github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
+      - npm-install-cordova-paramedic
       - replace-api-key-linux
       - run: sdk install gradle 7.5
       - run: rm -rf ~/.gradle/caches/
@@ -173,9 +178,7 @@ jobs:
           name: Start simulator
           command: xcrun instruments -w "iPhone 13 (15.4) [" || true
       - npm-dependencies
-      - run:
-          name: Install Cordova Paramedic
-          command: npm install --location=global github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
+      - npm-install-cordova-paramedic
       - npm-ios-dependencies
       - replace-api-key
       - run:

@@ -17,6 +17,13 @@ aliases:
         ignore: /^.*-SNAPSHOT/
       branches:
         only: /^release\/.*/
+  
+  release-branches: &release-branches
+    filters:
+      tags:
+        ignore: /.*/
+      branches:
+        only: /^release\/.*/
 
   only-main-branch: &only-main-branch
     filters:
@@ -25,15 +32,26 @@ aliases:
       branches:
         only: main
 
+parameters:
+  action:
+    type: enum
+    enum: [build, upgrade-hybrid-common, bump]
+    default: build
+  version:
+    type: string
+    default: ''
+  automatic:
+    type: boolean
+    default: false
+
 commands:
 
   npm-dependencies:
     description: "Install all global and local npm dependencies"
     steps:
       - run: npm install -g cordova
-      - run: npm install -g github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
       - run: npm install --legacy-peer-deps
-      - run: npm install --global yarn
+      - run: npm install -g yarn
 
   api-tester-dependencies:
     description: "Install API Tester dependencies"
@@ -65,6 +83,13 @@ commands:
     steps:
       - run: npm install -g ios-deploy
       - run: npm install --legacy-peer-deps
+
+  npm-install-cordova-paramedic:
+    description: "Install Cordova paramedic"
+    steps:
+      - run:
+          name: Install Cordova Paramedic
+          command: npm install --location=global github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
 
   replace-api-key-linux:
     description: "Replace API_KEY"
@@ -134,6 +159,7 @@ jobs:
           post-emulator-launch-assemble-command: ""
       - install-nvm
       - npm-dependencies
+      - npm-install-cordova-paramedic
       - replace-api-key-linux
       - run: sdk install gradle 7.5
       - run: rm -rf ~/.gradle/caches/
@@ -145,13 +171,14 @@ jobs:
   ios-integration-test:
     description: "Run iOS integration tests for Cordova"
     macos:
-      xcode: 13.3.1
+      xcode: 13.4.0
     steps:
       - checkout
       - run:
           name: Start simulator
           command: xcrun instruments -w "iPhone 13 (15.4) [" || true
       - npm-dependencies
+      - npm-install-cordova-paramedic
       - npm-ios-dependencies
       - replace-api-key
       - run:
@@ -194,20 +221,8 @@ jobs:
     steps:
       - checkout
       - yarn-dependencies
-      # Bundler
-      - restore_cache:
-          keys:
-            - v1-gem-cache-{{ checksum "Gemfile.lock" }}
-      - run:
-          name: Bundle install
-          command: |
-              bundle config set --local clean 'true'
-              bundle config set --local path 'vendor/bundle'
-              bundle install
-      - save_cache:
-          key: v1-gem-cache-{{ checksum "Gemfile.lock" }}
-          paths:
-            - vendor/bundle
+      - revenuecat/install-gem-unix-dependencies:
+          cache-version: v1
       - revenuecat/setup-git-credentials
       - run:
           name: Build docs
@@ -230,7 +245,7 @@ jobs:
   make-release:
     description: "Publishes the new version and creates a github release"
     macos:
-      xcode: 13.3.1
+      xcode: 13.4.0
     steps:
       - checkout
       - npm-dependencies
@@ -242,14 +257,46 @@ jobs:
           name: release
           command: bundle exec fastlane release
 
+  update-hybrid-common-versions:
+    description: "Creates a PR updating purchases-hybrid-common to latest release"
+    macos:
+      xcode: 13.4.0
+    steps:
+      - checkout
+      - npm-dependencies
+      - revenuecat/install-gem-mac-dependencies:
+          cache-version: v1
+      - revenuecat/trust-github-key
+      - revenuecat/setup-git-credentials
+      - run:
+          name: Updating to next version of phc
+          command: |
+            bundle exec fastlane update_hybrid_common 
+            version:<< pipeline.parameters.version >> \
+            open_pr:true \
+            automatic_release:<< pipeline.parameters.automatic >>
+
 workflows:
   version: 2
   build-test:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - runtest
 
   deploy:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
+      - hold:
+          type: approval
+          <<: *release-branches
+      - revenuecat/tag-current-branch:
+          requires:
+            - hold
+          <<: *release-branches
       - make-release:
           <<: *release-tags
       - docs-deploy:
@@ -258,14 +305,23 @@ workflows:
             - make-release
 
   android-integration-test:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - android-integration-test: *release-tags-and-branches
 
   ios-integration-test:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - ios-integration-test: *release-tags-and-branches
 
   api-tester-check:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - api-tester
 
@@ -280,3 +336,23 @@ workflows:
     jobs:
       - prepare-next-version:
           <<: *only-main-branch
+
+  weekly-run-workflow:
+    when:
+      and:
+        - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+        - equal: [ "release-train", << pipeline.schedule.name >> ]
+    jobs:
+      - revenuecat/automatic-bump
+
+  manual-trigger-bump:
+    when:
+      equal: [ bump, << pipeline.parameters.action >> ]
+    jobs:
+      - revenuecat/automatic-bump
+
+  update-hybrid-common-versions:
+    when:
+      equal: [ upgrade-hybrid-common, << pipeline.parameters.action >> ]
+    jobs:
+      - update-hybrid-common-versions

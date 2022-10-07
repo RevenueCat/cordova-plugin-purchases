@@ -21,6 +21,22 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 Bump version, edit changelog, and create pull request
 
+### automatic_bump
+
+```sh
+[bundle exec] fastlane automatic_bump
+```
+
+Automatically bumps version, edit changelog, and create pull request
+
+### release
+
+```sh
+[bundle exec] fastlane release
+```
+
+Creates GitHub release and publishes package
+
 ### github_release
 
 ```sh
@@ -37,21 +53,21 @@ Make github release
 
 Creates PR changing version to next minor adding a -SNAPSHOT suffix
 
-### release
+### tag_current_branch
 
 ```sh
-[bundle exec] fastlane release
+[bundle exec] fastlane tag_current_branch
 ```
 
-Creates GitHub release and publishes package
+Tag current branch with current version number
 
-### update_hybrid_common_versions
+### update_hybrid_common
 
 ```sh
-[bundle exec] fastlane update_hybrid_common_versions
+[bundle exec] fastlane update_hybrid_common
 ```
 
-Update hybrid common version in plugin.xml
+Update hybrid common in plugin.xml and pushes changes to a new branch if open_pr option is true
 
 ### generate_docs
 

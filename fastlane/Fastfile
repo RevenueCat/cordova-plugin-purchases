@@ -94,8 +94,8 @@ lane :tag_current_branch do |options|
   push_git_tags(tag: version_number)
 end
 
-desc "Update hybrid common version in plugin.xml"
-lane :update_hybrid_common_versions do |options|
+desc "Update hybrid common in plugin.xml and pushes changes to a new branch if open_pr option is true"
+lane :update_hybrid_common do |options|
   if options[:dry_run]
     dry_run = true
   end
@@ -126,11 +126,6 @@ lane :update_hybrid_common_versions do |options|
     open_pr: options[:open_pr] || false,
     automatic_release: options[:automatic_release] || false
   )
-end
-
-desc "Update Hybrid Common and builds examples. Calls update_hybrid_common, then build_hybrid_example and pushes changes to a new branch if open_pr option is true"
-lane :update_hybrid_common do |options|
-  update_hybrid_common_versions(options)
 end
 
 desc "Generate docs"

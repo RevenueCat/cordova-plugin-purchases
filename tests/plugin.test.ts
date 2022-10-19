@@ -8,42 +8,92 @@ window.cordova = {
 
 describe("Purchases", () => {
   it("configure fires PurchasesPlugin with the correct arguments", () => {
-    Purchases.configure("api_key", () => {
-      expect(execFn).toHaveBeenCalledWith(
-        expect.any(Function),
-        null,
-        "PurchasesPlugin",
-        "configure",
-        ["api_key", "app_user_id", false, undefined]
-      );
-    },
-     "app_user_id");
+    Purchases.configure("api_key", "app_user_id");
+
+    expect(execFn).toHaveBeenCalledWith(
+      expect.any(Function),
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", false, undefined, false]
+    );
+  });
+
+  it("configureWith fires PurchasesPlugin with the correct arguments", () => {
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id"});
+
+    expect(execFn).toHaveBeenCalledWith(
+      expect.any(Function),
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", false, undefined, false]
+    );
   });
 
   it("configure fires PurchasesPlugin with the correct arguments when specifying observermode", () => {
-    Purchases.configure("api_key", () => {
-      expect(execFn).toHaveBeenCalledWith(
-        expect.any(Function),
-        null,
-        "PurchasesPlugin",
-        "configure",
-        ["api_key", "app_user_id", true, undefined]
-      );
-    }, "app_user_id", true);
+    Purchases.configure("api_key", "app_user_id", true);
+
+    expect(execFn).toHaveBeenCalledWith(
+      expect.any(Function),
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", true, undefined, false]
+    );
+  });
+
+  it("configureWith fires PurchasesPlugin with the correct arguments when specifying observermode", () => {
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", observerMode: true});
+
+    expect(execFn).toHaveBeenCalledWith(
+      expect.any(Function),
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", true, undefined, false]
+    );
+>>>>>>> main
   });
 
   it("configure fires PurchasesPlugin with the correct arguments when setting user defaults suite name", () => {
     const expected = "suite-name";
 
-    Purchases.configure("api_key", () => {
-      expect(execFn).toHaveBeenCalledWith(
-        expect.any(Function),
-        null,
-        "PurchasesPlugin",
-        "configure",
-        ["api_key", "app_user_id", false, expected]
-      );
-    }, "app_user_id", false, expected);
+    Purchases.configure("api_key", "app_user_id", false, expected);
+
+    expect(execFn).toHaveBeenCalledWith(
+      expect.any(Function),
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", false, expected, false]
+    );
+  });
+
+  it("configure fires PurchasesPlugin with the correct arguments when setting user defaults suite name", () => {
+    const expected = "suite-name";
+
+    Purchases.configure("api_key", "app_user_id", false, expected);
+
+    expect(execFn).toHaveBeenCalledWith(
+      expect.any(Function),
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", false, expected, false]
+    );
+  });
+
+  it("configureWith fires PurchasesPlugin with the correct arguments when using Amazon", () => {
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", useAmazon: true});
+
+    expect(execFn).toHaveBeenCalledWith(
+      expect.any(Function),
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", false, undefined, true]
+    );
   });
 
   it("setProxyURL fires PurchasesPlugin with the correct arguments", () => {

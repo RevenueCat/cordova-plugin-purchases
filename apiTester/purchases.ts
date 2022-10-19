@@ -5,13 +5,13 @@ import {
   PurchasesError,
   PurchasesOfferings,
   PurchasesPackage,
-  PurchasesPromotionalOffer,
   PurchasesStoreProduct,
   UpgradeInfo,
   PURCHASE_TYPE, 
   PurchasesStoreProductDiscount, 
   BILLING_FEATURE,
   ShouldPurchasePromoProductListener,
+  PurchasesConfiguration
 } from '../www/plugin';
 
 import Purchases from '../www/plugin';
@@ -37,7 +37,6 @@ function checkUsers(purchases: Purchases) {
 function checkPurchasing(purchases: Purchases,
                          product: PurchasesStoreProduct,
                          discount: PurchasesStoreProductDiscount,
-                         paymentDiscount: PurchasesPromotionalOffer,
                          pack: PurchasesPackage) {
   const productId: string = "";
   const upgradeInfo: UpgradeInfo | null = null;
@@ -62,6 +61,7 @@ function checkConfigure() {
   const appUserID: string | null = "";
   const observerMode: boolean = false;
   const userDefaultsSuiteName: string = "";
+  const useAmazon: boolean = false;
 
   Purchases.configure(
     apiKey,
@@ -80,6 +80,50 @@ function checkConfigure() {
   Purchases.setProxyURL("");
   Purchases.setDebugLogsEnabled(true);
   Purchases.setSimulatesAskToBuyInSandbox(true);
+}
+
+function checkPurchasesConfiguration() {
+  const apiKey: string = "";
+  const appUserID: string | null = "";
+  const observerMode: boolean = false;
+  const userDefaultsSuiteName: string = "";
+  const useAmazon: boolean = false;
+
+  Purchases.configureWith({
+    apiKey,
+    appUserID,
+    observerMode
+  });
+  Purchases.configureWith({
+    apiKey,
+    appUserID,
+    observerMode,
+    userDefaultsSuiteName
+  });
+  Purchases.configureWith({
+    apiKey,
+    appUserID,
+    observerMode,
+    userDefaultsSuiteName,
+    useAmazon
+  });
+
+  const configuration: PurchasesConfiguration = {
+    apiKey,
+    appUserID,
+    observerMode,
+    userDefaultsSuiteName,
+    useAmazon
+  }
+  
+  Purchases.configureWith(configuration);
+
+  const simpleAmazonConfiguration: PurchasesConfiguration = {
+    apiKey,
+    useAmazon: true
+  }
+
+  Purchases.configureWith(simpleAmazonConfiguration);
 }
 
 function checkMisc() {

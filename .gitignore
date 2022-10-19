@@ -10,3 +10,11 @@ examples/cordova-sample/MyApp/platforms
 examples/cordova-sample/MyApp/plugins
 package-lock.json
 *.bck
+
+# fastlane
+fastlane/report.xml
+fastlane/.env
+
+# CircleCI folders
+vendor/
+.bundle/

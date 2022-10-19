@@ -149,6 +149,8 @@ var Purchases = /** @class */ (function () {
     function Purchases() {
     }
     /**
+     * @deprecated Use {@link configureWith} instead. It accepts a {@link PurchasesConfiguration} object which offers more flexibility.
+     *
      * Sets up Purchases with your API key and an app user id.
      * @param {string} apiKey RevenueCat API Key. Needs to be a string
      * @param {string?} appUserID A unique id for identifying the user
@@ -159,12 +161,26 @@ var Purchases = /** @class */ (function () {
      * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults
      * suite, otherwise it will use standardUserDefaults. Default is null, which will make the SDK use standardUserDefaults.
      */
-    Purchases.configure = function (apiKey, callback, appUserID, observerMode, userDefaultsSuiteName) {
+    Purchases.configure = function (apiKey, appUserID, observerMode, userDefaultsSuiteName) {
         if (observerMode === void 0) { observerMode = false; }
+        this.configureWith({
+            apiKey: apiKey,
+            appUserID: appUserID,
+            observerMode: observerMode,
+            userDefaultsSuiteName: userDefaultsSuiteName,
+            useAmazon: false
+        });
+    };
+    /**
+     * Sets up Purchases with your API key and an app user id.
+     * @param {PurchasesConfiguration} Object containing configuration parameters
+     */
+    Purchases.configureWith = function (_a) {
+        var apiKey = _a.apiKey, _b = _a.appUserID, appUserID = _b === void 0 ? null : _b, _c = _a.observerMode, observerMode = _c === void 0 ? false : _c, userDefaultsSuiteName = _a.userDefaultsSuiteName, _d = _a.useAmazon, useAmazon = _d === void 0 ? false : _d;
         window.cordova.exec(function (customerInfo) {
             window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
         }, null, PLUGIN_NAME, "setupDelegateCallback", []);
-        window.cordova.exec(callback, null, PLUGIN_NAME, "configure", [apiKey, appUserID, observerMode, userDefaultsSuiteName]);
+        window.cordova.exec(null, null, PLUGIN_NAME, "configure", [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]);
         this.setupShouldPurchasePromoProductCallback();
     };
     /**

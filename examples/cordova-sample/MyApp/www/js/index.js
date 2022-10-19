@@ -48,6 +48,11 @@ const app = {
   // 'pause', 'resume', etc.
   onDeviceReady: function() {
     this.receivedEvent("deviceready");
+    this.setupShouldPurchasePromoProductListener();
+    Purchases.setPhoneNumber("12345678");
+    Purchases.setDisplayName("Garfield");
+    Purchases.setAttributes({ "favorite_cat": "garfield" });
+    Purchases.setEmail("garfield@revenuecat.com");
   },
 
 
@@ -63,9 +68,10 @@ const app = {
     console.log("Received Event: " + id);
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
-    Purchases.configure("api_key", () => {
-      initializePurchasesSDK();
+    Purchases.configureWith({
+      apiKey: "api_key",
     });
+    initializePurchasesSDK();
   },
   
   getOfferings: function() { 
@@ -292,7 +298,7 @@ setupPurchaseButtons = function () {
         var purchaseButton = prototypeButton.cloneNode(true);
         purchaseButton.hidden = false;
         purchaseButton.id = package.product.identifier;
-        purchaseButton.textContent = "Buy " + package.identifier + package.product.priceString;
+        purchaseButton.textContent = "Buy " + package.identifier + " " + package.product.priceString;
         purchaseButton.style = "";
         parentNode.appendChild(purchaseButton);
         purchaseButton.addEventListener("click", function() {

@@ -1,5 +1,131 @@
+files_with_version_number = [
+  './.version',
+  './package.json',
+  './plugin.xml',
+  './src/android/PurchasesPlugin.java',
+  './src/ios/PurchasesPlugin.swift',
+  './scripts/docs/index.html'
+]
+repo_name = 'cordova-plugin-purchases'
+changelog_latest_path = './CHANGELOG.latest.md'
+changelog_path = './CHANGELOG.md'
+
 before_all do
   setup_circle_ci
+  update_fastlane
+end
+
+desc "Bump version, edit changelog, and create pull request"
+lane :bump do |options|
+  bump_version_update_changelog_create_pr(
+    current_version: current_version_number,
+    changelog_latest_path: changelog_latest_path,
+    changelog_path: changelog_path,
+    files_to_update: files_with_version_number,
+    repo_name: repo_name,
+    github_rate_limit: options[:github_rate_limit],
+    editor: options[:editor],
+    next_version: options[:next_version]
+  )
+  update_hybrids_versions_file(
+    versions_file_path: './VERSIONS.md',
+    new_sdk_version: current_version_number,
+    hybrid_common_version: get_phc_version
+  )
+  commit_current_changes(commit_message: 'Update VERSIONS.md')
+  push_to_git_remote(set_upstream: true)
+end
+
+desc "Automatically bumps version, edit changelog, and create pull request"
+lane :automatic_bump do |options|
+  next_version, type_of_bump = determine_next_version_using_labels(
+    repo_name: repo_name,
+    github_rate_limit: options[:github_rate_limit]
+  )
+  options[:next_version] = next_version
+  options[:automatic_release] = true
+  if type_of_bump == :skip
+    UI.message('Skipping automatic bump since the next version doesn\'t include public facing changes')
+    next
+  end
+  if type_of_bump == :major
+    UI.message('Skipping automatic bump since the next version is a major release')
+    next
+  end
+  bump(options)
+end
+
+desc "Creates GitHub release and publishes package"
+lane :release do |options|
+  version_number = current_version_number
+  Dir.chdir(get_root_folder) do
+    sh('npm', 'publish')
+  end
+  github_release(version: version_number)
+end
+
+desc "Make github release"
+lane :github_release do |options|
+  create_github_release(
+    version: options[:version],
+    repo_name: repo_name,
+    github_api_token: ENV["GITHUB_TOKEN"],
+    changelog_latest_path: changelog_latest_path,
+    upload_assets: []
+  )
+end
+
+desc "Creates PR changing version to next minor adding a -SNAPSHOT suffix"
+lane :prepare_next_version do |options|
+  create_next_snapshot_version(
+    current_version: current_version_number,
+    repo_name: repo_name,
+    github_pr_token: ENV["GITHUB_PULL_REQUEST_API_TOKEN"],
+    files_to_update: files_with_version_number
+  )
+end
+
+desc "Tag current branch with current version number"
+lane :tag_current_branch do |options|
+  version_number = current_version_number
+  check_no_git_tag_exists(version_number)
+
+  add_git_tag(tag: version_number)
+  push_git_tags(tag: version_number)
+end
+
+desc "Update hybrid common in plugin.xml and pushes changes to a new branch if open_pr option is true"
+lane :update_hybrid_common do |options|
+  if options[:dry_run]
+    dry_run = true
+  end
+  if options[:version]
+    new_version_number = options[:version]
+  else
+    UI.user_error!("Missing `version` argument")
+  end
+
+  current_phc_version = get_phc_version
+
+  UI.message("ℹ️  Current Purchases Hybrid Common version: #{current_phc_version}")
+  UI.message("ℹ️  Setting Purchases Hybrid Common version: #{new_version_number}")
+  files_to_update = [
+    'plugin.xml'
+  ]
+
+  if dry_run
+    UI.message('ℹ️  Nothing more to do, dry_run: true')
+    next
+  end
+
+  bump_phc_version(
+    repo_name: repo_name,
+    files_to_update: files_to_update,
+    current_version: current_phc_version,
+    next_version: new_version_number,
+    open_pr: options[:open_pr] || false,
+    automatic_release: options[:automatic_release] || false
+  )
 end
 
 desc "Generate docs"
@@ -9,7 +135,7 @@ lane :generate_docs do
   docs_repo_name = "cordova-plugin-purchases-docs"
   docs_repo_url = File.join(docs_repo_base_url, docs_repo_name)
   hosting_base_path = File.join(docs_repo_name, version_number)
-  
+
   Dir.mktmpdir do |docs_generation_folder|
     # Must be run from the root dir
     Dir.chdir("..") do
@@ -19,7 +145,7 @@ lane :generate_docs do
         "--out",
         docs_generation_folder
       )
-      
+
       docs_index_path = File.join(Dir.pwd, "scripts/docs/index.html")
 
       # clone docs repo
@@ -49,20 +175,23 @@ end
 # Helper functions 🤜🤛                                                      #
 ###############################################################################
 
+def get_phc_version
+  file_contents = File.read('../plugin.xml')
+  # This will parse the PHC version for iOS and android from within the plugin.xml file
+  # iOS appears in the form: <pod name="PurchasesHybridCommon" spec="4.2.0"/>
+  ios_phc_version = file_contents.split("<pod name=\"PurchasesHybridCommon\" spec=")[1].split('"')[1]
+  # Android appears in the form: <framework src="com.revenuecat.purchases:purchases-hybrid-common:4.2.0" />
+  android_phc_version = file_contents.split("<framework src=\"com.revenuecat.purchases:purchases-hybrid-common:")[1].split('"')[0]
+
+  UI.error("PHC version does not match between iOS and android in plugin.xml. Please check those values") if ios_phc_version != android_phc_version
+
+  ios_phc_version
+end
+
 def get_root_folder
   return File.expand_path('../../', __FILE__)
 end
 
 def current_version_number
-  version = nil
-
-  Dir.chdir(get_root_folder) do
-    version = (sh "awk -F\\\" \'/\"version\":\/ {print $4}\' package.json").strip
-  end
-
-  if version == nil
-    UI.user_error!("Couldn't get current version number from package.json")
-  end
-
-  return version
+  File.read("../.version")
 end

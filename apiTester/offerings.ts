@@ -5,7 +5,7 @@ import {
   PurchasesStoreProductDiscount,
   PurchasesIntroPrice,
   PurchasesOffering, PurchasesOfferings,
-  PurchasesPackage, PurchasesPromotionalOffer,
+  PurchasesPackage,
   PurchasesStoreProduct, UpgradeInfo
 } from "../www/plugin";
 
@@ -72,12 +72,4 @@ function checkUpgradeInfo(info: UpgradeInfo) {
 function checkIntroEligibility(eligibility: IntroEligibility) {
   const status: INTRO_ELIGIBILITY_STATUS = eligibility.status;
   const description: string = eligibility.description;
-}
-
-function checkPromotionalOffer(discount: PurchasesPromotionalOffer) {
-  const identifier: string = discount.identifier;
-  const keyIdentifier: string = discount.keyIdentifier;
-  const nonce: string = discount.nonce;
-  const signature: string = discount.signature;
-  const timestamp: number = discount.timestamp;
 }

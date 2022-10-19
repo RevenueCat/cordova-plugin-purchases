@@ -53,7 +53,6 @@ describe("Purchases", () => {
       "configure",
       ["api_key", "app_user_id", true, undefined, false]
     );
->>>>>>> main
   });
 
   it("configure fires PurchasesPlugin with the correct arguments when setting user defaults suite name", () => {

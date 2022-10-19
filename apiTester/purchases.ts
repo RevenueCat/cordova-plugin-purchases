@@ -65,13 +65,11 @@ function checkConfigure() {
 
   Purchases.configure(
     apiKey,
-    () => {},
     appUserID,
     observerMode
   );
   Purchases.configure(
     apiKey,
-    () => {},
     appUserID,
     observerMode,
     userDefaultsSuiteName

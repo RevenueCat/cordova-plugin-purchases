@@ -1,3 +1,9 @@
+## 3.1.1
+### Other Changes
+* [AUTOMATIC] Updates purchases-hybrid-common to 4.3.2 (#207) via RevenueCat Git Bot (@RCGitBot)
+* Update releasing docs (#205) via Cesar de la Vega (@vegaro)
+* Configures release train (#204) via Cesar de la Vega (@vegaro)
+
 ## 3.1.0
 
 `Purchases.configure` has been deprecated in favor of `Purchases.configureWith`, which accepts a `PurchasesConfiguration` object. 

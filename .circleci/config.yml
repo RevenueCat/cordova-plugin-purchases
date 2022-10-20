@@ -179,7 +179,7 @@ jobs:
       - checkout
       - macos/preboot-simulator:
           device: iPhone 13
-          version: 15.4
+          version: '15.4'
       - npm-dependencies
       - npm-install-cordova-paramedic
       - npm-ios-dependencies

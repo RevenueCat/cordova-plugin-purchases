@@ -1,4 +1,4 @@
-## 3.1.1
+## 3.2.0
 ### Other Changes
 * [AUTOMATIC] Updates purchases-hybrid-common to 4.3.2 (#207) via RevenueCat Git Bot (@RCGitBot)
 * Update releasing docs (#205) via Cesar de la Vega (@vegaro)

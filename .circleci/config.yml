@@ -177,9 +177,10 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
-      - macos/preboot-simulator:
-          device: iPhone 13
-          version: '15.4'
+      - macos/preboot-paired-simulator
+      # - macos/preboot-simulator:
+          # device: iPhone 13
+          # version: '15.4'
       - npm-dependencies
       - npm-install-cordova-paramedic
       - npm-ios-dependencies

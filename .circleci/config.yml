@@ -138,7 +138,7 @@ commands:
   
   install-and-create-sim:
     parameters:
-      install-name:
+      install-simulator-name:
         type: string
       sim-device-type:
         type: string
@@ -154,7 +154,7 @@ commands:
           name: Install simulator
           command: | # Print all available simulators and install required one
               xcversion simulators
-              xcversion simulators --install="<< parameters.install-name >>"
+              xcversion simulators --install="<< parameters.install-simulator-name >>"
       - run:
           name: Create simulator
           command: xcrun simctl create '<< parameters.sim-name >>' com.apple.CoreSimulator.SimDeviceType.<< parameters.sim-device-type >> com.apple.CoreSimulator.SimRuntime.<< parameters.sim-device-runtime >>
@@ -201,7 +201,7 @@ jobs:
     steps:
       - checkout
       - install-and-create-sim:
-          install-name: iOS 15.4 Simulator
+          install-simulator-name: iOS 15.4 Simulator
           sim-device-type: iPhone-13
           sim-device-runtime: iOS-15-4
           sim-name: iPhone 13 (15.4)

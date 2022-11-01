@@ -12,13 +12,6 @@ aliases:
       branches:
         ignore: /.*/
 
-  release-tags-and-branches: &release-tags-and-branches
-    filters:
-      tags:
-        ignore: /^.*-SNAPSHOT/
-      branches:
-        only: /^release\/.*/
-  
   release-branches: &release-branches
     filters:
       tags:
@@ -321,8 +314,13 @@ workflows:
       not:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
+      - android-integration-test: *release-branches
+      - ios-integration-test: *release-branches
       - hold:
           type: approval
+          requires:
+            - ios-integration-test
+            - android-integration-test
           <<: *release-branches
       - revenuecat/tag-current-branch:
           requires:
@@ -334,20 +332,6 @@ workflows:
           <<: *release-tags
           requires:
             - make-release
-
-  android-integration-test:
-    when:
-      not:
-        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
-    jobs:
-      - android-integration-test: *release-tags-and-branches
-
-  ios-integration-test:
-    when:
-      not:
-        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
-    jobs:
-      - ios-integration-test: *release-tags-and-branches
 
   api-tester-check:
     when:

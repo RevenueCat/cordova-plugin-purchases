@@ -11,7 +11,7 @@ describe("Purchases", () => {
     Purchases.configure("api_key", "app_user_id");
 
     expect(execFn).toHaveBeenCalledWith(
-      expect.any(Function),
+      null,
       null,
       "PurchasesPlugin",
       "configure",
@@ -23,7 +23,7 @@ describe("Purchases", () => {
     Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id"});
 
     expect(execFn).toHaveBeenCalledWith(
-      expect.any(Function),
+      null,
       null,
       "PurchasesPlugin",
       "configure",
@@ -35,7 +35,7 @@ describe("Purchases", () => {
     Purchases.configure("api_key", "app_user_id", true);
 
     expect(execFn).toHaveBeenCalledWith(
-      expect.any(Function),
+      null,
       null,
       "PurchasesPlugin",
       "configure",
@@ -47,7 +47,7 @@ describe("Purchases", () => {
     Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", observerMode: true});
 
     expect(execFn).toHaveBeenCalledWith(
-      expect.any(Function),
+      null,
       null,
       "PurchasesPlugin",
       "configure",
@@ -61,7 +61,7 @@ describe("Purchases", () => {
     Purchases.configure("api_key", "app_user_id", false, expected);
 
     expect(execFn).toHaveBeenCalledWith(
-      expect.any(Function),
+      null,
       null,
       "PurchasesPlugin",
       "configure",
@@ -75,7 +75,7 @@ describe("Purchases", () => {
     Purchases.configure("api_key", "app_user_id", false, expected);
 
     expect(execFn).toHaveBeenCalledWith(
-      expect.any(Function),
+      null,
       null,
       "PurchasesPlugin",
       "configure",
@@ -87,11 +87,35 @@ describe("Purchases", () => {
     Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", useAmazon: true});
 
     expect(execFn).toHaveBeenCalledWith(
-      expect.any(Function),
+      null,
       null,
       "PurchasesPlugin",
       "configure",
       ["api_key", "app_user_id", false, undefined, true]
+    );
+  });
+
+  it("configure setups delegate callback", () => {
+    Purchases.configure("api_key", "app_user_id");
+
+    expect(execFn).toHaveBeenCalledWith(
+      expect.any(Function),
+      null,
+      "PurchasesPlugin",
+      "setupDelegateCallback",
+      []
+    );
+  });
+
+  it("configureWith setups delegate callback", () => {
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id"});
+
+    expect(execFn).toHaveBeenCalledWith(
+      expect.any(Function),
+      null,
+      "PurchasesPlugin",
+      "setupDelegateCallback",
+      []
     );
   });
 

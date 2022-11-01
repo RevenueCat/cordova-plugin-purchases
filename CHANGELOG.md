@@ -1,3 +1,8 @@
+## 3.2.1
+### Other Changes
+* Update fastlane-plugin-revenuecat_internal (#212) via Cesar de la Vega (@vegaro)
+* [AUTOMATIC] Updates purchases-hybrid-common to 4.3.6 (#211) via RevenueCat Git Bot (@RCGitBot)
+
 ## 3.2.0
 ### Other Changes
 * [AUTOMATIC] Updates purchases-hybrid-common to 4.3.2 (#207) via RevenueCat Git Bot (@RCGitBot)

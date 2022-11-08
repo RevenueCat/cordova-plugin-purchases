@@ -48,6 +48,11 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             store = Store.AMAZON;
         }
         CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, observerMode, platformInfo, store);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.MAIN, actionName = "setupDelegateCallback", isAutofinish = false)
+    private void setupDelegateCallback(CallbackContext callbackContext) {
         Purchases.getSharedInstance().setUpdatedCustomerInfoListener(new UpdatedCustomerInfoListener() {
             @Override
             public void onReceived(@NonNull CustomerInfo customerInfo) {

@@ -568,8 +568,8 @@ export interface PurchasesConfiguration {
    */
   observerMode?: boolean;
   /**
-   * An optional string. iOS-only, will be ignored for Android. 
-   * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults 
+   * An optional string. iOS-only, will be ignored for Android.
+   * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults
    * suite, otherwise it will use standardUserDefaults. Default is null, which will make the SDK use standardUserDefaults.
    */
   userDefaultsSuiteName?: string;
@@ -628,7 +628,7 @@ class Purchases {
 
   /**
    * @deprecated Use {@link configureWith} instead. It accepts a {@link PurchasesConfiguration} object which offers more flexibility.
-   * 
+   *
    * Sets up Purchases with your API key and an app user id.
    * @param {string} apiKey RevenueCat API Key. Needs to be a string
    * @param {string?} appUserID A unique id for identifying the user
@@ -666,13 +666,21 @@ class Purchases {
     useAmazon = false
   }: PurchasesConfiguration): void {
     window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "configure",
+      [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]
+    );
+
+    window.cordova.exec(
       (customerInfo: any) => {
         window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
       },
       null,
       PLUGIN_NAME,
-      "configure",
-      [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]
+      "setupDelegateCallback",
+      []
     );
     this.setupShouldPurchasePromoProductCallback();
   }

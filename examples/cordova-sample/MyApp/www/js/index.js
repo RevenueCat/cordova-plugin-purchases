@@ -55,13 +55,6 @@ const app = {
     Purchases.setEmail("garfield@revenuecat.com");
   },
 
-  setupShouldPurchasePromoProductListener: function() {
-    Purchases.addShouldPurchasePromoProductListener((makeDeferredPurchase) => {
-      console.log("This codes executes right before making the purchase");
-      makeDeferredPurchase();
-      console.log("This codes executes right after making the purchase");
-    });
-  },
 
   // Update DOM on a Received Event
   receivedEvent: function(id) {
@@ -281,6 +274,10 @@ initializePurchasesSDK = function() {
   this.setupShouldPurchasePromoProductListener();
   Purchases.enableAdServicesAttributionTokenCollection();
   this.setupPurchaseButtons();
+  window.addEventListener("onCustomerInfoUpdated", (info) => {
+    console.log("customer info updated!");
+    console.log(info);
+  });
 }
 
 setupShouldPurchasePromoProductListener = function() {
@@ -329,3 +326,4 @@ setStatusLabelText = function(myObject) {
 }
 
 app.initialize();
+

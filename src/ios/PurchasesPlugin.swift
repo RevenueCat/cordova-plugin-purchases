@@ -21,6 +21,14 @@ public class CDVPurchasesPlugin : CDVPlugin {
 
     private var purchases: Purchases!
 
+    @objc(setupDelegateCallback:)
+    func setupDelegateCallback(command: CDVInvokedUrlCommand) {
+        self.updatedCustomerInfoCallbackID = command.callbackId
+        let pluginResult = CDVPluginResult(status: .noResult)
+        pluginResult?.setKeepCallbackAs(true)
+        self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
+    }
+
     @objc(configure:)
     func configure(command: CDVInvokedUrlCommand) {
         guard let apiKey = command.arguments[0] as? String else {
@@ -38,11 +46,8 @@ public class CDVPurchasesPlugin : CDVPlugin {
                                              platformFlavor: self.platformFlavor,
                                              platformFlavorVersion: self.platformFlavorVersion,
                                              dangerousSettings: nil)
-        self.updatedCustomerInfoCallbackID = command.callbackId
         self.purchases.delegate = self
-        let pluginResult = CDVPluginResult(status: .noResult)
-        pluginResult?.setKeepCallbackAs(true)
-        self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
+        self.sendOKFor(command: command)
     }
 
     @objc(setupShouldPurchasePromoProductCallback:)

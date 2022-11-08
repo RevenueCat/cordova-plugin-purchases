@@ -666,6 +666,14 @@ class Purchases {
     useAmazon = false
   }: PurchasesConfiguration): void {
     window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "configure",
+      [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]
+    );
+
+    window.cordova.exec(
       (customerInfo: any) => {
         window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
       },
@@ -673,14 +681,6 @@ class Purchases {
       PLUGIN_NAME,
       "setupDelegateCallback",
       []
-    );
-
-    window.cordova.exec(
-      null,
-      null,
-      PLUGIN_NAME,
-      "configure",
-      [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]
     );
     this.setupShouldPurchasePromoProductCallback();
   }

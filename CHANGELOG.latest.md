@@ -1,3 +1,6 @@
+### Bugfixes
+* Untangle configure and delegate (#188) via Andy Boedo (@aboedo)
 ### Other Changes
-* Update fastlane-plugin-revenuecat_internal (#212) via Cesar de la Vega (@vegaro)
-* [AUTOMATIC] Updates purchases-hybrid-common to 4.3.6 (#211) via RevenueCat Git Bot (@RCGitBot)
+* [AUTOMATIC] Updates purchases-hybrid-common to 4.4.0 (#217) via RevenueCat Git Bot (@RCGitBot)
+* Makes hold job depend on integration tests (#215) via Cesar de la Vega (@vegaro)
+* Adds missing parameter to bump_version_update_changelog_create_pr (#214) via Cesar de la Vega (@vegaro)

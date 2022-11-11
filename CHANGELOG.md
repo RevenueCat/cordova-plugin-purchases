@@ -1,3 +1,8 @@
+## 3.3.1
+### Other Changes
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 4.4.1 (#222) via RevenueCat Git Bot (@RCGitBot)
+* Update Fastlane plugin (#218) via Cesar de la Vega (@vegaro)
+
 ## 3.3.0
 ### Bugfixes
 * Untangle configure and delegate (#188) via Andy Boedo (@aboedo)

@@ -1,3 +1,7 @@
+## 2.4.2
+
+- Setting type of module to `commonjs` https://github.com/RevenueCat/cordova-plugin-purchases/pull/192
+
 ## 2.4.1
 
 - Bump`purchases-hybrid-common` to `2.0.1` [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/2.0.1)
@@ -26,7 +30,7 @@
 
 ## 2.3.1
 
-- Bumped purchases-android to 4.3.1 [Changelog here](https://github.com/RevenueCat/purchases-android/releases/4.3.1), 
+- Bumped purchases-android to 4.3.1 [Changelog here](https://github.com/RevenueCat/purchases-android/releases/4.3.1),
 which fixes canMakePayments not returning (see related issue: https://github.com/RevenueCat/purchases-unity/issues/61)
 - Bumped purchases-ios to 3.12.3 [Changelog here](https://github.com/RevenueCat/purchases-ios/releases/tag/3.12.3)
 - Bumped purchases-hybrid-common to 1.9.1 [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/tag/1.9.1)
@@ -35,13 +39,13 @@ which fixes canMakePayments not returning (see related issue: https://github.com
 
 ### Identity V3:
 
-In this version, we’ve redesigned the way that user identification works. 
+In this version, we’ve redesigned the way that user identification works.
 Detailed docs about the new system are available [here](https://docs.revenuecat.com/v3.2/docs/user-ids).
 
 #### New methods
-- Introduces `logIn`, a new way of identifying users, which also returns whether a new user has been registered in the system. 
-`logIn` uses a new backend endpoint. 
-- Introduces `logOut`, a replacement for `reset`. 
+- Introduces `logIn`, a new way of identifying users, which also returns whether a new user has been registered in the system.
+`logIn` uses a new backend endpoint.
+- Introduces `logOut`, a replacement for `reset`.
 
 #### Deprecations
 - deprecates `createAlias` in favor of `logIn`.
@@ -78,7 +82,7 @@ Detailed docs about the new system are available [here](https://docs.revenuecat.
 
 ## 2.1.0
 
-- iOS: 
+- iOS:
     - Added a new method `setSimulatesAskToBuyInSandbox`, that allows developers to test deferred purchases easily.
 - Bumped purchases-hybrid-common to 1.6.1 [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/1.6.1)
 - Bumped purchases-ios to 3.10.6 [Changelog here](https://github.com/RevenueCat/purchases-ios/releases/3.10.6)
@@ -88,7 +92,7 @@ Detailed docs about the new system are available [here](https://docs.revenuecat.
 ### 2.0.0
 
 - removes deprecated `makePurchase`, replaced by `purchaseProduct`
- - iOS: 
+ - iOS:
      - added new method, `syncPurchases`, that enables syncing the purchases in the local receipt with the backend without risking a password prompt. The method was already available on Android.
      - added a new method, `presentCodeRedemptionSheet`, for offer codes redemption.
 - Bumped `purchases-hybrid-common` to 1.5.0 [Changelog here](https://github.com/RevenueCat/purchases-hybrid-common/releases/1.5.0)
@@ -151,8 +155,8 @@ for a user in RevenueCat. More info: https://docs.revenuecat.com/docs/user-attri
 
 ## 1.0.5
 
-- Adds `shouldPurchasePromoProduct`, which allows the app to decide how and when to handle promotional purchases made by users directly through the App Store (https://github.com/RevenueCat/cordova-plugin-purchases/pull/25). 
-- Fixes some JSDocs and export types https://github.com/RevenueCat/cordova-plugin-purchases/pull/26. 
+- Adds `shouldPurchasePromoProduct`, which allows the app to decide how and when to handle promotional purchases made by users directly through the App Store (https://github.com/RevenueCat/cordova-plugin-purchases/pull/25).
+- Fixes some JSDocs and export types https://github.com/RevenueCat/cordova-plugin-purchases/pull/26.
 
 ## 1.0.4
 
@@ -177,10 +181,10 @@ for a user in RevenueCat. More info: https://docs.revenuecat.com/docs/user-attri
 - Deprecates `makePurchase` methods. Replaces with `purchasePackage`
 - Deprecates `getEntitlements` method. Replaces with `getOfferings`
 - See our migration guide for more info: https://docs.revenuecat.com/v3.0/docs/offerings-migration
-- Updates to BillingClient 2.0.3. If finishTransactions is set to false (or observerMode is true when configuring the SDK), 
+- Updates to BillingClient 2.0.3. If finishTransactions is set to false (or observerMode is true when configuring the SDK),
 this SDK won't acknowledge any purchase and you have to do it yourself.
 - Adds proration mode support on upgrades/downgrades
-- Adds more PurchaserInfo missing properties. `activeEntitlements`, `expirationsForActiveEntitlements` 
+- Adds more PurchaserInfo missing properties. `activeEntitlements`, `expirationsForActiveEntitlements`
 and `purchaseDatesForActiveEntitlements` have been removed from PurchaserInfo
 - `intro_price`, `intro_price_period_number_of_units` and `intro_price_cycles` are a number now or null instead of empty
  strings, `intro_price_period_unit` can also be null.
@@ -190,7 +194,7 @@ and `purchaseDatesForActiveEntitlements` have been removed from PurchaserInfo
   - .identify() will create an alias if being called from an anonymous ID generated by RevenueCat
   - Added an isAnonymous property to Purchases.sharedInstance
   - Improved offline use
-  
+
 ## 0.3.2
 
 - Fixes EntitlementInfo's `expirationDate` in iOS.

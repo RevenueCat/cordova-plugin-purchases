@@ -10,7 +10,7 @@ import Foundation
 import PurchasesHybridCommon
 import RevenueCat
 
-public class CDVPurchasesPlugin : CDVPlugin {
+@objc(CDVPurchasesPlugin) public class CDVPurchasesPlugin : CDVPlugin {
 
     public typealias DeferredPromotionalPurchaseBlock = (@escaping PurchaseCompletedBlock) -> Void
     typealias HybridResponseBlock = ([String: Any]?, ErrorContainer?) -> Void

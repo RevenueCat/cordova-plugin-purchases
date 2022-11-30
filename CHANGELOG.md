@@ -1,3 +1,7 @@
+## 3.3.3
+### Other Changes
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 4.4.4 (#231) via RevenueCat Git Bot (@RCGitBot)
+
 ## 3.3.2
 ### Bugfixes
 * Fix CDVPlugin class CDVPurchasesPlugin (pluginName: purchasesplugin) does not exist bug (#226) via Cesar de la Vega (@vegaro)

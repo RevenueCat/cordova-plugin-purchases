@@ -555,6 +555,12 @@ export interface PurchasesConfiguration {
      */
     userDefaultsSuiteName?: string;
     /**
+     * iOS-only, will be ignored for Android.
+     * Set this to FALSE to disable StoreKit2.
+     * Default is TRUE.
+     */
+    usesStoreKit2IfAvailable?: boolean;
+    /**
      * An optional boolean. Android only. Required to configure the plugin to be used in the Amazon Appstore.
      */
     useAmazon?: boolean;
@@ -615,7 +621,7 @@ declare class Purchases {
      * Sets up Purchases with your API key and an app user id.
      * @param {PurchasesConfiguration} Object containing configuration parameters
      */
-    static configureWith({ apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon }: PurchasesConfiguration): void;
+    static configureWith({ apiKey, appUserID, observerMode, userDefaultsSuiteName, usesStoreKit2IfAvailable, useAmazon }: PurchasesConfiguration): void;
     /**
      * Gets the Offerings configured in the RevenueCat dashboard
      * @param {function(PurchasesOfferings):void} callback Callback triggered after a successful getOfferings call.

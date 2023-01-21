@@ -176,8 +176,8 @@ var Purchases = /** @class */ (function () {
      * @param {PurchasesConfiguration} Object containing configuration parameters
      */
     Purchases.configureWith = function (_a) {
-        var apiKey = _a.apiKey, _b = _a.appUserID, appUserID = _b === void 0 ? null : _b, _c = _a.observerMode, observerMode = _c === void 0 ? false : _c, userDefaultsSuiteName = _a.userDefaultsSuiteName, _d = _a.useAmazon, useAmazon = _d === void 0 ? false : _d;
-        window.cordova.exec(null, null, PLUGIN_NAME, "configure", [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]);
+        var apiKey = _a.apiKey, _b = _a.appUserID, appUserID = _b === void 0 ? null : _b, _c = _a.observerMode, observerMode = _c === void 0 ? false : _c, userDefaultsSuiteName = _a.userDefaultsSuiteName, _d = _a.usesStoreKit2IfAvailable, usesStoreKit2IfAvailable = _d === void 0 ? false : _d, _e = _a.useAmazon, useAmazon = _e === void 0 ? false : _e;
+        window.cordova.exec(null, null, PLUGIN_NAME, "configure", [apiKey, appUserID, observerMode, userDefaultsSuiteName, usesStoreKit2IfAvailable, useAmazon]);
         window.cordova.exec(function (customerInfo) {
             window.cordova.fireWindowEvent("onCustomerInfoUpdated", customerInfo);
         }, null, PLUGIN_NAME, "setupDelegateCallback", []);

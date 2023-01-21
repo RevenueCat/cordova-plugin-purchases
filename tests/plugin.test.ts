@@ -15,7 +15,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, false]
+      ["api_key", "app_user_id", false, undefined, false, false]
     );
   });
 
@@ -27,7 +27,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, false]
+      ["api_key", "app_user_id", false, undefined, false, false]
     );
   });
 
@@ -39,7 +39,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", true, undefined, false]
+      ["api_key", "app_user_id", true, undefined, false, false]
     );
   });
 
@@ -51,7 +51,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", true, undefined, false]
+      ["api_key", "app_user_id", true, undefined, false, false]
     );
   });
 
@@ -65,7 +65,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, expected, false]
+      ["api_key", "app_user_id", false, expected, false, false]
     );
   });
 
@@ -79,7 +79,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, expected, false]
+      ["api_key", "app_user_id", false, expected, false, false]
     );
   });
 
@@ -91,7 +91,19 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, true]
+      ["api_key", "app_user_id", false, undefined, false, true]
+    );
+  });
+
+  it("configureWith fires PurchasesPlugin with the correct arguments when using StoreKit 2", () => {
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", usesStoreKit2IfAvailable: true});
+
+    expect(execFn).toHaveBeenCalledWith(
+      null,
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", false, undefined, true, false]
     );
   });
 

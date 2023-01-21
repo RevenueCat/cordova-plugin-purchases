@@ -38,6 +38,7 @@ import RevenueCat
         let appUserID = command.arguments[1] as? String
         let observerMode = command.arguments[2] as? Bool ?? false
         let userDefaultsSuiteName = command.arguments[3] as? String
+        let usesStoreKit2IfAvailable = command.arguments[4] as? Bool ?? false
     
         self.purchases = Purchases.configure(apiKey: apiKey,
                                              appUserID: appUserID,
@@ -45,6 +46,7 @@ import RevenueCat
                                              userDefaultsSuiteName: userDefaultsSuiteName,
                                              platformFlavor: self.platformFlavor,
                                              platformFlavorVersion: self.platformFlavorVersion,
+                                             usesStoreKit2IfAvailable: usesStoreKit2IfAvailable,
                                              dangerousSettings: nil)
         self.purchases.delegate = self
         self.sendOKFor(command: command)

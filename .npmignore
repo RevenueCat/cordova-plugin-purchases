@@ -19,3 +19,12 @@ fastlane/
 # CircleCI folders
 vendor/
 .bundle/
+
+**/.idea
+**/*.iml
+
+Gemfile
+Gemfile.lock
+
+.prettierrc
+.sdkmanrc

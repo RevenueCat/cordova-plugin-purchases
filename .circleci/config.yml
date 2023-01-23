@@ -235,11 +235,8 @@ jobs:
           keys:
             - api-tester-dependencies-{{ checksum "package.json" }}
       - run:
-          name: NPM install plugin
+          name: Install and compile plugin
           command: npm install
-      - run:
-          name: Compile plugin
-          command: tsc
       - run:
           name: Compile API Tester
           command: tsc -p apiTester

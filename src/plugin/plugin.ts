@@ -585,7 +585,7 @@ export interface PurchasesConfiguration {
   /**
    * iOS-only, will be ignored for Android.
    * Set this to FALSE to disable StoreKit2.
-   * Default is TRUE.
+   * Default is FALSE.
    */
   usesStoreKit2IfAvailable?: boolean;
   /**

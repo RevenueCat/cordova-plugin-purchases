@@ -235,6 +235,9 @@ jobs:
           keys:
             - api-tester-dependencies-{{ checksum "package.json" }}
       - run:
+          name: Compile plugin
+          command: tsc
+      - run:
           name: Compile API Tester
           command: tsc -p apiTester
 

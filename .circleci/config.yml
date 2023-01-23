@@ -317,8 +317,8 @@ workflows:
       not:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
-      - android-integration-test: *release-branches
-      - ios-integration-test: *release-branches
+      - android-integration-test
+      - ios-integration-test
       - hold:
           type: approval
           requires:

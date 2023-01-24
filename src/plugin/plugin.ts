@@ -583,6 +583,12 @@ export interface PurchasesConfiguration {
    */
   userDefaultsSuiteName?: string;
   /**
+   * iOS-only, will be ignored for Android.
+   * Set this to FALSE to disable StoreKit2.
+   * Default is FALSE.
+   */
+  usesStoreKit2IfAvailable?: boolean;
+  /**
    * An optional boolean. Android only. Required to configure the plugin to be used in the Amazon Appstore.
    */
   useAmazon?: boolean;
@@ -667,11 +673,12 @@ class Purchases {
    * Sets up Purchases with your API key and an app user id.
    * @param {PurchasesConfiguration} Object containing configuration parameters
    */
-   public static configureWith({
+  public static configureWith({
     apiKey,
     appUserID = null,
     observerMode = false,
     userDefaultsSuiteName,
+    usesStoreKit2IfAvailable = false,
     useAmazon = false
   }: PurchasesConfiguration): void {
     window.cordova.exec(
@@ -679,7 +686,7 @@ class Purchases {
       null,
       PLUGIN_NAME,
       "configure",
-      [apiKey, appUserID, observerMode, userDefaultsSuiteName, useAmazon]
+      [apiKey, appUserID, observerMode, userDefaultsSuiteName, usesStoreKit2IfAvailable, useAmazon]
     );
 
     window.cordova.exec(

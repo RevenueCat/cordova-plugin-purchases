@@ -156,6 +156,14 @@ export enum INTRO_ELIGIBILITY_STATUS {
   INTRO_ELIGIBILITY_STATUS_NO_INTRO_OFFER_EXISTS,
 }
 
+export enum LOG_LEVEL {
+  VERBOSE = "VERBOSE",
+  DEBUG = "DEBUG",
+  INFO = "INFO",
+  WARN = "WARN",
+  ERROR = "ERROR"
+}
+
 /**
  * The EntitlementInfo object gives you access to all of the information about the status of a user entitlement.
  */
@@ -642,6 +650,13 @@ class Purchases {
   public static INTRO_ELIGIBILITY_STATUS = INTRO_ELIGIBILITY_STATUS;
 
   /**
+   * Enum of different possible log levels.
+   * @readonly
+   * @enum {string}
+   */
+  public static LOG_LEVEL = LOG_LEVEL;
+
+  /**
    * @deprecated Use {@link configureWith} instead. It accepts a {@link PurchasesConfiguration} object which offers more flexibility.
    *
    * Sets up Purchases with your API key and an app user id.
@@ -905,10 +920,22 @@ class Purchases {
   /**
    * Enables/Disables debugs logs
    * @param {boolean} enabled Enable or not debug logs
+   * @deprecated Use {@link setLogLevel} instead.
    */
   public static setDebugLogsEnabled(enabled: boolean): void {
     window.cordova.exec(null, null, PLUGIN_NAME, "setDebugLogsEnabled", [
       enabled,
+    ]);
+  }
+
+  /**
+   * Used to set the log level. Useful for debugging issues with the lovely team @RevenueCat.
+   * @param {boolean} enabled Enable or not debug logs
+   * @deprecated Use {@link setLogLevel} instead.
+   */
+  public static setLogLevel(level: LOG_LEVEL): void {
+    window.cordova.exec(null, null, PLUGIN_NAME, "setLogLevel", [
+      level,
     ]);
   }
 

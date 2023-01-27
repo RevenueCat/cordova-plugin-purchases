@@ -919,7 +919,7 @@ class Purchases {
 
   /**
    * Enables/Disables debugs logs
-   * @param {boolean} enabled Enable or not debug logs
+   * @param {boolean} enabled Enable or disable debug logs
    * @deprecated Use {@link setLogLevel} instead.
    */
   public static setDebugLogsEnabled(enabled: boolean): void {
@@ -930,8 +930,7 @@ class Purchases {
 
   /**
    * Used to set the log level. Useful for debugging issues with the lovely team @RevenueCat.
-   * @param {boolean} enabled Enable or not debug logs
-   * @deprecated Use {@link setLogLevel} instead.
+   * @param {LOG_LEVEL} level the minimum log level to enable.
    */
   public static setLogLevel(level: LOG_LEVEL): void {
     window.cordova.exec(null, null, PLUGIN_NAME, "setLogLevel", [

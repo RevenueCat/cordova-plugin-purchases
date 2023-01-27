@@ -10,6 +10,7 @@ import {
   PURCHASE_TYPE, 
   PurchasesStoreProductDiscount, 
   BILLING_FEATURE,
+  LOG_LEVEL,
   ShouldPurchasePromoProductListener,
   PurchasesConfiguration
 } from '../www/plugin';
@@ -77,7 +78,18 @@ function checkConfigure() {
 
   Purchases.setProxyURL("");
   Purchases.setDebugLogsEnabled(true);
+  Purchases.setLogLevel(LOG_LEVEL.DEBUG);
   Purchases.setSimulatesAskToBuyInSandbox(true);
+}
+
+function checkLogLevels(level: LOG_LEVEL) {
+  switch (level) {
+    case LOG_LEVEL.DEBUG:
+    case LOG_LEVEL.VERBOSE:
+    case LOG_LEVEL.INFO:
+    case LOG_LEVEL.WARN:
+    case LOG_LEVEL.ERROR:
+  }
 }
 
 function checkPurchasesConfiguration() {

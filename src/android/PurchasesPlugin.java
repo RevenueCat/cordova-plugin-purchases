@@ -159,9 +159,16 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         CommonKt.getCustomerInfo(getOnResult(callbackContext));
     }
 
+    @Deprecated
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setDebugLogsEnabled")
     private void setDebugLogsEnabled(boolean enabled, CallbackContext callbackContext) {
         CommonKt.setDebugLogsEnabled(enabled);
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setLogLevel")
+    private void setLogLevel(String level, CallbackContext callbackContext) {
+        CommonKt.setLogLevel(level);
         callbackContext.success();
     }
 

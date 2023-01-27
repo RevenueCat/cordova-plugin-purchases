@@ -68,6 +68,17 @@ import RevenueCat
         self.sendOKFor(command: command)
     }
 
+    @objc(setLogLevel:)
+    func setLogLevel(command: CDVInvokedUrlCommand) {
+        guard let level = command.arguments[0] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "level", expectedType: String.self)
+            return
+        }
+
+        CommonFunctionality.setLogLevel(level)
+        self.sendOKFor(command: command)
+    }
+
 }
 
 

@@ -79,6 +79,18 @@ import RevenueCat
         self.sendOKFor(command: command)
     }
 
+    @objc(setLogHandler:)
+    func setLogHandler(command: CDVInvokedUrlCommand) {
+        CommonFunctionality.setLogHander { logDetails in
+            let pluginResult = CDVPluginResult(status: .ok, messageAs: logDetails)
+            pluginResult?.setKeepCallbackAs(true)
+            self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
+        }
+        let pluginResult = CDVPluginResult(status: .noResult)
+        pluginResult?.setKeepCallbackAs(true)
+        self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
+    }
+
 }
 
 

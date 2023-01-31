@@ -605,6 +605,8 @@ export interface PurchasesConfiguration {
 export type ShouldPurchasePromoProductListener = (deferredPurchase: () => void) => void;
 let shouldPurchasePromoProductListeners: ShouldPurchasePromoProductListener[] = [];
 
+export type LogHandler = (logLevel: LOG_LEVEL, message: string) => void;
+
 class Purchases {
 
   /**
@@ -936,6 +938,26 @@ class Purchases {
     window.cordova.exec(null, null, PLUGIN_NAME, "setLogLevel", [
       level,
     ]);
+  }
+
+  /**
+   * Set a custom log handler for redirecting logs to your own logging system.
+   * By default, this sends info, warning, and error messages.
+   * If you wish to receive Debug level messages, see [setLogLevel].
+   * @param {LogHandler} logHandler It will get called for each log event. 
+   * Implement this function to redirect the log to your own logging system
+   */
+  public static setLogHandler(logHandler: LogHandler): void {
+    window.cordova.exec(
+      ({ logLevel, message }: { logLevel: LOG_LEVEL, message: string }) => {
+        const logLevelEnum = LOG_LEVEL[logLevel];
+        logHandler(logLevelEnum, message);
+      },
+      null,
+      PLUGIN_NAME,
+      "setLogHandler",
+      []
+    );
   }
 
   /**

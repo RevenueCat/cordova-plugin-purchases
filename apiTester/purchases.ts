@@ -80,6 +80,7 @@ function checkConfigure() {
   Purchases.setDebugLogsEnabled(true);
   Purchases.setLogLevel(LOG_LEVEL.DEBUG);
   Purchases.setSimulatesAskToBuyInSandbox(true);
+  Purchases.setLogHandler((logLevel: LOG_LEVEL, message: string) => {    });
 }
 
 function checkLogLevels(level: LOG_LEVEL) {

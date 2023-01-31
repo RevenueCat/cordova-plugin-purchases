@@ -945,7 +945,7 @@ class Purchases {
    * By default, this sends info, warning, and error messages.
    * If you wish to receive Debug level messages, see [setLogLevel].
    * @param {LogHandler} logHandler It will get called for each log event. 
-   * Implement this function to redirect the log to your own logging system
+   * Use this function to redirect the log to your own logging system
    */
   public static setLogHandler(logHandler: LogHandler): void {
     window.cordova.exec(

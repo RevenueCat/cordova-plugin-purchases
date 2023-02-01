@@ -174,8 +174,8 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setLogHandler", isAutofinish = false)
     private void setLogHandler(CallbackContext callbackContext) {
-        CommonKt.setLogHandler(logData -> {
-            PluginResult result = new PluginResult(PluginResult.Status.OK, convertMapToJson(logData));
+        CommonKt.setLogHandler(logDetails -> {
+            PluginResult result = new PluginResult(PluginResult.Status.OK, convertMapToJson(logDetails));
             result.setKeepCallback(true);
 
             callbackContext.sendPluginResult(result);

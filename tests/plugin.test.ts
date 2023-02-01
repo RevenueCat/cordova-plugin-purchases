@@ -168,7 +168,7 @@ describe("Purchases", () => {
     // string instead of a number. The indexer of `LOG_LEVEL` can only accept `VERBOSE`, `DEBUG`...
     // We need a helper method to create a new type `enumKeys`
     for (const value of enumKeys(LOG_LEVEL)) {
-      it(`setLogLevel(${value}) fires PurchasesPlugin with the correct arguments`, () => {
+      it(`setLogHandler fires the callback for ${value} logs`, () => {
         let receivedLogLevel;
         Purchases.setLogHandler((logLevel, message) => {
           receivedLogLevel = logLevel

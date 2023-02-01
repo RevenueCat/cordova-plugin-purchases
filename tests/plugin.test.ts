@@ -1,4 +1,5 @@
 import Purchases from "../src/plugin/plugin";
+import {LOG_LEVEL, LogHandler} from "../www/plugin";
 
 const execFn = jest.fn();
 
@@ -144,6 +145,49 @@ describe("Purchases", () => {
     );
   });
 
+  describe("setLogLevel", () => {
+    // If the enum is backed by string values, iterating over the enum won’t work because the `value` in our loop is a
+    // string instead of a number. The indexer of `LOG_LEVEL` can only accept `VERBOSE`, `DEBUG`...
+    // We need a helper method to create a new type `enumKeys`
+    for (const value of enumKeys(LOG_LEVEL)) {
+      it(`setLogLevel(${value}) fires PurchasesPlugin with the correct arguments`, () => {
+        Purchases.setLogLevel(LOG_LEVEL[value]);
+        expect(execFn).toHaveBeenCalledWith(
+            null,
+            null,
+            "PurchasesPlugin",
+            "setLogLevel",
+            [value]
+        );
+      });
+    }
+  });
+
+  describe("setLogHandler", () => {
+    // If the enum is backed by string values, iterating over the enum won’t work because the `value` in our loop is a
+    // string instead of a number. The indexer of `LOG_LEVEL` can only accept `VERBOSE`, `DEBUG`...
+    // We need a helper method to create a new type `enumKeys`
+    for (const value of enumKeys(LOG_LEVEL)) {
+      it(`setLogLevel(${value}) fires PurchasesPlugin with the correct arguments`, () => {
+        let receivedLogLevel;
+        Purchases.setLogHandler((logLevel, message) => {
+          receivedLogLevel = logLevel
+          expect(message).toEqual("message");
+        });
+        expect(execFn).toHaveBeenCalledWith(
+            expect.any(Function),
+            null,
+            "PurchasesPlugin",
+            "setLogHandler",
+            []
+        );
+        let capturedCallback = execFn.mock.calls[0][0] as LogHandler;
+        capturedCallback(LOG_LEVEL[value], "a message");
+        expect(receivedLogLevel).toEqual(LOG_LEVEL[value]);
+      });
+    }
+  });
+
   describe("canMakePayments", () => {
     describe("when no parameters are passed", () => {
       it("calls Purchases with empty list", () => {
@@ -217,4 +261,10 @@ describe("Purchases", () => {
         });
       });
   });
+
+  // Creates a new type from an enum with string values so we can be iterated over the keys of the enum
+  // https://www.petermorlion.com/iterating-a-typescript-enum/
+  function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {
+    return Object.keys(obj).filter(k => Number.isNaN(+k)) as K[];
+  }
 });

@@ -25,7 +25,7 @@
 Please follow the [Quickstart Guide](https://docs.revenuecat.com/docs/) for more information on how to use the SDK
 
 ### Requirements
-*cordova-plugin-purchases* requires Xcode 13.0+ and minimum targets iOS 11.0+
+*cordova-plugin-purchases* requires Xcode 13.2+ and minimum targets iOS 11.0+
 
 ## SDK Reference
 Our full SDK reference [can be found here](https://revenuecat.github.io/cordova-plugin-purchases-docs).

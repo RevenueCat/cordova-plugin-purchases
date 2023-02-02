@@ -186,6 +186,10 @@ describe("Purchases", () => {
         expect(receivedLogLevel).toEqual(LOG_LEVEL[value]);
       });
     }
+
+    it("enumKeys returns all LOG_LEVEL options", () => {
+      expect(enumKeys(LOG_LEVEL).length).toEqual(Object.keys(LOG_LEVEL).length);
+    });
   });
 
   describe("canMakePayments", () => {

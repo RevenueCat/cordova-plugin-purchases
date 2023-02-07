@@ -170,9 +170,10 @@ describe("Purchases", () => {
     for (const value of enumKeys(LOG_LEVEL)) {
       it(`setLogHandler fires the callback for ${value} logs`, () => {
         let receivedLogLevel;
+        let messageReceived;
         Purchases.setLogHandler((logLevel, message) => {
-          receivedLogLevel = logLevel
-          expect(message).toEqual("message");
+          receivedLogLevel = logLevel;
+          messageReceived = message;
         });
         expect(execFn).toHaveBeenCalledWith(
             expect.any(Function),
@@ -181,9 +182,11 @@ describe("Purchases", () => {
             "setLogHandler",
             []
         );
-        let capturedCallback = execFn.mock.calls[0][0] as LogHandler;
-        capturedCallback(LOG_LEVEL[value], "a message");
-        expect(receivedLogLevel).toEqual(LOG_LEVEL[value]);
+        let callsToMock = execFn.mock.calls;
+        let capturedCallback = callsToMock[callsToMock.length - 1][0];
+        capturedCallback({logLevel: value, message: "message"});
+        expect(receivedLogLevel).toEqual(value);
+        expect(messageReceived).toEqual("message");
       });
     }
 

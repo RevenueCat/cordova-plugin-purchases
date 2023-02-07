@@ -12,7 +12,8 @@ import {
   BILLING_FEATURE,
   LOG_LEVEL,
   ShouldPurchasePromoProductListener,
-  PurchasesConfiguration, LogHandler
+  PurchasesConfiguration, 
+  LogHandler
 } from '../www/plugin';
 
 import Purchases from '../www/plugin';

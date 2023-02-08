@@ -7,12 +7,13 @@ import {
   PurchasesPackage,
   PurchasesStoreProduct,
   UpgradeInfo,
-  PURCHASE_TYPE, 
-  PurchasesStoreProductDiscount, 
+  PURCHASE_TYPE,
+  PurchasesStoreProductDiscount,
   BILLING_FEATURE,
   LOG_LEVEL,
   ShouldPurchasePromoProductListener,
-  PurchasesConfiguration
+  PurchasesConfiguration, 
+  LogHandler
 } from '../www/plugin';
 
 import Purchases from '../www/plugin';
@@ -80,6 +81,11 @@ function checkConfigure() {
   Purchases.setDebugLogsEnabled(true);
   Purchases.setLogLevel(LOG_LEVEL.DEBUG);
   Purchases.setSimulatesAskToBuyInSandbox(true);
+  Purchases.setLogHandler((logLevel: LOG_LEVEL, message: string) => {    });
+}
+
+function checkLogHandler(logHandler: LogHandler) {
+  Purchases.setLogHandler(logHandler);
 }
 
 function checkLogLevels(level: LOG_LEVEL) {

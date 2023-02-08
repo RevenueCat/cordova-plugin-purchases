@@ -7,12 +7,12 @@ import androidx.annotation.Nullable;
 import com.appfeel.cordova.annotated.android.plugin.AnnotatedCordovaPlugin;
 import com.appfeel.cordova.annotated.android.plugin.ExecutionThread;
 import com.appfeel.cordova.annotated.android.plugin.PluginAction;
+import com.revenuecat.purchases.common.PlatformInfo;
 import com.revenuecat.purchases.hybridcommon.CommonKt;
 import com.revenuecat.purchases.hybridcommon.ErrorContainer;
 import com.revenuecat.purchases.hybridcommon.OnResult;
-import com.revenuecat.purchases.hybridcommon.OnResultList;
 import com.revenuecat.purchases.hybridcommon.OnResultAny;
-import com.revenuecat.purchases.common.PlatformInfo;
+import com.revenuecat.purchases.hybridcommon.OnResultList;
 import com.revenuecat.purchases.hybridcommon.SubscriberAttributesKt;
 import com.revenuecat.purchases.hybridcommon.mappers.CustomerInfoMapperKt;
 import com.revenuecat.purchases.interfaces.UpdatedCustomerInfoListener;
@@ -41,7 +41,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     // other calls to the plugin will fail with UninitializedPropertyAccessException
     @PluginAction(thread = ExecutionThread.MAIN, actionName = "configure", isAutofinish = false)
     private void configure(String apiKey, @Nullable String appUserID, boolean observerMode,
-                           @Nullable String userDefaultsSuiteName, boolean usesStoreKit2IfAvailable, 
+                           @Nullable String userDefaultsSuiteName, boolean usesStoreKit2IfAvailable,
                            boolean useAmazon, CallbackContext callbackContext) {
         PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
         Store store = Store.PLAY_STORE;
@@ -172,6 +172,20 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success();
     }
 
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setLogHandler", isAutofinish = false)
+    private void setLogHandler(CallbackContext callbackContext) {
+        CommonKt.setLogHandler(logDetails -> {
+            PluginResult result = new PluginResult(PluginResult.Status.OK, convertMapToJson(logDetails));
+            result.setKeepCallback(true);
+
+            callbackContext.sendPluginResult(result);
+            return null;
+        });
+        PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);
+        result.setKeepCallback(true);
+        callbackContext.sendPluginResult(result);
+    }
+
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setSimulatesAskToBuyInSandbox")
     private void setSimulatesAskToBuyInSandbox(boolean enabled, CallbackContext callbackContext) {
         // NOOP
@@ -210,13 +224,13 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         Map<String, Map<String, Object>> map = CommonKt.checkTrialOrIntroductoryPriceEligibility(productIDList);
         callbackContext.success(convertMapToJson(map));
     }
-    
+
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "invalidateCustomerInfoCache")
     private void invalidateCustomerInfoCache(CallbackContext callbackContext) {
         CommonKt.invalidateCustomerInfoCache();
         callbackContext.success();
     }
-    
+
     @PluginAction(thread = ExecutionThread.UI, actionName = "setProxyURLString")
     public void setProxyURLString(String proxyURLString, CallbackContext callbackContext) {
         CommonKt.setProxyURLString(proxyURLString);
@@ -237,15 +251,15 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         }
 
         CommonKt.canMakePayments(this.cordova.getActivity(), featureList, new OnResultAny<Boolean>() {
-          @Override
-          public void onError(@Nullable ErrorContainer errorContainer) {
-            callbackContext.error(convertMapToJson(errorContainer.getInfo()));
-          }
-  
-          @Override
-          public void onReceived(Boolean result) {
-            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
-          }
+            @Override
+            public void onError(@Nullable ErrorContainer errorContainer) {
+                callbackContext.error(convertMapToJson(errorContainer.getInfo()));
+            }
+
+            @Override
+            public void onReceived(Boolean result) {
+                callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
+            }
         });
     }
 
@@ -285,43 +299,43 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAdjustID")
-    private void setAdjustID(String adjustID, CallbackContext callbackContext) { 
+    private void setAdjustID(String adjustID, CallbackContext callbackContext) {
         SubscriberAttributesKt.setAdjustID(adjustID);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAppsflyerID")
-    private void setAppsflyerID(String appsflyerID, CallbackContext callbackContext) { 
+    private void setAppsflyerID(String appsflyerID, CallbackContext callbackContext) {
         SubscriberAttributesKt.setAppsflyerID(appsflyerID);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setFBAnonymousID")
-    private void setFBAnonymousID(String fBAnonymousID, CallbackContext callbackContext) { 
+    private void setFBAnonymousID(String fBAnonymousID, CallbackContext callbackContext) {
         SubscriberAttributesKt.setFBAnonymousID(fBAnonymousID);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setMparticleID")
-    private void setMparticleID(String mparticleID, CallbackContext callbackContext) { 
+    private void setMparticleID(String mparticleID, CallbackContext callbackContext) {
         SubscriberAttributesKt.setMparticleID(mparticleID);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setOnesignalID")
-    private void setOnesignalID(String onesignalID, CallbackContext callbackContext) { 
+    private void setOnesignalID(String onesignalID, CallbackContext callbackContext) {
         SubscriberAttributesKt.setOnesignalID(onesignalID);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAirshipChannelID")
-    private void setAirshipChannelID(String airshipChannelID, CallbackContext callbackContext) { 
+    private void setAirshipChannelID(String airshipChannelID, CallbackContext callbackContext) {
         SubscriberAttributesKt.setAirshipChannelID(airshipChannelID);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setMediaSource")
-    private void setMediaSource(String mediaSource, CallbackContext callbackContext) { 
+    private void setMediaSource(String mediaSource, CallbackContext callbackContext) {
         SubscriberAttributesKt.setMediaSource(mediaSource);
         callbackContext.success();
     }
@@ -345,37 +359,37 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setCampaign")
-    private void setCampaign(String campaign, CallbackContext callbackContext) { 
+    private void setCampaign(String campaign, CallbackContext callbackContext) {
         SubscriberAttributesKt.setCampaign(campaign);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAdGroup")
-    private void setAdGroup(String adGroup, CallbackContext callbackContext) { 
+    private void setAdGroup(String adGroup, CallbackContext callbackContext) {
         SubscriberAttributesKt.setAdGroup(adGroup);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAd")
-    private void setAd(String ad, CallbackContext callbackContext) { 
+    private void setAd(String ad, CallbackContext callbackContext) {
         SubscriberAttributesKt.setAd(ad);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setKeyword")
-    private void setKeyword(String keyword, CallbackContext callbackContext) { 
+    private void setKeyword(String keyword, CallbackContext callbackContext) {
         SubscriberAttributesKt.setKeyword(keyword);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setCreative")
-    private void setCreative(String creative, CallbackContext callbackContext) { 
+    private void setCreative(String creative, CallbackContext callbackContext) {
         SubscriberAttributesKt.setCreative(creative);
         callbackContext.success();
     }
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "collectDeviceIdentifiers")
-    private void collectDeviceIdentifiers(CallbackContext callbackContext) { 
+    private void collectDeviceIdentifiers(CallbackContext callbackContext) {
         SubscriberAttributesKt.collectDeviceIdentifiers();
         callbackContext.success();
     }

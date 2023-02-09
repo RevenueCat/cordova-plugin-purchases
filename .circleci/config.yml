@@ -305,9 +305,72 @@ jobs:
 
 workflows:
   version: 2
+  build-test:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+    jobs:
+      - runtest
+
   deploy:
     when:
       not:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
-      - android-integration-test
+      - android-integration-test: *release-branches
+      - ios-integration-test: *release-branches
+      - hold:
+          type: approval
+          requires:
+            - ios-integration-test
+            - android-integration-test
+          <<: *release-branches
+      - revenuecat/tag-current-branch:
+          requires:
+            - hold
+          <<: *release-branches
+      - make-release:
+          <<: *release-tags
+      - docs-deploy:
+          <<: *release-tags
+          requires:
+            - make-release
+
+  api-tester-check:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+    jobs:
+      - api-tester
+
+  danger:
+     jobs:
+       - revenuecat/danger
+
+  snapshot-bump:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+    jobs:
+      - prepare-next-version:
+          <<: *only-main-branch
+
+  weekly-run-workflow:
+    when:
+      and:
+        - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+        - equal: [ "release-train", << pipeline.schedule.name >> ]
+    jobs:
+      - revenuecat/automatic-bump
+
+  manual-trigger-bump:
+    when:
+      equal: [ bump, << pipeline.parameters.action >> ]
+    jobs:
+      - revenuecat/automatic-bump
+
+  update-hybrid-common-versions:
+    when:
+      equal: [ upgrade-hybrid-common, << pipeline.parameters.action >> ]
+    jobs:
+      - update-hybrid-common-versions

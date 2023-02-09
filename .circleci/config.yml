@@ -167,7 +167,7 @@ jobs:
       - android/accept-licenses
       - android/create-avd:
           avd-name: myavd
-          system-image: system-images;android-31;google_apis;x86_64
+          system-image: system-images;android-32;google_apis;x86_64
           install: true
       - android/start-emulator:
           avd-name: myavd

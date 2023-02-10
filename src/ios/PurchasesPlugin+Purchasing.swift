@@ -118,4 +118,10 @@ import PurchasesHybridCommon
                                                  completion: self.responseCompletion(forCommand: command))
     }
 
+    @objc(syncObserverModeAmazonPurchase:)
+    func syncObserverModeAmazonPurchase(command: CDVInvokedUrlCommand) {
+        NSLog("%@", "[Purchases] Warning: tried to sync an Amazon purchase on an iOS device.")
+        self.sendOKFor(command: command)
+    }
+
 }

@@ -1,3 +1,9 @@
+## 3.9.1
+### Dependency Updates
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 4.13.1 (#290) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 5.7.1](https://github.com/RevenueCat/purchases-android/releases/tag/5.7.1)
+  * [iOS 4.17.5](https://github.com/RevenueCat/purchases-ios/releases/tag/4.17.5)
+
 ## 3.9.0
 ### New Features
 * setLogHandler support (#275) via Cesar de la Vega (@vegaro)

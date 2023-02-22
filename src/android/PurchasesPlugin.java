@@ -105,12 +105,12 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
                                  @Nullable final Integer prorationMode, final String type,
                                  final CallbackContext callbackContext) {
         CommonKt.purchaseProduct(
-                this.cordova.getActivity(),
-                productIdentifier,
-                oldSKU,
-                prorationMode,
-                type,
-                getOnResult(callbackContext));
+            this.cordova.getActivity(),
+            productIdentifier,
+            oldSKU,
+            prorationMode,
+            type,
+            getOnResult(callbackContext));
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "purchasePackage", isAutofinish = false)
@@ -120,12 +120,12 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
                                  @Nullable final Integer prorationMode,
                                  final CallbackContext callbackContext) {
         CommonKt.purchasePackage(
-                this.cordova.getActivity(),
-                packageIdentifier,
-                offeringIdentifier,
-                oldSKU,
-                prorationMode,
-                getOnResult(callbackContext));
+            this.cordova.getActivity(),
+            packageIdentifier,
+            offeringIdentifier,
+            oldSKU,
+            prorationMode,
+            getOnResult(callbackContext));
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "syncPurchases")

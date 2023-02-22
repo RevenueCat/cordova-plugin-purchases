@@ -269,6 +269,32 @@ describe("Purchases", () => {
       });
   });
 
+  describe("syncObserverModeAmazonPurchase", () => {
+    it("calls Purchases with the correct arguments", () => {
+      Purchases.syncObserverModeAmazonPurchase(
+          'productID_test',
+          'receiptID_test',
+          'amazonUserID_test',
+          'isoCurrencyCode_test',
+          3.4,
+      );
+
+      expect(execFn).toHaveBeenCalledWith(
+          null,
+          null,
+          "PurchasesPlugin",
+          "syncObserverModeAmazonPurchase",
+          [
+            'productID_test',
+            'receiptID_test',
+            'amazonUserID_test',
+            'isoCurrencyCode_test',
+            3.4
+          ]
+      );
+    });
+  });
+
   // Creates a new type from an enum with string values so we can be iterated over the keys of the enum
   // https://www.petermorlion.com/iterating-a-typescript-enum/
   function enumKeys<O extends object, K extends keyof O = keyof O>(obj: O): K[] {

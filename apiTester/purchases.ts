@@ -12,7 +12,7 @@ import {
   BILLING_FEATURE,
   LOG_LEVEL,
   ShouldPurchasePromoProductListener,
-  PurchasesConfiguration, 
+  PurchasesConfiguration,
   LogHandler
 } from '../www/plugin';
 
@@ -43,7 +43,7 @@ function checkPurchasing(purchases: Purchases,
   const productId: string = "";
   const upgradeInfo: UpgradeInfo | null = null;
   const features: BILLING_FEATURE[] = [];
-  
+
   const purchaseCallback = ({productIdentifier, customerInfo,}: { productIdentifier: string; customerInfo: CustomerInfo; }) => {};
   const errorCallbackUserCancelled = ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => {};
 
@@ -131,7 +131,7 @@ function checkPurchasesConfiguration() {
     userDefaultsSuiteName,
     useAmazon
   }
-  
+
   Purchases.configureWith(configuration);
 
   const simpleAmazonConfiguration: PurchasesConfiguration = {
@@ -152,4 +152,13 @@ function checkListeners() {
 
   Purchases.addShouldPurchasePromoProductListener(shouldPurchaseListener);
   Purchases.removeShouldPurchasePromoProductListener(shouldPurchaseListener);
+}
+
+function checkSyncObserverModeAmazonPurchase(productID: string,
+                                             receiptID: string,
+                                             amazonUserID: string,
+                                             isoCurrencyCode?: string | null,
+                                             price?: number | null) {
+  Purchases.syncObserverModeAmazonPurchase(
+    productID, receiptID, amazonUserID, isoCurrencyCode, price);
 }

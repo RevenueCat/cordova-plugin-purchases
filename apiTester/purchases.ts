@@ -155,10 +155,10 @@ function checkListeners() {
 }
 
 function checkSyncObserverModeAmazonPurchase(productID: string,
-                                                   receiptID: string,
-                                                   amazonUserID: string,
-                                                   isoCurrencyCode?: string | null,
-                                                   price?: number | null) {
+                                             receiptID: string,
+                                             amazonUserID: string,
+                                             isoCurrencyCode?: string | null,
+                                             price?: number | null) {
   Purchases.syncObserverModeAmazonPurchase(
-      productID, receiptID, amazonUserID, isoCurrencyCode, price);
+    productID, receiptID, amazonUserID, isoCurrencyCode, price);
 }

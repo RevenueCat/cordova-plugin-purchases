@@ -995,14 +995,14 @@ class Purchases {
    * @param {(number|null|undefined)} price Product's price.
    */
   public static syncObserverModeAmazonPurchase(productID: string, receiptID: string,
-                                                     amazonUserID: string, isoCurrencyCode?: string | null,
-                                                     price?: number | null): void {
+                                               amazonUserID: string, isoCurrencyCode?: string | null,
+                                               price?: number | null): void {
     window.cordova.exec(
-        null,
-        null,
-        PLUGIN_NAME,
-        "syncObserverModeAmazonPurchase",
-        [productID, receiptID, amazonUserID, isoCurrencyCode, price]);
+      null,
+      null,
+      PLUGIN_NAME,
+      "syncObserverModeAmazonPurchase",
+      [productID, receiptID, amazonUserID, isoCurrencyCode, price]);
   }
 
   /**

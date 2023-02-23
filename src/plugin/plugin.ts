@@ -1470,14 +1470,18 @@ class Purchases {
    *
    * Note: Billing features are only relevant to Google Play Android users.
    * For other stores and platforms, billing features won't be checked.
-   * @param feature An array of feature types to check for support. Feature types must be one of
    *       [BILLING_FEATURE]. By default, is an empty list and no specific feature support will be checked.
+   * @param features An array of feature types to check for support. Feature types must be one of [BILLING_FEATURE].
+   * By default, is an empty list and no specific feature support will be checked.
+   * @param {function(boolean):void} callback Will be sent true if billing is supported, false otherwise.
+   * @param {function(PurchasesError):void} errorCallback Callback triggered after an error or when checking if billing
+   * is supported.
    */
-
   public static canMakePayments(
     features: BILLING_FEATURE[] = [],
     callback: (canMakePayments: boolean) => void,
-    errorCallback: (error: PurchasesError) => void): void {
+    errorCallback: (error: PurchasesError) => void
+  ): void {
     window.cordova.exec(
       callback,
       errorCallback,

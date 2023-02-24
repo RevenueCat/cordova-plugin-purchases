@@ -6,6 +6,8 @@
 //
 
 import Foundation
+import PurchasesHybridCommon
+import RevenueCat
 
 extension CDVPurchasesPlugin {
 
@@ -41,6 +43,12 @@ extension CDVPurchasesPlugin {
             self.commandDelegate.send(result, callbackId: command.callbackId)
         }
         return callback
+    }
+
+    func sendUnsupportedErrorFor(command: CDVInvokedUrlCommand) {
+        let error = ErrorContainer(error: ErrorCode.unsupportedError, extraPayload: [:])
+        let result = CDVPluginResult(status: .error, messageAs: error.info)
+        self.commandDelegate.send(result, callbackId: command.callbackId)
     }
 
 }

@@ -25,7 +25,7 @@ const app = {
       this.onDeviceReady.bind(this),
       false
     );
-    document.getElementById("get-offerings").addEventListener("click", this.getOfferings); 
+    document.getElementById("get-offerings").addEventListener("click", this.getOfferings);
     document.getElementById("get-products").addEventListener("click", this.getProducts);
     document.getElementById("get-customer-info").addEventListener("click", this.getCustomerInfo);
     document.getElementById("login-random").addEventListener("click", this.loginRandom);
@@ -40,6 +40,7 @@ const app = {
     document.getElementById("invalidate-customer-info-cache").addEventListener("click", this.invalidateCustomerInfoCache)
     document.getElementById("toggle-simulates-ask-to-buy-in-sandbox").addEventListener("click", this.toggleSimulatesAskToBuyInSandbox)
     document.getElementById("present-code-redemption-sheet").addEventListener("click", this.presentCodeRedemptionSheet)
+    document.getElementById("begin-refund-request-active-entitlement").addEventListener("click", this.beginRefundRequestForActiveEntitlement)
   },
 
   // deviceready Event Handler
@@ -73,8 +74,8 @@ const app = {
     });
     initializePurchasesSDK();
   },
-  
-  getOfferings: function() { 
+
+  getOfferings: function() {
     Purchases.getOfferings(
       offerings => {
         setStatusLabelText(offerings);
@@ -94,7 +95,7 @@ const app = {
             productIdentifiers.push(package.product.identifier);
           });
         }
-        
+
         Purchases.getProducts(
           productIdentifiers,
           products => {
@@ -200,7 +201,7 @@ const app = {
     Purchases.setPhoneNumber("12345678");
     Purchases.setDisplayName("Garfield");
     Purchases.setAttributes({ "favorite_cat": "garfield" });
-    Purchases.setEmail("garfield@revenuecat.com");  
+    Purchases.setEmail("garfield@revenuecat.com");
     Purchases.setAdjustID("AdjustID");
     Purchases.setAppsflyerID("AppsflyerID");
     Purchases.setFBAnonymousID("FBAnonymousID");
@@ -229,7 +230,7 @@ const app = {
             productIdentifiers.push(package.product.identifier);
           });
         }
-        
+
         Purchases.checkTrialOrIntroductoryPriceEligibility(
           productIdentifiers,
           info => {
@@ -242,30 +243,39 @@ const app = {
       }
     );
   },
-  
-  isAnonymous: function() { 
+
+  isAnonymous: function() {
     Purchases.isAnonymous(
       isAnonymous => {
         setStatusLabelText(isAnonymous);
       }
     );
   },
-  
+
   invalidateCustomerInfoCache: function() {
     setStatusLabelText("invalidating customer info cache");
     Purchases.invalidateCustomerInfoCache();
   },
-  
+
   simulatesAskToBuyInSandbox: false,
   toggleSimulatesAskToBuyInSandbox: function() {
     this.simulatesAskToBuyInSandbox = !this.simulatesAskToBuyInSandbox;
     setStatusLabelText("setting simulatesAskToBuyInSandbox to " + this.simulatesAskToBuyInSandbox);
     Purchases.setSimulatesAskToBuyInSandbox(simulatesAskToBuyInSandbox);
   },
-  
+
   presentCodeRedemptionSheet: function() {
     setStatusLabelText("presenting code redemption sheet");
     Purchases.presentCodeRedemptionSheet();
+  },
+
+  beginRefundRequestForActiveEntitlement: function() {
+    setStatusLabelText("beginning refund request for active entitlement");
+    Purchases.beginRefundRequestForActiveEntitlement(refundRequestStatus => {
+      setStatusLabelText(refundRequestStatus);
+    }, error => {
+      setStatusLabelText(error);
+    });
   },
 
 };
@@ -318,7 +328,7 @@ setupPurchaseButtons = function () {
   );
 }
 
-setStatusLabelText = function(myObject) { 
+setStatusLabelText = function(myObject) {
   var objectString = JSON.stringify(myObject, null, 4);
   console.log(objectString);
 

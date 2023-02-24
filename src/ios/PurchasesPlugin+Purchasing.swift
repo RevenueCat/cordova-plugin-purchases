@@ -132,6 +132,42 @@ import PurchasesHybridCommon
 #endif
     }
 
+    @objc(beginRefundRequestForEntitlementId:)
+    func beginRefundRequestForEntitlementId(command: CDVInvokedUrlCommand) {
+        guard let entitlementIdentifier = command.arguments[0] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "entitlementIdentifier", expectedType: String.self)
+            return
+        }
+#if os(iOS)
+        if #available(iOS 15.0, *) {
+            let completion = beginRefundRequestCompletionFor(command: command)
+            CommonFunctionality.beginRefundRequest(entitlementId: entitlementIdentifier, completion: completion)
+        } else {
+            sendUnsupportedErrorFor(command: command)
+        }
+#else
+        sendUnsupportedErrorFor(command: command)
+#endif
+    }
+
+    @objc(beginRefundRequestForProductId:)
+    func beginRefundRequestForProductId(command: CDVInvokedUrlCommand) {
+        guard let productIdentifier = command.arguments[0] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "productIdentifier", expectedType: String.self)
+            return
+        }
+#if os(iOS)
+        if #available(iOS 15.0, *) {
+            let completion = beginRefundRequestCompletionFor(command: command)
+            CommonFunctionality.beginRefundRequest(productId: productIdentifier, completion: completion)
+        } else {
+            sendUnsupportedErrorFor(command: command)
+        }
+#else
+        sendUnsupportedErrorFor(command: command)
+#endif
+    }
+
     private func beginRefundRequestCompletionFor(command: CDVInvokedUrlCommand) -> (ErrorContainer?) -> Void {
         return { error in
             let result: CDVPluginResult
@@ -148,26 +184,6 @@ import PurchasesHybridCommon
             self.commandDelegate.send(result, callbackId: command.callbackId)
         }
     }
-    
-//    @objc(beginRefundRequestForEntitlementId:)
-//    func beginRefundRequestForEntitlementId(command: CDVInvokedUrlCommand) {
-//        guard let entitlementIdentifier = command.arguments[0] as? String else {
-//            self.sendBadParameterFor(command: command, parameterNamed: "entitlementIdentifier", expectedType: String.self)
-//            return
-//        }
-//
-//        #if TARGET_OS_IPHONE
-//        if (@available(iOS 15.0, *)) {
-//            [RCCommonFunctionality beginRefundRequestEntitlementId:entitlementIdentifier
-//                                                   completionBlock:[self getBeginRefundResponseCompletionBlockWithResolve:resolve
-//                                                                                                                   reject:reject]];
-//        } else {
-//            resolve(nil);
-//        }
-//        #else
-//        resolve(nil);
-//        #endif
-//    }
 //
 //    RCT_EXPORT_METHOD(beginRefundRequestForProductId:(NSString *)productIdentifier
 //                      resolve:(RCTPromiseResolveBlock)resolve

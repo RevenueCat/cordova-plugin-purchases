@@ -1530,7 +1530,7 @@ class Purchases {
    */
   public static beginRefundRequestForActiveEntitlement(
     callback: (refundRequestStatus: REFUND_REQUEST_STATUS) => void,
-    errorCallback: (error: PurchasesError) => void
+    errorCallback: (error: PurchasesError) => void,
   ): void {
     window.cordova.exec(
       (refundRequestStatusInt: number) => {
@@ -1554,17 +1554,20 @@ class Purchases {
    * @param entitlementInfo The entitlement to begin a refund request for.
    * @param {function(REFUND_REQUEST_STATUS):void} callback REFUND_REQUEST_STATUS: The status of the refund request.
    * Keep in mind the status could be REFUND_REQUEST_STATUS.USER_CANCELLED
+   * @param {function(PurchasesError):void} errorCallback Callback triggered after an error when beginning refund
+   * request for an entitlement.
    */
   public static beginRefundRequestForEntitlement(
     entitlementInfo: PurchasesEntitlementInfo,
     callback: (refundRequestStatus: REFUND_REQUEST_STATUS) => void,
+    errorCallback: (error: PurchasesError) => void,
   ): void {
     window.cordova.exec(
       (refundRequestStatusInt: number) => {
         const refundRequestStatus = Purchases.convertIntToRefundRequestStatus(refundRequestStatusInt);
         callback(refundRequestStatus);
       },
-      null,
+      errorCallback,
       PLUGIN_NAME,
       "beginRefundRequestForEntitlementId",
       [entitlementInfo.identifier]
@@ -1581,17 +1584,20 @@ class Purchases {
    * @param storeProduct The StoreProduct to begin a refund request for.
    * @param {function(REFUND_REQUEST_STATUS):void} callback REFUND_REQUEST_STATUS: The status of the refund request.
    * Keep in mind the status could be REFUND_REQUEST_STATUS.USER_CANCELLED
+   * @param {function(PurchasesError):void} errorCallback Callback triggered after an error when beginning refund
+   * request for a product.
    */
   public static beginRefundRequestForProduct(
     storeProduct: PurchasesStoreProduct,
     callback: (refundRequestStatus: REFUND_REQUEST_STATUS) => void,
+    errorCallback: (error: PurchasesError) => void,
   ): void {
     window.cordova.exec(
       (refundRequestStatusInt: number) => {
         const refundRequestStatus = Purchases.convertIntToRefundRequestStatus(refundRequestStatusInt);
         callback(refundRequestStatus);
       },
-      null,
+      errorCallback,
       PLUGIN_NAME,
       "beginRefundRequestForProductId",
       [storeProduct.identifier]

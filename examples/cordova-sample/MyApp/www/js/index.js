@@ -41,6 +41,8 @@ const app = {
     document.getElementById("toggle-simulates-ask-to-buy-in-sandbox").addEventListener("click", this.toggleSimulatesAskToBuyInSandbox)
     document.getElementById("present-code-redemption-sheet").addEventListener("click", this.presentCodeRedemptionSheet)
     document.getElementById("begin-refund-request-active-entitlement").addEventListener("click", this.beginRefundRequestForActiveEntitlement)
+    document.getElementById("begin-refund-request-entitlement").addEventListener("click", this.beginRefundRequestForEntitlement)
+    document.getElementById("begin-refund-request-product-id").addEventListener("click", this.beginRefundRequestForProduct)
   },
 
   // deviceready Event Handler
@@ -272,10 +274,61 @@ const app = {
   beginRefundRequestForActiveEntitlement: function() {
     setStatusLabelText("beginning refund request for active entitlement");
     Purchases.beginRefundRequestForActiveEntitlement(refundRequestStatus => {
-      setStatusLabelText(refundRequestStatus);
+      setStatusLabelText(Purchases.REFUND_REQUEST_STATUS[refundRequestStatus]);
     }, error => {
       setStatusLabelText(error);
     });
+  },
+
+  beginRefundRequestForEntitlement: function() {
+    setStatusLabelText("beginning refund request by entitlement id");
+    Purchases.getCustomerInfo(
+      customerInfo => {
+        if (!customerInfo.entitlements.active) {
+          setStatusLabelText("customer info doesn't have an active entitlements");
+          return;
+        }
+        let activeEntitlement = Object.values(customerInfo.entitlements.active)[0];
+        setStatusLabelText("beginning refund request for entitlement id: " +
+          activeEntitlement.identifier);
+        Purchases.beginRefundRequestForEntitlement(activeEntitlement, refundRequestStatus => {
+          setStatusLabelText(Purchases.REFUND_REQUEST_STATUS[refundRequestStatus]);
+        }, error => {
+          setStatusLabelText(error);
+        });
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+  },
+
+  beginRefundRequestForProduct: function() {
+    setStatusLabelText("beginning refund request for product");
+    Purchases.getCustomerInfo(
+      customerInfo => {
+        if (!customerInfo.entitlements.active) {
+          setStatusLabelText("customer info doesn't have an active entitlements");
+          return;
+        }
+        let activeProductIdentifier = Object.values(customerInfo.entitlements.active)[0].productIdentifier;
+        Purchases.getProducts([activeProductIdentifier], products => {
+          if (!products) {
+            setStatusLabelText("couldn't get products");
+            return;
+          }
+          setStatusLabelText("beginning refund request for product: " + products[0].identifier);
+          Purchases.beginRefundRequestForProduct(products[0], refundRequestStatus => {
+            setStatusLabelText(Purchases.REFUND_REQUEST_STATUS[refundRequestStatus]);
+          }, error => {
+            setStatusLabelText(error);
+          });
+        });
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
   },
 
 };
@@ -296,9 +349,9 @@ setupShouldPurchasePromoProductListener = function() {
     makeDeferredPurchase();
     console.log("This codes executes right after making the purchase");
   });
-},
+}
 
-setupPurchaseButtons = function () { 
+setupPurchaseButtons = function () {
   const prototypeButton = document.getElementById("prototype-button");
   const parentNode = prototypeButton.parentNode;
   Purchases.getOfferings(
@@ -313,7 +366,7 @@ setupPurchaseButtons = function () {
         parentNode.appendChild(purchaseButton);
         purchaseButton.addEventListener("click", function() {
           Purchases.purchasePackage(package,
-            customerInfo => { 
+            customerInfo => {
               setStatusLabelText(customerInfo);
             },
             error => {

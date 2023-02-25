@@ -13,7 +13,9 @@ import {
   LOG_LEVEL,
   ShouldPurchasePromoProductListener,
   PurchasesConfiguration,
-  LogHandler
+  LogHandler,
+  REFUND_REQUEST_STATUS,
+  PurchasesEntitlementInfo,
 } from '../www/plugin';
 
 import Purchases from '../www/plugin';
@@ -161,4 +163,13 @@ function checkSyncObserverModeAmazonPurchase(productID: string,
                                              price?: number | null) {
   Purchases.syncObserverModeAmazonPurchase(
     productID, receiptID, amazonUserID, isoCurrencyCode, price);
+}
+
+function checkBeginRefundRequest(
+  entitlementInfo: PurchasesEntitlementInfo,
+  purchasesStoreProduct: PurchasesStoreProduct
+) {
+  Purchases.beginRefundRequestForActiveEntitlement((refundRequestStatus: REFUND_REQUEST_STATUS) => {}, errorCallback);
+  Purchases.beginRefundRequestForEntitlement(entitlementInfo, (refundRequestStatus: REFUND_REQUEST_STATUS) => {}, errorCallback);
+  Purchases.beginRefundRequestForProduct(purchasesStoreProduct, (refundRequestStatus: REFUND_REQUEST_STATUS) => {}, errorCallback);
 }

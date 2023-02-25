@@ -1,5 +1,5 @@
 import Purchases from "../src/plugin/plugin";
-import {LOG_LEVEL, LogHandler} from "../www/plugin";
+import {LOG_LEVEL, PurchasesError, PurchasesEntitlementInfo, PurchasesStoreProduct} from "../www/plugin";
 
 const execFn = jest.fn();
 
@@ -267,6 +267,337 @@ describe("Purchases", () => {
           );
         });
       });
+  });
+
+  describe("beginRefundRequest", () => {
+    function stubBeginRefundRequestError() {
+      let expectedError: PurchasesError = {
+        code: 31,
+        message: 'Error when trying to begin refund request',
+        readableErrorCode: 'BEGIN_REFUND_REQUEST_ERROR',
+        underlyingErrorMessage: 'Unable to request refund'
+      }
+      return expectedError;
+    }
+
+    function stubEntitlementInfo() {
+      let entitlementInfo: PurchasesEntitlementInfo = {
+        identifier: 'entitlement_id',
+        isActive: true,
+        willRenew: true,
+        periodType: 'NORMAL',
+        latestPurchaseDate: new Date().toDateString(),
+        originalPurchaseDate: new Date().toDateString(),
+        expirationDate: new Date().toDateString(),
+        store: 'appStore',
+        productIdentifier: 'product_id',
+        isSandbox: true,
+        unsubscribeDetectedAt: new Date().toDateString(),
+        billingIssueDetectedAt: new Date().toDateString()
+      }
+      return entitlementInfo;
+    }
+
+    function stubStoreProduct() {
+      let storeProduct: PurchasesStoreProduct = {
+        identifier: 'product_id',
+        description: 'product_description',
+        title: 'product_title',
+        price: 1.99,
+        priceString: '$1.99',
+        currencyCode: 'USD',
+        introPrice: null,
+        discounts: null,
+        subscriptionPeriod: 'P1M',
+      }
+      return storeProduct;
+    }
+
+    describe("for active entitlement", () => {
+      it("calls Purchases with correct parameters", () => {
+        let receivedRefundRequestStatus;
+        Purchases.beginRefundRequestForActiveEntitlement(
+          refundRequestStatus => {
+            receivedRefundRequestStatus = refundRequestStatus;
+          },
+          error => {}
+        );
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForActiveEntitlement",
+          []
+        );
+      });
+
+      it("returns REFUND_REQUEST_STATUS.SUCCESS", () => {
+        let receivedRefundRequestStatus;
+        Purchases.beginRefundRequestForActiveEntitlement(
+          refundRequestStatus => {
+            receivedRefundRequestStatus = refundRequestStatus;
+          },
+          error => {}
+        );
+
+        let callsToMock = execFn.mock.calls;
+        let capturedCallback = callsToMock[callsToMock.length - 1][0];
+        capturedCallback(0);
+        expect(receivedRefundRequestStatus).toEqual(Purchases.REFUND_REQUEST_STATUS.SUCCESS);
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForActiveEntitlement",
+          []
+        );
+      });
+
+      it("returns REFUND_REQUEST_STATUS.USER_CANCELLED", () => {
+        let receivedRefundRequestStatus;
+        Purchases.beginRefundRequestForActiveEntitlement(
+          refundRequestStatus => {
+            receivedRefundRequestStatus = refundRequestStatus;
+          },
+          error => {}
+        );
+
+        let callsToMock = execFn.mock.calls;
+        let capturedCallback = callsToMock[callsToMock.length - 1][0];
+        capturedCallback(1);
+        expect(receivedRefundRequestStatus).toEqual(Purchases.REFUND_REQUEST_STATUS.USER_CANCELLED);
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForActiveEntitlement",
+          []
+        );
+      });
+
+      it("returns error", () => {
+        let receivedError;
+        Purchases.beginRefundRequestForActiveEntitlement(
+          refundRequestStatus => {},
+          error => {
+            receivedError = error;
+          }
+        );
+
+        let callsToMock = execFn.mock.calls;
+        let capturedErrorCallback = callsToMock[callsToMock.length - 1][1];
+        let expectedError = stubBeginRefundRequestError();
+        capturedErrorCallback(expectedError);
+        expect(receivedError).toEqual(expectedError);
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForActiveEntitlement",
+          []
+        );
+      });
+    });
+
+    describe("for entitlement", () => {
+      it("calls Purchases with correct parameters", () => {
+        let receivedRefundRequestStatus;
+        let entitlementInfo = stubEntitlementInfo();
+        Purchases.beginRefundRequestForEntitlement(
+          entitlementInfo,
+          refundRequestStatus => {
+            receivedRefundRequestStatus = refundRequestStatus;
+          },
+          error => {}
+        );
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForEntitlementId",
+          [entitlementInfo.identifier]
+        );
+      });
+
+      it("returns REFUND_REQUEST_STATUS.SUCCESS", () => {
+        let receivedRefundRequestStatus;
+        let entitlementInfo = stubEntitlementInfo();
+        Purchases.beginRefundRequestForEntitlement(
+          entitlementInfo,
+          refundRequestStatus => {
+            receivedRefundRequestStatus = refundRequestStatus;
+          },
+          error => {}
+        );
+
+        let callsToMock = execFn.mock.calls;
+        let capturedCallback = callsToMock[callsToMock.length - 1][0];
+        capturedCallback(0);
+        expect(receivedRefundRequestStatus).toEqual(Purchases.REFUND_REQUEST_STATUS.SUCCESS);
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForEntitlementId",
+          [entitlementInfo.identifier]
+        );
+      });
+
+      it("returns REFUND_REQUEST_STATUS.USER_CANCELLED", () => {
+        let receivedRefundRequestStatus;
+        let entitlementInfo = stubEntitlementInfo();
+        Purchases.beginRefundRequestForEntitlement(
+          entitlementInfo,
+          refundRequestStatus => {
+            receivedRefundRequestStatus = refundRequestStatus;
+          },
+          error => {}
+        );
+
+        let callsToMock = execFn.mock.calls;
+        let capturedCallback = callsToMock[callsToMock.length - 1][0];
+        capturedCallback(1);
+        expect(receivedRefundRequestStatus).toEqual(Purchases.REFUND_REQUEST_STATUS.USER_CANCELLED);
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForEntitlementId",
+          [entitlementInfo.identifier]
+        );
+      });
+
+      it("returns error", () => {
+        let receivedError;
+        let entitlementInfo = stubEntitlementInfo();
+        Purchases.beginRefundRequestForEntitlement(
+          entitlementInfo,
+          refundRequestStatus => {},
+          error => {
+            receivedError = error;
+          }
+        );
+
+        let callsToMock = execFn.mock.calls;
+        let capturedErrorCallback = callsToMock[callsToMock.length - 1][1];
+        let expectedError = stubBeginRefundRequestError();
+        capturedErrorCallback(expectedError);
+        expect(receivedError).toEqual(expectedError);
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForEntitlementId",
+          [entitlementInfo.identifier]
+        );
+      });
+    });
+
+    describe("for product", () => {
+      it("calls Purchases with correct parameters", () => {
+        let receivedRefundRequestStatus;
+        let storeProduct = stubStoreProduct();
+        Purchases.beginRefundRequestForProduct(
+          storeProduct,
+          refundRequestStatus => {
+            receivedRefundRequestStatus = refundRequestStatus;
+          },
+          error => {}
+        );
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForProductId",
+          [storeProduct.identifier]
+        );
+      });
+
+      it("returns REFUND_REQUEST_STATUS.SUCCESS", () => {
+        let receivedRefundRequestStatus;
+        let storeProduct = stubStoreProduct();
+        Purchases.beginRefundRequestForProduct(
+          storeProduct,
+          refundRequestStatus => {
+            receivedRefundRequestStatus = refundRequestStatus;
+          },
+          error => {}
+        );
+
+        let callsToMock = execFn.mock.calls;
+        let capturedCallback = callsToMock[callsToMock.length - 1][0];
+        capturedCallback(0);
+        expect(receivedRefundRequestStatus).toEqual(Purchases.REFUND_REQUEST_STATUS.SUCCESS);
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForProductId",
+          [storeProduct.identifier]
+        );
+      });
+
+      it("returns REFUND_REQUEST_STATUS.USER_CANCELLED", () => {
+        let receivedRefundRequestStatus;
+        let storeProduct = stubStoreProduct();
+        Purchases.beginRefundRequestForProduct(
+          storeProduct,
+          refundRequestStatus => {
+            receivedRefundRequestStatus = refundRequestStatus;
+          },
+          error => {}
+        );
+
+        let callsToMock = execFn.mock.calls;
+        let capturedCallback = callsToMock[callsToMock.length - 1][0];
+        capturedCallback(1);
+        expect(receivedRefundRequestStatus).toEqual(Purchases.REFUND_REQUEST_STATUS.USER_CANCELLED);
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForProductId",
+          [storeProduct.identifier]
+        );
+      });
+
+      it("returns error", () => {
+        let receivedError;
+        let storeProduct = stubStoreProduct();
+        Purchases.beginRefundRequestForProduct(
+          storeProduct,
+          refundRequestStatus => {},
+          error => {
+            receivedError = error;
+          }
+        );
+
+        let callsToMock = execFn.mock.calls;
+        let capturedErrorCallback = callsToMock[callsToMock.length - 1][1];
+        let expectedError = stubBeginRefundRequestError();
+        capturedErrorCallback(expectedError);
+        expect(receivedError).toEqual(expectedError);
+
+        expect(execFn).toHaveBeenCalledWith(
+          expect.any(Function),
+          expect.any(Function),
+          "PurchasesPlugin",
+          "beginRefundRequestForProductId",
+          [storeProduct.identifier]
+        );
+      });
+    });
   });
 
   describe("syncObserverModeAmazonPurchase", () => {

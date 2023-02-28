@@ -184,39 +184,5 @@ import PurchasesHybridCommon
             self.commandDelegate.send(result, callbackId: command.callbackId)
         }
     }
-//
-//    RCT_EXPORT_METHOD(beginRefundRequestForProductId:(NSString *)productIdentifier
-//                      resolve:(RCTPromiseResolveBlock)resolve
-//                      reject:(RCTPromiseRejectBlock)reject) {
-//        #if TARGET_OS_IPHONE
-//        if (@available(iOS 15.0, *)) {
-//            [RCCommonFunctionality beginRefundRequestProductId:productIdentifier
-//                                               completionBlock:[self getBeginRefundResponseCompletionBlockWithResolve:resolve
-//                                                                                                               reject:reject]];
-//        } else {
-//            resolve(nil);
-//        }
-//        #else
-//        resolve(nil);
-//        #endif
-//    }
-//
-//    func getBeginRefundResponseCompletionBlock() {
-//
-//    }
-//
-//    - (void (^)(RCErrorContainer *))getBeginRefundResponseCompletionBlockWithResolve:(RCTPromiseResolveBlock)resolve
-//                                                                              reject:(RCTPromiseRejectBlock)reject {
-//        return ^(RCErrorContainer * _Nullable error) {
-//            if (error == nil) {
-//                resolve(0);
-//            } else if ([error.info[@"userCancelled"] isEqual:@YES]) {
-//                resolve(1);
-//            } else {
-//                [self rejectPromiseWithBlock:reject error:error];
-//            }
-//        };
-//    }
-
 
 }

@@ -304,7 +304,7 @@ const app = {
   },
 
   beginRefundRequestForProduct: function() {
-    setStatusLabelText("beginning refund request for product");
+    setStatusLabelText("beginning refund request by product id");
     Purchases.getCustomerInfo(
       customerInfo => {
         if (!customerInfo.entitlements.active) {
@@ -317,7 +317,7 @@ const app = {
             setStatusLabelText("couldn't get products");
             return;
           }
-          setStatusLabelText("beginning refund request for product: " + products[0].identifier);
+          setStatusLabelText("beginning refund request by product id: " + products[0].identifier);
           Purchases.beginRefundRequestForProduct(products[0], refundRequestStatus => {
             setStatusLabelText(Purchases.REFUND_REQUEST_STATUS[refundRequestStatus]);
           }, error => {

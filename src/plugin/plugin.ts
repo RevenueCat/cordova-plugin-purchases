@@ -1518,7 +1518,7 @@ class Purchases {
    * If the request was unsuccessful, no active entitlements could be found for
    * the user, or multiple active entitlements were found for the user,
    * the promise will return an error.
-   * If called in an unsupported platform (Android or iOS < 15), an `UnsupportedPlatformException` will be thrown.
+   * If called in an unsupported platform (iOS < 15), an `unsupportedError` will be sent to the callback.
    *
    * Important: This method should only be used if your user can only have a single active entitlement at a given time.
    * If a user could have more than one entitlement at a time, use `beginRefundRequestForEntitlement` instead.
@@ -1549,7 +1549,7 @@ class Purchases {
    * the latest transaction associated with the `entitlement`.
    *
    * If the request was unsuccessful, the promise will return an error.
-   * If called in an unsupported platform (Android or iOS < 15), an `UnsupportedPlatformException` will be thrown.
+   * If called in an unsupported platform (iOS < 15), an `unsupportedError` will be sent to the callback.
    *
    * @param entitlementInfo The entitlement to begin a refund request for.
    * @param {function(REFUND_REQUEST_STATUS):void} callback REFUND_REQUEST_STATUS: The status of the refund request.
@@ -1579,7 +1579,7 @@ class Purchases {
    * the latest transaction associated with the `product`.
    *
    * If the request was unsuccessful, the promise will return an error.
-   * If called in an unsupported platform (Android or iOS < 15), an `UnsupportedPlatformException` will be thrown.
+   * If called in an unsupported platform (iOS < 15), an `unsupportedError` will be sent to the callback.
    *
    * @param storeProduct The StoreProduct to begin a refund request for.
    * @param {function(REFUND_REQUEST_STATUS):void} callback REFUND_REQUEST_STATUS: The status of the refund request.

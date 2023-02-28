@@ -285,7 +285,7 @@ const app = {
     Purchases.getCustomerInfo(
       customerInfo => {
         if (!customerInfo.entitlements.active) {
-          setStatusLabelText("customer info doesn't have an active entitlements");
+          setStatusLabelText("customer info doesn't have active entitlements");
           return;
         }
         let activeEntitlement = Object.values(customerInfo.entitlements.active)[0];
@@ -308,7 +308,7 @@ const app = {
     Purchases.getCustomerInfo(
       customerInfo => {
         if (!customerInfo.entitlements.active) {
-          setStatusLabelText("customer info doesn't have an active entitlements");
+          setStatusLabelText("customer info doesn't have active entitlements");
           return;
         }
         let activeProductIdentifier = Object.values(customerInfo.entitlements.active)[0].productIdentifier;

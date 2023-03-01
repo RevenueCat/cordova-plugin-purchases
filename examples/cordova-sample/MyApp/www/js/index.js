@@ -25,7 +25,7 @@ const app = {
       this.onDeviceReady.bind(this),
       false
     );
-    document.getElementById("get-offerings").addEventListener("click", this.getOfferings); 
+    document.getElementById("get-offerings").addEventListener("click", this.getOfferings);
     document.getElementById("get-products").addEventListener("click", this.getProducts);
     document.getElementById("get-customer-info").addEventListener("click", this.getCustomerInfo);
     document.getElementById("login-random").addEventListener("click", this.loginRandom);
@@ -40,6 +40,9 @@ const app = {
     document.getElementById("invalidate-customer-info-cache").addEventListener("click", this.invalidateCustomerInfoCache)
     document.getElementById("toggle-simulates-ask-to-buy-in-sandbox").addEventListener("click", this.toggleSimulatesAskToBuyInSandbox)
     document.getElementById("present-code-redemption-sheet").addEventListener("click", this.presentCodeRedemptionSheet)
+    document.getElementById("begin-refund-request-active-entitlement").addEventListener("click", this.beginRefundRequestForActiveEntitlement)
+    document.getElementById("begin-refund-request-entitlement").addEventListener("click", this.beginRefundRequestForEntitlement)
+    document.getElementById("begin-refund-request-product-id").addEventListener("click", this.beginRefundRequestForProduct)
   },
 
   // deviceready Event Handler
@@ -73,8 +76,8 @@ const app = {
     });
     initializePurchasesSDK();
   },
-  
-  getOfferings: function() { 
+
+  getOfferings: function() {
     Purchases.getOfferings(
       offerings => {
         setStatusLabelText(offerings);
@@ -94,7 +97,7 @@ const app = {
             productIdentifiers.push(package.product.identifier);
           });
         }
-        
+
         Purchases.getProducts(
           productIdentifiers,
           products => {
@@ -200,7 +203,7 @@ const app = {
     Purchases.setPhoneNumber("12345678");
     Purchases.setDisplayName("Garfield");
     Purchases.setAttributes({ "favorite_cat": "garfield" });
-    Purchases.setEmail("garfield@revenuecat.com");  
+    Purchases.setEmail("garfield@revenuecat.com");
     Purchases.setAdjustID("AdjustID");
     Purchases.setAppsflyerID("AppsflyerID");
     Purchases.setFBAnonymousID("FBAnonymousID");
@@ -229,7 +232,7 @@ const app = {
             productIdentifiers.push(package.product.identifier);
           });
         }
-        
+
         Purchases.checkTrialOrIntroductoryPriceEligibility(
           productIdentifiers,
           info => {
@@ -242,30 +245,90 @@ const app = {
       }
     );
   },
-  
-  isAnonymous: function() { 
+
+  isAnonymous: function() {
     Purchases.isAnonymous(
       isAnonymous => {
         setStatusLabelText(isAnonymous);
       }
     );
   },
-  
+
   invalidateCustomerInfoCache: function() {
     setStatusLabelText("invalidating customer info cache");
     Purchases.invalidateCustomerInfoCache();
   },
-  
+
   simulatesAskToBuyInSandbox: false,
   toggleSimulatesAskToBuyInSandbox: function() {
     this.simulatesAskToBuyInSandbox = !this.simulatesAskToBuyInSandbox;
     setStatusLabelText("setting simulatesAskToBuyInSandbox to " + this.simulatesAskToBuyInSandbox);
     Purchases.setSimulatesAskToBuyInSandbox(simulatesAskToBuyInSandbox);
   },
-  
+
   presentCodeRedemptionSheet: function() {
     setStatusLabelText("presenting code redemption sheet");
     Purchases.presentCodeRedemptionSheet();
+  },
+
+  beginRefundRequestForActiveEntitlement: function() {
+    setStatusLabelText("beginning refund request for active entitlement");
+    Purchases.beginRefundRequestForActiveEntitlement(refundRequestStatus => {
+      setStatusLabelText(Purchases.REFUND_REQUEST_STATUS[refundRequestStatus]);
+    }, error => {
+      setStatusLabelText(error);
+    });
+  },
+
+  beginRefundRequestForEntitlement: function() {
+    setStatusLabelText("beginning refund request by entitlement id");
+    Purchases.getCustomerInfo(
+      customerInfo => {
+        if (!customerInfo.entitlements.active) {
+          setStatusLabelText("customer info doesn't have active entitlements");
+          return;
+        }
+        let activeEntitlement = Object.values(customerInfo.entitlements.active)[0];
+        setStatusLabelText("beginning refund request for entitlement id: " +
+          activeEntitlement.identifier);
+        Purchases.beginRefundRequestForEntitlement(activeEntitlement, refundRequestStatus => {
+          setStatusLabelText(Purchases.REFUND_REQUEST_STATUS[refundRequestStatus]);
+        }, error => {
+          setStatusLabelText(error);
+        });
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+  },
+
+  beginRefundRequestForProduct: function() {
+    setStatusLabelText("beginning refund request by product id");
+    Purchases.getCustomerInfo(
+      customerInfo => {
+        if (!customerInfo.entitlements.active) {
+          setStatusLabelText("customer info doesn't have active entitlements");
+          return;
+        }
+        let activeProductIdentifier = Object.values(customerInfo.entitlements.active)[0].productIdentifier;
+        Purchases.getProducts([activeProductIdentifier], products => {
+          if (!products) {
+            setStatusLabelText("couldn't get products");
+            return;
+          }
+          setStatusLabelText("beginning refund request by product id: " + products[0].identifier);
+          Purchases.beginRefundRequestForProduct(products[0], refundRequestStatus => {
+            setStatusLabelText(Purchases.REFUND_REQUEST_STATUS[refundRequestStatus]);
+          }, error => {
+            setStatusLabelText(error);
+          });
+        });
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
   },
 
 };
@@ -286,9 +349,9 @@ setupShouldPurchasePromoProductListener = function() {
     makeDeferredPurchase();
     console.log("This codes executes right after making the purchase");
   });
-},
+}
 
-setupPurchaseButtons = function () { 
+setupPurchaseButtons = function () {
   const prototypeButton = document.getElementById("prototype-button");
   const parentNode = prototypeButton.parentNode;
   Purchases.getOfferings(
@@ -303,7 +366,7 @@ setupPurchaseButtons = function () {
         parentNode.appendChild(purchaseButton);
         purchaseButton.addEventListener("click", function() {
           Purchases.purchasePackage(package,
-            customerInfo => { 
+            customerInfo => {
               setStatusLabelText(customerInfo);
             },
             error => {
@@ -318,7 +381,7 @@ setupPurchaseButtons = function () {
   );
 }
 
-setStatusLabelText = function(myObject) { 
+setStatusLabelText = function(myObject) {
   var objectString = JSON.stringify(myObject, null, 4);
   console.log(objectString);
 

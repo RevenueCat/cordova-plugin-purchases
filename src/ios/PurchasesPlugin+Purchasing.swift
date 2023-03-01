@@ -118,10 +118,71 @@ import PurchasesHybridCommon
                                                  completion: self.responseCompletion(forCommand: command))
     }
 
-    @objc(syncObserverModeAmazonPurchase:)
-    func syncObserverModeAmazonPurchase(command: CDVInvokedUrlCommand) {
-        NSLog("%@", "[Purchases] Warning: tried to sync an Amazon purchase on an iOS device.")
-        self.sendOKFor(command: command)
+    @objc(beginRefundRequestForActiveEntitlement:)
+    func beginRefundRequestForActiveEntitlement(command: CDVInvokedUrlCommand) {
+#if os(iOS)
+        if #available(iOS 15.0, *) {
+            let completion = beginRefundRequestCompletionFor(command: command)
+            CommonFunctionality.beginRefundRequestForActiveEntitlement(completion: completion)
+        } else {
+            sendUnsupportedErrorFor(command: command)
+        }
+#else
+        sendUnsupportedErrorFor(command: command)
+#endif
+    }
+
+    @objc(beginRefundRequestForEntitlementId:)
+    func beginRefundRequestForEntitlementId(command: CDVInvokedUrlCommand) {
+        guard let entitlementIdentifier = command.arguments[0] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "entitlementIdentifier", expectedType: String.self)
+            return
+        }
+#if os(iOS)
+        if #available(iOS 15.0, *) {
+            let completion = beginRefundRequestCompletionFor(command: command)
+            CommonFunctionality.beginRefundRequest(entitlementId: entitlementIdentifier, completion: completion)
+        } else {
+            sendUnsupportedErrorFor(command: command)
+        }
+#else
+        sendUnsupportedErrorFor(command: command)
+#endif
+    }
+
+    @objc(beginRefundRequestForProductId:)
+    func beginRefundRequestForProductId(command: CDVInvokedUrlCommand) {
+        guard let productIdentifier = command.arguments[0] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "productIdentifier", expectedType: String.self)
+            return
+        }
+#if os(iOS)
+        if #available(iOS 15.0, *) {
+            let completion = beginRefundRequestCompletionFor(command: command)
+            CommonFunctionality.beginRefundRequest(productId: productIdentifier, completion: completion)
+        } else {
+            sendUnsupportedErrorFor(command: command)
+        }
+#else
+        sendUnsupportedErrorFor(command: command)
+#endif
+    }
+
+    private func beginRefundRequestCompletionFor(command: CDVInvokedUrlCommand) -> (ErrorContainer?) -> Void {
+        return { error in
+            let result: CDVPluginResult
+            guard let error = error else {
+                result = CDVPluginResult(status: .ok, messageAs: 0)
+                self.commandDelegate.send(result, callbackId: command.callbackId)
+                return
+            }
+            if ((error.info["userCancelled"]) != nil) {
+                result = CDVPluginResult(status: .ok, messageAs: 1)
+            } else {
+                result = CDVPluginResult(status: .error, messageAs: error.info)
+            }
+            self.commandDelegate.send(result, callbackId: command.callbackId)
+        }
     }
 
 }

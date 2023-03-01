@@ -4,7 +4,10 @@
     "baseUrl": ".",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
-    "noEmit": true // We don't actually need to output anything
+    // We don't actually need to output anything
+    "noEmit": true
   },
-  "include": ["./*"],
+  "include": [
+    "./*"
+  ]
 }

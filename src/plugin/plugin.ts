@@ -60,6 +60,23 @@ export enum BILLING_FEATURE {
   PRICE_CHANGE_CONFIRMATION,
 }
 
+export enum REFUND_REQUEST_STATUS {
+  /**
+   * Apple has received the refund request.
+   */
+  SUCCESS,
+
+  /**
+   * User canceled submission of the refund request.
+   */
+  USER_CANCELLED,
+
+  /**
+   * There was an error with the request. See message for more details.
+   */
+  ERROR
+}
+
 export enum PRORATION_MODE {
   UNKNOWN_SUBSCRIPTION_UPGRADE_DOWNGRADE_POLICY = 0,
 
@@ -629,6 +646,13 @@ class Purchases {
    * https://developer.android.com/reference/com/android/billingclient/api/BillingClient.FeatureType
    */
   public static BILLING_FEATURE = BILLING_FEATURE;
+
+  /**
+   * Enum with possible return states for beginning refund request.
+   * @readonly
+   * @enum {string}
+   */
+  public static REFUND_REQUEST_STATUS = REFUND_REQUEST_STATUS;
 
   /**
    * Replace SKU's ProrationMode.
@@ -1490,6 +1514,99 @@ class Purchases {
     );
   }
 
+  /**
+   * iOS 15+ only. Presents a refund request sheet in the current window scene for
+   * the latest transaction associated with the active entitlement.
+   *
+   * If the request was unsuccessful, no active entitlements could be found for
+   * the user, or multiple active entitlements were found for the user,
+   * the promise will return an error.
+   * If called in an unsupported platform (iOS < 15), an `unsupportedError` will be sent to the callback.
+   *
+   * Important: This method should only be used if your user can only have a single active entitlement at a given time.
+   * If a user could have more than one entitlement at a time, use `beginRefundRequestForEntitlement` instead.
+   *
+   * @param {function(REFUND_REQUEST_STATUS):void} callback REFUND_REQUEST_STATUS: The status of the refund request.
+   * Keep in mind the status could be REFUND_REQUEST_STATUS.USER_CANCELLED
+   * @param {function(PurchasesError):void} errorCallback Callback triggered after an error when beginning refund
+   * request for active entitlement.
+   */
+  public static beginRefundRequestForActiveEntitlement(
+    callback: (refundRequestStatus: REFUND_REQUEST_STATUS) => void,
+    errorCallback: (error: PurchasesError) => void,
+  ): void {
+    window.cordova.exec(
+      (refundRequestStatusInt: number) => {
+        const refundRequestStatus = Purchases.convertIntToRefundRequestStatus(refundRequestStatusInt);
+        callback(refundRequestStatus);
+      },
+      errorCallback,
+      PLUGIN_NAME,
+      "beginRefundRequestForActiveEntitlement",
+      []
+    );
+  }
+
+  /**
+   * iOS 15+ only. Presents a refund request sheet in the current window scene for
+   * the latest transaction associated with the `entitlement`.
+   *
+   * If the request was unsuccessful, the promise will return an error.
+   * If called in an unsupported platform (iOS < 15), an `unsupportedError` will be sent to the callback.
+   *
+   * @param entitlementInfo The entitlement to begin a refund request for.
+   * @param {function(REFUND_REQUEST_STATUS):void} callback REFUND_REQUEST_STATUS: The status of the refund request.
+   * Keep in mind the status could be REFUND_REQUEST_STATUS.USER_CANCELLED
+   * @param {function(PurchasesError):void} errorCallback Callback triggered after an error when beginning refund
+   * request for an entitlement.
+   */
+  public static beginRefundRequestForEntitlement(
+    entitlementInfo: PurchasesEntitlementInfo,
+    callback: (refundRequestStatus: REFUND_REQUEST_STATUS) => void,
+    errorCallback: (error: PurchasesError) => void,
+  ): void {
+    window.cordova.exec(
+      (refundRequestStatusInt: number) => {
+        const refundRequestStatus = Purchases.convertIntToRefundRequestStatus(refundRequestStatusInt);
+        callback(refundRequestStatus);
+      },
+      errorCallback,
+      PLUGIN_NAME,
+      "beginRefundRequestForEntitlementId",
+      [entitlementInfo.identifier]
+    );
+  }
+
+  /**
+   * iOS 15+ only. Presents a refund request sheet in the current window scene for
+   * the latest transaction associated with the `product`.
+   *
+   * If the request was unsuccessful, the promise will return an error.
+   * If called in an unsupported platform (iOS < 15), an `unsupportedError` will be sent to the callback.
+   *
+   * @param storeProduct The StoreProduct to begin a refund request for.
+   * @param {function(REFUND_REQUEST_STATUS):void} callback REFUND_REQUEST_STATUS: The status of the refund request.
+   * Keep in mind the status could be REFUND_REQUEST_STATUS.USER_CANCELLED
+   * @param {function(PurchasesError):void} errorCallback Callback triggered after an error when beginning refund
+   * request for a product.
+   */
+  public static beginRefundRequestForProduct(
+    storeProduct: PurchasesStoreProduct,
+    callback: (refundRequestStatus: REFUND_REQUEST_STATUS) => void,
+    errorCallback: (error: PurchasesError) => void,
+  ): void {
+    window.cordova.exec(
+      (refundRequestStatusInt: number) => {
+        const refundRequestStatus = Purchases.convertIntToRefundRequestStatus(refundRequestStatusInt);
+        callback(refundRequestStatus);
+      },
+      errorCallback,
+      PLUGIN_NAME,
+      "beginRefundRequestForProductId",
+      [storeProduct.identifier]
+    );
+  }
+
   private static setupShouldPurchasePromoProductCallback(): void {
     window.cordova.exec(
       ({callbackID}: { callbackID: number }) => {
@@ -1506,6 +1623,17 @@ class Purchases {
 
   private static getMakeDeferredPurchaseFunction(callbackID: number) {
     return () => window.cordova.exec(null, null, PLUGIN_NAME, "makeDeferredPurchase", [callbackID]);
+  }
+
+  private static convertIntToRefundRequestStatus(refundRequestStatusInt: number): REFUND_REQUEST_STATUS {
+    switch (refundRequestStatusInt) {
+      case 0:
+        return REFUND_REQUEST_STATUS.SUCCESS;
+      case 1:
+        return REFUND_REQUEST_STATUS.USER_CANCELLED;
+      default:
+        return REFUND_REQUEST_STATUS.ERROR;
+    }
   }
 }
 

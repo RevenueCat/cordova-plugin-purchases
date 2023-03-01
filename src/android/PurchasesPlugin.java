@@ -416,6 +416,24 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success();
     }
 
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "beginRefundRequestForActiveEntitlement")
+    private void beginRefundRequestForActiveEntitlement(CallbackContext callbackContext) {
+        // noop
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "beginRefundRequestForEntitlementId")
+    private void beginRefundRequestForEntitlementId(CallbackContext callbackContext) {
+        // noop
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "beginRefundRequestForProductId")
+    private void beginRefundRequestForProductId(CallbackContext callbackContext) {
+        // noop
+        callbackContext.success();
+    }
+
     //================================================================================
     // Private methods
     //================================================================================

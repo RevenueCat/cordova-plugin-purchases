@@ -1,7 +1,3 @@
-### New Features
-* add `immediateAndChargeFullPrice` proration mode (#310) via Andy Boedo (@aboedo)
 ### Dependency Updates
-* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 4.14.0 (#311) via RevenueCat Git Bot (@RCGitBot)
-  * [Android 5.8.2](https://github.com/RevenueCat/purchases-android/releases/tag/5.8.2)
-### Other Changes
-* Deprecate `usesStoreKit2IfAvailable` configuration parameter (#306) via Andy Boedo (@aboedo)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 4.14.1 (#314) via RevenueCat Git Bot (@RCGitBot)
+  * [iOS 4.17.8](https://github.com/RevenueCat/purchases-ios/releases/tag/4.17.8)

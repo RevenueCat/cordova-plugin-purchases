@@ -1,11 +1,17 @@
-files_with_version_number = [
-  './.version',
-  './package.json',
-  './plugin.xml',
-  './src/android/PurchasesPlugin.java',
-  './src/ios/PurchasesPlugin.swift',
-  './scripts/docs/index.html'
-]
+files_with_version_number = {
+  './.version' => ['{x}'],
+  './package.json' => ['"version": "{x}"'],
+  './plugin.xml' => ['id="cordova-plugin-purchases" version="{x}"'],
+  './src/android/PurchasesPlugin.java' => ['PLUGIN_VERSION = "{x}"'],
+  './src/ios/PurchasesPlugin.swift' => ['return "{x}"'],
+  './scripts/docs/index.html' => ['cordova-plugin-purchases-docs/{x}/']
+}
+files_to_update_phc_version = {
+  'plugin.xml' => [
+    'name="PurchasesHybridCommon" spec="{x}"',
+    'com.revenuecat.purchases:purchases-hybrid-common:{x}'
+  ]
+}
 repo_name = 'cordova-plugin-purchases'
 changelog_latest_path = './CHANGELOG.latest.md'
 changelog_path = './CHANGELOG.md'
@@ -114,9 +120,6 @@ lane :update_hybrid_common do |options|
 
   UI.message("ℹ️  Current Purchases Hybrid Common version: #{current_phc_version}")
   UI.message("ℹ️  Setting Purchases Hybrid Common version: #{new_version_number}")
-  files_to_update = [
-    'plugin.xml'
-  ]
 
   if dry_run
     UI.message('ℹ️  Nothing more to do, dry_run: true')
@@ -125,7 +128,7 @@ lane :update_hybrid_common do |options|
 
   bump_phc_version(
     repo_name: repo_name,
-    files_to_update: files_to_update,
+    files_to_update: files_to_update_phc_version,
     current_version: current_phc_version,
     next_version: new_version_number,
     open_pr: options[:open_pr] || false,
@@ -139,7 +142,6 @@ lane :generate_docs do
   docs_repo_base_url = "https://github.com/RevenueCat/"
   docs_repo_name = "cordova-plugin-purchases-docs"
   docs_repo_url = File.join(docs_repo_base_url, docs_repo_name)
-  hosting_base_path = File.join(docs_repo_name, version_number)
 
   Dir.mktmpdir do |docs_generation_folder|
     # Must be run from the root dir

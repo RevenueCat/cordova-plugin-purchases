@@ -107,9 +107,12 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         CommonKt.purchaseProduct(
             this.cordova.getActivity(),
             productIdentifier,
+            type,
+            null, // TODO: add base plan id
             oldSKU,
             prorationMode,
-            type,
+            false, // TODO: add personalized price
+            null, // TODO: add presented offering id
             getOnResult(callbackContext));
     }
 
@@ -125,6 +128,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             offeringIdentifier,
             oldSKU,
             prorationMode,
+            false, // TODO: add personalized price
             getOnResult(callbackContext));
     }
 

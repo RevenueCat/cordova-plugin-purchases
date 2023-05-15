@@ -25,6 +25,7 @@ const app = {
       this.onDeviceReady.bind(this),
       false
     );
+    document.getElementById("show-paywall").addEventListener("click", this.showPaywall);
     document.getElementById("get-offerings").addEventListener("click", this.getOfferings);
     document.getElementById("get-products").addEventListener("click", this.getProducts);
     document.getElementById("get-customer-info").addEventListener("click", this.getCustomerInfo);
@@ -75,6 +76,73 @@ const app = {
       apiKey: "api_key",
     });
     initializePurchasesSDK();
+  },
+
+  showPaywall: function() {
+    Purchases.getOfferings(
+      offerings => {
+
+        if (offerings.current !== null && offerings.current.availablePackages.length !== 0) {
+          var paywallDiv = document.createElement("div")
+          
+          var packages = offerings.current.availablePackages;
+          packages.forEach((package) => {
+            // Packages div
+            var packageDiv = document.createElement("div")
+            paywallDiv.appendChild(packageDiv)
+            packageDiv.classList.add("package")
+
+            // Package info
+            var identifierDiv = document.createElement("div")
+            packageDiv.appendChild(identifierDiv)
+            identifierDiv.appendChild(document.createTextNode(package.product.identifier))
+            var priceDiv = document.createElement("div")
+            packageDiv.appendChild(priceDiv)
+            priceDiv.appendChild(document.createTextNode(package.product.priceString))
+
+            // Buy Package
+            var buyPackageButton = document.createElement("button")
+            packageDiv.appendChild(buyPackageButton);
+            buyPackageButton.textContent = "Buy Package";
+            buyPackageButton.id = "package-" + package.identifier;
+            buyPackageButton.style = "";
+            buyPackageButton.addEventListener("click", function() {
+              Purchases.purchasePackage(package,
+                customerInfo => {
+                  setStatusLabelText(customerInfo);
+                },
+                error => {
+                  setStatusLabelText(error);
+                });
+            });
+
+            // Buy Product
+            var buyProductButton = document.createElement("button")
+            packageDiv.appendChild(buyProductButton);
+            buyProductButton.textContent = "Buy Product";
+            buyPackageButton.id = "product-" + package.product.identifier;
+            buyProductButton.style = "";
+            buyProductButton.addEventListener("click", function() {
+              Purchases.purchaseProduct(package.product.identifier,
+                customerInfo => {
+                  setStatusLabelText(customerInfo);
+                },
+                error => {
+                  setStatusLabelText(error);
+                });
+            });
+          });
+
+          document.getElementById("paywall").innerHTML = "";
+          document.getElementById("paywall").appendChild(paywallDiv);
+        } else {
+          setStatusLabelText("No current");
+        }
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
   },
 
   getOfferings: function() {

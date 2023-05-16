@@ -116,14 +116,30 @@ const app = {
                 });
             });
 
-            // Buy Product
+            // Buy Product (deprecated)
             var buyProductButton = document.createElement("button")
             packageDiv.appendChild(buyProductButton);
-            buyProductButton.textContent = "Buy Product";
+            buyProductButton.textContent = "Buy Product (deprecated)";
             buyPackageButton.id = "product-" + package.product.identifier;
             buyProductButton.style = "";
             buyProductButton.addEventListener("click", function() {
               Purchases.purchaseProduct(package.product.identifier,
+                customerInfo => {
+                  setStatusLabelText(customerInfo);
+                },
+                error => {
+                  setStatusLabelText(error);
+                });
+            });
+
+            // Buy Store Product
+            var buyProductButton = document.createElement("button")
+            packageDiv.appendChild(buyProductButton);
+            buyProductButton.textContent = "Buy Store Product";
+            buyPackageButton.id = "product-" + package.product.identifier;
+            buyProductButton.style = "";
+            buyProductButton.addEventListener("click", function() {
+              Purchases.purchaseStoreProduct(package.product,
                 customerInfo => {
                   setStatusLabelText(customerInfo);
                 },

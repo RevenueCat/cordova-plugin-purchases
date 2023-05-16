@@ -1071,12 +1071,58 @@ class Purchases {
   /**
    * Make a purchase
    *
+   * @param {PurchasesStoreProduct} product The product you want to purchase
+   * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you 
+   * wish to upgrade from containing the oldProductIdentifier and the optional prorationMode.
+   * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
+   * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
+   * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
+   * @returns {Promise<{ productIdentifier: string, customerInfo:CustomerInfo }>} A promise of an object containing
+   * a customer info object and a product identifier. Rejections return an error code,
+   * a boolean indicating if the user cancelled the purchase, and an object with more information. The promise will
+   * also be rejected if configure has not been called yet.
+   */
+  public static purchaseStoreProduct(
+    product: PurchasesStoreProduct,
+    callback: ({productIdentifier, customerInfo,}: { productIdentifier: string; customerInfo: CustomerInfo; }) => void,
+    errorCallback: ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => void,
+    googleProductChangeInfo?: GoogleProductChangeInfo | null,
+    googleIsPersonalizedPrice: boolean = false
+  ) {
+    window.cordova.exec(
+      callback,
+      (response: { [key: string]: any }) => {
+        const {userCancelled, ...error} = response;
+        errorCallback({
+          error: error as PurchasesError,
+          userCancelled,
+        });
+      },
+      PLUGIN_NAME,
+      "purchaseProduct",
+      [
+        product.identifier,
+        googleProductChangeInfo !== undefined && googleProductChangeInfo !== null ? googleProductChangeInfo.oldProductIdentifier : null,
+        googleProductChangeInfo !== undefined && googleProductChangeInfo !== null
+          ? googleProductChangeInfo.prorationMode
+          : null,
+        product.productCategory,
+        googleIsPersonalizedPrice,
+        product.presentedOfferingIdentifier,
+      ]
+    );
+  }
+
+  /**
+   * Make a purchase
+   *
    * @param {PurchasesPackage} aPackage The Package you wish to purchase. You can get the Packages by calling getOfferings
    * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchase.
    * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error or when the user cancels the purchase.
    * If user cancelled, userCancelled will be true
    * @param {UpgradeInfo} upgradeInfo Android only. Optional UpgradeInfo you wish to upgrade from containing the oldSKU
    * and the optional prorationMode.
+   * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you 
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
    * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
    * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
@@ -1086,8 +1132,19 @@ class Purchases {
     callback: ({productIdentifier, customerInfo,}: { productIdentifier: string; customerInfo: CustomerInfo; }) => void,
     errorCallback: ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => void,
     upgradeInfo?: UpgradeInfo | null,
+    googleProductChangeInfo?: GoogleProductChangeInfo | null,
     googleIsPersonalizedPrice: boolean = false
   ) {
+    var oldProductIdentifier = null;
+    var prorationMode = null;
+    if (googleProductChangeInfo !== undefined && googleProductChangeInfo !== null) {
+      oldProductIdentifier = googleProductChangeInfo.oldProductIdentifier;
+      prorationMode = googleProductChangeInfo.prorationMode;
+    } else if (upgradeInfo !== undefined && upgradeInfo !== null) {
+      oldProductIdentifier = upgradeInfo.oldSKU;
+      prorationMode = upgradeInfo.prorationMode;
+    }
+
     window.cordova.exec(
       callback,
       (response: { [key: string]: any }) => {
@@ -1102,13 +1159,9 @@ class Purchases {
       [
         aPackage.identifier,
         aPackage.offeringIdentifier,
-        upgradeInfo !== undefined && upgradeInfo !== null
-          ? upgradeInfo.oldSKU
-          : null,
-        upgradeInfo !== undefined && upgradeInfo !== null
-          ? upgradeInfo.prorationMode
-          : null,
-          googleIsPersonalizedPrice,
+        oldProductIdentifier,
+        prorationMode,
+        googleIsPersonalizedPrice,
       ]
     );
   }
@@ -1120,8 +1173,8 @@ class Purchases {
    * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchase.
    * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error or when the user cancels the purchase.
    * If user cancelled, userCancelled will be true
-   * @param {UpgradeInfo} upgradeInfo Android only. Optional UpgradeInfo you wish to upgrade from containing the oldSKU
-   * and the optional prorationMode.
+   * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you 
+   * wish to upgrade from containing the oldProductIdentifier and the optional prorationMode.
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
    * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
    * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
@@ -1130,7 +1183,7 @@ class Purchases {
     subscriptionOption: SubscriptionOption,
     callback: ({productIdentifier, customerInfo,}: { productIdentifier: string; customerInfo: CustomerInfo; }) => void,
     errorCallback: ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => void,
-    upgradeInfo?: UpgradeInfo | null,
+    googleProductChangeInfo?: GoogleProductChangeInfo | null,
     googleIsPersonalizedPrice: boolean = false
   ) {
     window.cordova.exec(
@@ -1147,9 +1200,9 @@ class Purchases {
       [
         subscriptionOption.productId,
         subscriptionOption.id,
-        upgradeInfo !== undefined && upgradeInfo !== null ? upgradeInfo.oldSKU : null,
-        upgradeInfo !== undefined && upgradeInfo !== null
-          ? upgradeInfo.prorationMode
+        googleProductChangeInfo !== undefined && googleProductChangeInfo !== null ? googleProductChangeInfo.oldProductIdentifier : null,
+        googleProductChangeInfo !== undefined && googleProductChangeInfo !== null
+          ? googleProductChangeInfo.prorationMode
           : null,
         googleIsPersonalizedPrice,
         subscriptionOption.presentedOfferingIdentifier,

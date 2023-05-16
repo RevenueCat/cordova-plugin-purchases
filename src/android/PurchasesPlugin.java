@@ -101,18 +101,22 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "purchaseProduct", isAutofinish = false)
-    private void purchaseProduct(final String productIdentifier, @Nullable final String oldSKU,
-                                 @Nullable final Integer prorationMode, final String type,
+    private void purchaseProduct(final String productIdentifier,
+                                 @Nullable final String oldSKU,
+                                 @Nullable final Integer prorationMode,
+                                 final String type,
+                                 final Boolean googleIsPersonalizedPrice,
+                                 @Nullable final String presentedOfferingIdentifier,
                                  final CallbackContext callbackContext) {
         CommonKt.purchaseProduct(
             this.cordova.getActivity(),
             productIdentifier,
             type,
-            null, // TODO: add base plan id
+            null,
             oldSKU,
             prorationMode,
-            false, // TODO: add personalized price
-            null, // TODO: add presented offering id
+            googleIsPersonalizedPrice,
+            presentedOfferingIdentifier,
             getOnResult(callbackContext));
     }
 
@@ -121,6 +125,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
                                  final String offeringIdentifier,
                                  @Nullable final String oldSKU,
                                  @Nullable final Integer prorationMode,
+                                 final Boolean googleIsPersonalizedPrice,
                                  final CallbackContext callbackContext) {
         CommonKt.purchasePackage(
             this.cordova.getActivity(),
@@ -128,8 +133,28 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             offeringIdentifier,
             oldSKU,
             prorationMode,
-            false, // TODO: add personalized price
+            googleIsPersonalizedPrice,
             getOnResult(callbackContext));
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "purchaseSubscriptionOption", isAutofinish = false)
+    private void purchaseSubscriptionOption(final String productIdentifier,
+                                            final String optionIdentifier,
+                                            @Nullable final String oldSKU,
+                                            @Nullable final Integer prorationMode,
+                                            final Boolean googleIsPersonalizedPrice,
+                                            @Nullable final String presentedOfferingIdentifier,
+                                            final CallbackContext callbackContext) {
+        CommonKt.purchaseSubscriptionOption(
+            this.cordova.getActivity(),
+            productIdentifier,
+            optionIdentifier,
+            oldSKU,
+            prorationMode,
+            googleIsPersonalizedPrice,
+            presentedOfferingIdentifier,
+            getOnResult(callbackContext)
+        );
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "syncPurchases")

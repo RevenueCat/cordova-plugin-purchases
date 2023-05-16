@@ -131,6 +131,30 @@ const app = {
                   setStatusLabelText(error);
                 });
             });
+
+            // Buy Subscription Options
+            var options = package.product.subscriptionOptions || [];
+            options.forEach((option) => {
+              var pricePhases = option.pricingPhases.map((phase) => {
+                return phase.price.formatted + " for " + phase.billingPeriod.iso8601;
+              }).join(" > ");
+
+              // Buy Subscription Option
+              var buyOptionButton = document.createElement("button")
+              packageDiv.appendChild(buyOptionButton);
+              buyOptionButton.innerHTML = "<div style=\"text-align: left;\"><div>Buy " + option.id + "</div><div>" + pricePhases + "</div></div>";
+              buyPackageButton.id = "option-" + option.id;
+              buyOptionButton.style = "";
+              buyOptionButton.addEventListener("click", function() {
+                Purchases.purchaseSubscriptionOption(option,
+                  customerInfo => {
+                    setStatusLabelText(customerInfo);
+                  },
+                  error => {
+                    setStatusLabelText(error);
+                  });
+              });
+            });
           });
 
           document.getElementById("paywall").innerHTML = "";

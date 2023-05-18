@@ -885,6 +885,13 @@ class Purchases {
   public static PURCHASE_TYPE = PURCHASE_TYPE;
 
   /**
+   * Supported product categories.
+   * @readonly
+   * @enum {string}
+   */
+  public static PRODUCT_CATEGORY = PRODUCT_CATEGORY;
+
+  /**
    * Enum for billing features.
    * Currently, these are only relevant for Google Play Android users:
    * https://developer.android.com/reference/com/android/billingclient/api/BillingClient.FeatureType

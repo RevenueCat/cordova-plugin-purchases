@@ -450,8 +450,8 @@ export interface PurchasesStoreProduct {
   readonly discounts: PurchasesStoreProductDiscount[] | null;
 
   /**
-     * Product category.
-     */
+   * Product category.
+   */
   readonly productCategory: PRODUCT_CATEGORY | null;
 
   /**
@@ -464,8 +464,8 @@ export interface PurchasesStoreProduct {
   readonly subscriptionPeriod: string | null;
 
   /**
-     * Default subscription option for a product. Google Play only.
-     */
+   * Default subscription option for a product. Google Play only.
+   */
   readonly defaultOption: SubscriptionOption | null;
   /**
    * Collection of subscription options for a product. Google Play only.
@@ -756,8 +756,8 @@ export interface SubscriptionOption {
 }
 
 /**
-* Contains all the details associated with a PricingPhase
-*/
+ * Contains all the details associated with a PricingPhase
+ */
 export interface PricingPhase {
   /**
    * Billing period for which the PricingPhase applies
@@ -787,8 +787,8 @@ export interface PricingPhase {
 }
 
 /**
-* Recurrence mode for a pricing phase
-*/
+ * Recurrence mode for a pricing phase
+ */
 export enum RECURRENCE_MODE {
   INFINITE_RECURRING = 1,
   FINITE_RECURRING = 2,
@@ -796,8 +796,8 @@ export enum RECURRENCE_MODE {
 }
 
 /**
-* Payment mode for offer pricing phases. Google Play only.
-*/
+ * Payment mode for offer pricing phases. Google Play only.
+ */
 export enum OFFER_PAYMENT_MODE {
   FREE_TRIAL = "FREE_TRIAL",
   SINGLE_PAYMENT = "SINGLE_PAYMENT",
@@ -805,8 +805,8 @@ export enum OFFER_PAYMENT_MODE {
 }
 
 /**
-* Contains all the details associated with a Price
-*/
+ * Contains all the details associated with a Price
+ */
 export interface Price {
   /**
    * Formatted price of the item, including its currency sign. For example $3.00
@@ -831,8 +831,8 @@ export interface Price {
 }
 
 /**
-* Contains all the details associated with a Period
-*/
+ * Contains all the details associated with a Period
+ */
 export interface Period {
   /**
    * The number of period units: day, week, month, year, unknown
@@ -853,8 +853,8 @@ export interface Period {
 }
 
 /**
-* Time duration unit for Period.
-*/
+ * Time duration unit for Period.
+ */
 export enum PERIOD_UNIT {
   DAY = "DAY",
   WEEK = "WEEK",
@@ -1142,8 +1142,8 @@ class Purchases {
     googleProductChangeInfo?: GoogleProductChangeInfo | null,
     googleIsPersonalizedPrice: boolean = false
   ) {
-    var oldProductIdentifier = null;
-    var prorationMode = null;
+    let oldProductIdentifier = null;
+    let prorationMode = null;
     if (googleProductChangeInfo !== undefined && googleProductChangeInfo !== null) {
       oldProductIdentifier = googleProductChangeInfo.oldProductIdentifier;
       prorationMode = googleProductChangeInfo.prorationMode;

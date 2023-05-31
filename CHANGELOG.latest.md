@@ -1,6 +1,6 @@
 ### Dependency Updates
-* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 4.15.0 (#334) via RevenueCat Git Bot (@RCGitBot)
-  * [iOS 4.18.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.18.0)
-* Bump danger from 9.2.0 to 9.3.0 (#331) via dependabot[bot] (@dependabot[bot])
+* Bump fastlane from 2.212.2 to 2.213.0 (#343) via dependabot[bot] (@dependabot[bot])
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 4.16.0 (#341) via RevenueCat Git Bot (@RCGitBot)
+  * [iOS 4.19.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.19.0)
 ### Other Changes
-* Update fastlane-plugin-revenuecat version (#333) via Cesar de la Vega (@vegaro)
+* Fix iOS integration tests (#344) via Cesar de la Vega (@vegaro)

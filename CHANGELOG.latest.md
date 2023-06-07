@@ -1,4 +1,4 @@
-The first alpha of **RevenueCat Purchases Cordova v4** is here!! 😻
+The first release candidate of **RevenueCat Purchases Cordova v4** is here!! 😻
 
 This latest release updates the Android SDK dependency from v5 to [v6](https://github.com/RevenueCat/purchases-android/releases/tag/6.0.0) to use BillingClient 5. This version of BillingClient brings an entire new subscription model which has resulted in large changes across the entire SDK.
 
@@ -36,3 +36,5 @@ For more control, purchase subscription options with the new `purchaseSubscripti
 
 Observer mode is still supported in v4. Other than updating the SDK version, there are no changes required.
 
+### New Features
+* Add metadata to offering (#355) via Josh Holtz (@joshdholtz)

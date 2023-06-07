@@ -1,3 +1,7 @@
+## 4.0.0-rc.1
+### New Features
+* Add metadata to offering (#355) via Josh Holtz (@joshdholtz)
+
 ## 4.0.0-alpha.1
 The first alpha of **RevenueCat Purchases Cordova v4** is here!! 😻
 

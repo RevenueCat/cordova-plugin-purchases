@@ -84,6 +84,10 @@ const app = {
 
         if (offerings.current !== null && offerings.current.availablePackages.length !== 0) {
           var paywallDiv = document.createElement("div")
+
+          var metadataDiv = document.createElement("div")
+          paywallDiv.appendChild(metadataDiv);
+          metadataDiv.appendChild(document.createTextNode(JSON.stringify(offerings.current.metadata)));
           
           var packages = offerings.current.availablePackages;
           packages.forEach((package) => {

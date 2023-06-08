@@ -80,6 +80,20 @@ For more control, purchase subscription options with the new `purchaseSubscripti
 
 Observer mode is still supported in v4. Other than updating the SDK version, there are no changes required.
 
+## 3.15.0
+### Dependency Updates
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 4.18.0 (#348) via RevenueCat Git Bot (@RCGitBot)
+  * [iOS 4.21.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.21.0)
+  * [iOS 4.19.1](https://github.com/RevenueCat/purchases-ios/releases/tag/4.19.1)
+  * [iOS 4.20.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.20.0)
+
+## 3.14.0
+### Dependency Updates
+* Bump fastlane from 2.212.2 to 2.213.0 (#343) via dependabot[bot] (@dependabot[bot])
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 4.16.0 (#341) via RevenueCat Git Bot (@RCGitBot)
+  * [iOS 4.19.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.19.0)
+### Other Changes
+* Fix iOS integration tests (#344) via Cesar de la Vega (@vegaro)
 
 ## 3.13.0
 ### Dependency Updates

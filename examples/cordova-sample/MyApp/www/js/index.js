@@ -25,6 +25,7 @@ const app = {
       this.onDeviceReady.bind(this),
       false
     );
+    document.getElementById("show-paywall").addEventListener("click", this.showPaywall);
     document.getElementById("get-offerings").addEventListener("click", this.getOfferings);
     document.getElementById("get-products").addEventListener("click", this.getProducts);
     document.getElementById("get-customer-info").addEventListener("click", this.getCustomerInfo);
@@ -72,9 +73,120 @@ const app = {
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
     Purchases.configureWith({
-      apiKey: "api_key",
+      apiKey: "appl_KFpRDwauDyfIGIETKyVymslMcjX",
     });
     initializePurchasesSDK();
+  },
+
+  showPaywall: function() {
+    Purchases.getOfferings(
+      offerings => {
+
+        if (offerings.current !== null && offerings.current.availablePackages.length !== 0) {
+          var paywallDiv = document.createElement("div")
+
+          var metadataDiv = document.createElement("div")
+          paywallDiv.appendChild(metadataDiv);
+          metadataDiv.appendChild(document.createTextNode(JSON.stringify(offerings.current.metadata)));
+          
+          var packages = offerings.current.availablePackages;
+          packages.forEach((package) => {
+            // Packages div
+            var packageDiv = document.createElement("div")
+            paywallDiv.appendChild(packageDiv)
+            packageDiv.classList.add("package")
+
+            // Package info
+            var identifierDiv = document.createElement("div")
+            packageDiv.appendChild(identifierDiv)
+            identifierDiv.appendChild(document.createTextNode(package.product.identifier))
+            var priceDiv = document.createElement("div")
+            packageDiv.appendChild(priceDiv)
+            priceDiv.appendChild(document.createTextNode(package.product.priceString))
+
+            // Buy Package
+            var buyPackageButton = document.createElement("button")
+            packageDiv.appendChild(buyPackageButton);
+            buyPackageButton.textContent = "Buy Package";
+            buyPackageButton.id = "package-" + package.identifier;
+            buyPackageButton.style = "";
+            buyPackageButton.addEventListener("click", function() {
+              Purchases.purchasePackage(package,
+                customerInfo => {
+                  setStatusLabelText(customerInfo);
+                },
+                error => {
+                  setStatusLabelText(error);
+                });
+            });
+
+            // Buy Product (deprecated)
+            var buyProductButton = document.createElement("button")
+            packageDiv.appendChild(buyProductButton);
+            buyProductButton.textContent = "Buy Product (deprecated)";
+            buyPackageButton.id = "product-" + package.product.identifier;
+            buyProductButton.style = "";
+            buyProductButton.addEventListener("click", function() {
+              Purchases.purchaseProduct(package.product.identifier,
+                customerInfo => {
+                  setStatusLabelText(customerInfo);
+                },
+                error => {
+                  setStatusLabelText(error);
+                });
+            });
+
+            // Buy Store Product
+            var buyProductButton = document.createElement("button")
+            packageDiv.appendChild(buyProductButton);
+            buyProductButton.textContent = "Buy Store Product";
+            buyPackageButton.id = "product-" + package.product.identifier;
+            buyProductButton.style = "";
+            buyProductButton.addEventListener("click", function() {
+              Purchases.purchaseStoreProduct(package.product,
+                customerInfo => {
+                  setStatusLabelText(customerInfo);
+                },
+                error => {
+                  setStatusLabelText(error);
+                });
+            });
+
+            // Buy Subscription Options
+            var options = package.product.subscriptionOptions || [];
+            options.forEach((option) => {
+              var pricePhases = option.pricingPhases.map((phase) => {
+                return phase.price.formatted + " for " + phase.billingPeriod.iso8601;
+              }).join(" > ");
+
+              // Buy Subscription Option
+              var buyOptionButton = document.createElement("button")
+              packageDiv.appendChild(buyOptionButton);
+              buyOptionButton.innerHTML = "<div style=\"text-align: left;\"><div>Buy " + option.id + "</div><div>" + pricePhases + "</div></div>";
+              buyPackageButton.id = "option-" + option.id;
+              buyOptionButton.style = "";
+              buyOptionButton.addEventListener("click", function() {
+                Purchases.purchaseSubscriptionOption(option,
+                  customerInfo => {
+                    setStatusLabelText(customerInfo);
+                  },
+                  error => {
+                    setStatusLabelText(error);
+                  });
+              });
+            });
+          });
+
+          document.getElementById("paywall").innerHTML = "";
+          document.getElementById("paywall").appendChild(paywallDiv);
+        } else {
+          setStatusLabelText("No current");
+        }
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
   },
 
   getOfferings: function() {

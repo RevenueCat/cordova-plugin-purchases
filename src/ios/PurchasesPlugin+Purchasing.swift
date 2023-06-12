@@ -185,4 +185,9 @@ import PurchasesHybridCommon
         }
     }
 
+    @objc(purchaseSubscriptionOption:)
+    func purchaseSubscriptionOption(command: CDVInvokedUrlCommand) {
+        sendUnsupportedErrorFor(command: command)
+    }
+
 }

@@ -27,13 +27,11 @@
       "cordova-plugin-purchases": {}
     },
     "platforms": [
-      "ios",
-      "android"
+      "ios"
     ]
   },
   "devDependencies": {
-    "cordova-android": "^11.0.0",
-    "cordova-ios": "^6.2.0",
+    "cordova-ios": "^6.3.0",
     "cordova-plugin-add-swift-support": "^2.0.2"
   }
 }

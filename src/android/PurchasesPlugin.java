@@ -33,7 +33,7 @@ import java.util.Map;
 public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     public static final String PLATFORM_NAME = "cordova";
-    public static final String PLUGIN_VERSION = "3.16.0-SNAPSHOT";
+    public static final String PLUGIN_VERSION = "4.0.0-rc.1";
 
     // Needs to run on ExecutionThread.MAIN so it blocks the JavaBridge thread created by Cordova
     // That way we guarantee any other call to the plugin happen after configure has completed
@@ -101,15 +101,22 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "purchaseProduct", isAutofinish = false)
-    private void purchaseProduct(final String productIdentifier, @Nullable final String oldSKU,
-                                 @Nullable final Integer prorationMode, final String type,
+    private void purchaseProduct(final String productIdentifier,
+                                 @Nullable final String oldSKU,
+                                 @Nullable final Integer prorationMode,
+                                 final String type,
+                                 final Boolean googleIsPersonalizedPrice,
+                                 @Nullable final String presentedOfferingIdentifier,
                                  final CallbackContext callbackContext) {
         CommonKt.purchaseProduct(
             this.cordova.getActivity(),
             productIdentifier,
+            type,
+            null,
             oldSKU,
             prorationMode,
-            type,
+            googleIsPersonalizedPrice,
+            presentedOfferingIdentifier,
             getOnResult(callbackContext));
     }
 
@@ -118,6 +125,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
                                  final String offeringIdentifier,
                                  @Nullable final String oldSKU,
                                  @Nullable final Integer prorationMode,
+                                 final Boolean googleIsPersonalizedPrice,
                                  final CallbackContext callbackContext) {
         CommonKt.purchasePackage(
             this.cordova.getActivity(),
@@ -125,7 +133,28 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             offeringIdentifier,
             oldSKU,
             prorationMode,
+            googleIsPersonalizedPrice,
             getOnResult(callbackContext));
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "purchaseSubscriptionOption", isAutofinish = false)
+    private void purchaseSubscriptionOption(final String productIdentifier,
+                                            final String optionIdentifier,
+                                            @Nullable final String oldSKU,
+                                            @Nullable final Integer prorationMode,
+                                            final Boolean googleIsPersonalizedPrice,
+                                            @Nullable final String presentedOfferingIdentifier,
+                                            final CallbackContext callbackContext) {
+        CommonKt.purchaseSubscriptionOption(
+            this.cordova.getActivity(),
+            productIdentifier,
+            optionIdentifier,
+            oldSKU,
+            prorationMode,
+            googleIsPersonalizedPrice,
+            presentedOfferingIdentifier,
+            getOnResult(callbackContext)
+        );
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "syncPurchases")

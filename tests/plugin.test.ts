@@ -1,5 +1,5 @@
 import Purchases from "../src/plugin/plugin";
-import {LOG_LEVEL, PurchasesError, PurchasesEntitlementInfo, PurchasesStoreProduct} from "../www/plugin";
+import {LOG_LEVEL, PurchasesError, PurchasesEntitlementInfo, PurchasesStoreProduct, PRODUCT_CATEGORY} from "../www/plugin";
 
 const execFn = jest.fn();
 
@@ -308,7 +308,11 @@ describe("Purchases", () => {
         currencyCode: 'USD',
         introPrice: null,
         discounts: null,
+        productCategory: PRODUCT_CATEGORY.NON_SUBSCRIPTION,
         subscriptionPeriod: 'P1M',
+        defaultOption: null,
+        subscriptionOptions: null,
+        presentedOfferingIdentifier: null
       }
       return storeProduct;
     }

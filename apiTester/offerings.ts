@@ -14,6 +14,7 @@ import {
   PERIOD_UNIT,
   RECURRENCE_MODE,
   OFFER_PAYMENT_MODE,
+  PRODUCT_CATEGORY,
 } from "../www/plugin";
 
 function checkProduct(product: PurchasesStoreProduct) {
@@ -26,6 +27,10 @@ function checkProduct(product: PurchasesStoreProduct) {
   const introPrice: PurchasesIntroPrice | null = product.introPrice;
   const discounts: PurchasesStoreProductDiscount[] | null = product.discounts;
   const subscriptionPeriod: string | null = product.subscriptionPeriod;
+  const productCategory: PRODUCT_CATEGORY | null = product.productCategory;
+  const defaultOption: SubscriptionOption | null = product.defaultOption;
+  const subscriptionOptions: SubscriptionOption[] | null =  product.subscriptionOptions;
+  const presentedOfferingIdentifier: string | null = product.presentedOfferingIdentifier;
 }
 
 function checkDiscount(discount: PurchasesStoreProductDiscount) {
@@ -145,6 +150,16 @@ function checkOfferPaymentMode(offerPaymentMode: OFFER_PAYMENT_MODE) {
     case OFFER_PAYMENT_MODE.FREE_TRIAL, 
     OFFER_PAYMENT_MODE.SINGLE_PAYMENT, 
     OFFER_PAYMENT_MODE.DISCOUNTED_RECURRING_PAYMENT: { 
+       break; 
+    } 
+  };
+}
+
+function checkOfferProductCategory(productCategory: PRODUCT_CATEGORY) {
+  switch(productCategory) { 
+    case PRODUCT_CATEGORY.NON_SUBSCRIPTION, 
+    PRODUCT_CATEGORY.SUBSCRIPTION, 
+    PRODUCT_CATEGORY.UNKNOWN: { 
        break; 
     } 
   };

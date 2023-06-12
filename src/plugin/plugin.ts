@@ -734,8 +734,8 @@ export interface SubscriptionOption {
   readonly billingPeriod: Period | null;
 
   /**
-     * True if the subscription is pre-paid.
-     */
+   * True if the subscription is pre-paid.
+   */
   readonly isPrepaid: boolean;
 
   /**

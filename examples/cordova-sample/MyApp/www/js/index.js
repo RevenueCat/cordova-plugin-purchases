@@ -73,7 +73,7 @@ const app = {
     console.log("---------");
     Purchases.setDebugLogsEnabled(true);
     Purchases.configureWith({
-      apiKey: "appl_KFpRDwauDyfIGIETKyVymslMcjX",
+      apiKey: "api_key",
     });
     initializePurchasesSDK();
   },

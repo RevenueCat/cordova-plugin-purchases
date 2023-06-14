@@ -1,3 +1,7 @@
+## 4.0.1
+### Bugfixes
+* Remove api key (#363) via Mark Villacampa (@MarkVillacampa)
+
 ## 4.0.0
 **RevenueCat Purchases Cordova v4** is here!! 😻
 

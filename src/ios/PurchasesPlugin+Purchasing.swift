@@ -81,11 +81,20 @@ import PurchasesHybridCommon
 
     @objc(presentCodeRedemptionSheet:)
     func presentCodeRedemptionSheet(command: CDVInvokedUrlCommand) {
-        if #available(iOS 14.0, *) {
-            CommonFunctionality.presentCodeRedemptionSheet()
-        } else {
+        func logPresentCodeRedemptionSheetNotAvailable() {
             NSLog("%@", "[Purchases] Warning: tried to present codeRedemptionSheet, but it's only available on iOS 14.0 or greater.")
         }
+
+        #if targetEnvironment(macCatalyst)
+            logPresentCodeRedemptionSheetNotAvailable()
+        #else
+            if #available(iOS 14.0, *) {
+                CommonFunctionality.presentCodeRedemptionSheet()
+            } else {
+                logPresentCodeRedemptionSheetNotAvailable
+            }
+        #endif
+
         self.sendOKFor(command: command)
     }
 

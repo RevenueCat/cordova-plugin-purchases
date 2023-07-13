@@ -101,7 +101,7 @@ extension CDVPurchasesPlugin {
     }
 
     var platformFlavorVersion: String {
-        return "4.3.0"
+        return "4.4.0-SNAPSHOT"
     }
 
 }

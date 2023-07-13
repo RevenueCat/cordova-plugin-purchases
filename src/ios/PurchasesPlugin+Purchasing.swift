@@ -91,7 +91,7 @@ import PurchasesHybridCommon
             if #available(iOS 14.0, *) {
                 CommonFunctionality.presentCodeRedemptionSheet()
             } else {
-                logPresentCodeRedemptionSheetNotAvailable
+                logPresentCodeRedemptionSheetNotAvailable()
             }
         #endif
 

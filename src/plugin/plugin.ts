@@ -534,7 +534,7 @@ export interface PurchasesOffering {
   /**
    * Offering metadata defined in RevenueCat dashboard.
    */
-  readonly metadata: Map<string, any>;
+  readonly metadata: { [key: string]: unknown };
   /**
    * Array of `Package` objects available for purchase.
    */

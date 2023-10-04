@@ -446,7 +446,7 @@ const app = {
 
   showInAppMessages: function () {
     setStatusLabelText("beginning showInAppMessages");
-    Purchases.showInAppMessages([]);
+    Purchases.showInAppMessages();
     setStatusLabelText("finished showInAppMessages");
   }
 

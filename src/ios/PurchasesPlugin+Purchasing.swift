@@ -179,7 +179,7 @@ import PurchasesHybridCommon
 
     @objc(showInAppMessages:)
     func showInAppMessages(command: CDVInvokedUrlCommand) {
-        let intMessageTypes = call.getArray("messageTypes") as? [Int]
+        let intMessageTypes = command.argument(at: 0, withDefault: nil) as? [Int]
 #if os(iOS) || targetEnvironment(macCatalyst) || VISION_OS
         if #available(iOS 16.0, *) {
             if let intMessageTypes {

@@ -177,6 +177,31 @@ import PurchasesHybridCommon
 #endif
     }
 
+    @objc(showInAppMessages:)
+    func showInAppMessages(command: CDVInvokedUrlCommand) {
+        let intMessageTypes = call.getArray("messageTypes") as? [Int]
+#if os(iOS) || targetEnvironment(macCatalyst) || VISION_OS
+        if #available(iOS 16.0, *) {
+            if let intMessageTypes {
+                let messageTypes = intMessageTypes.map({ intNumber in
+                    NSNumber(integerLiteral: intNumber)
+                })
+                CommonFunctionality.showStoreMessages(forRawValues: Set(messageTypes)) { [weak self] in
+                    self?.sendOKFor(command: command)
+                }
+            } else {
+                CommonFunctionality.showStoreMessages { [weak self] in
+                    self?.sendOKFor(command: command)
+                }
+            }
+        } else {
+            self.sendOKFor(command: command)
+        }
+#else
+        self.sendOKFor(command: command)
+#endif
+    }
+
     private func beginRefundRequestCompletionFor(command: CDVInvokedUrlCommand) -> (ErrorContainer?) -> Void {
         return { error in
             let result: CDVPluginResult

@@ -19,6 +19,7 @@ import {
 } from '../www/plugin';
 
 import Purchases from '../www/plugin';
+import {IN_APP_MESSAGE_TYPE} from "../src/plugin/plugin";
 
 const errorCallback = (error: PurchasesError) => {
 };
@@ -134,6 +135,7 @@ function checkPurchasesConfiguration() {
   const observerMode: boolean = false;
   const userDefaultsSuiteName: string = "";
   const useAmazon: boolean = false;
+  const shouldShowInAppMessagesAutomatically: boolean = true;
 
   Purchases.configureWith({
     apiKey,
@@ -152,6 +154,14 @@ function checkPurchasesConfiguration() {
     observerMode,
     userDefaultsSuiteName,
     useAmazon
+  });
+  Purchases.configureWith({
+    apiKey,
+    appUserID,
+    observerMode,
+    userDefaultsSuiteName,
+    useAmazon,
+    shouldShowInAppMessagesAutomatically
   });
 
   const configuration: PurchasesConfiguration = {
@@ -175,6 +185,9 @@ function checkPurchasesConfiguration() {
 function checkMisc() {
   Purchases.presentCodeRedemptionSheet();
   Purchases.invalidateCustomerInfoCache();
+  Purchases.showInAppMessages();
+  const messageTypes: IN_APP_MESSAGE_TYPE[] = [];
+  Purchases.showInAppMessages(messageTypes);
 }
 
 function checkListeners() {

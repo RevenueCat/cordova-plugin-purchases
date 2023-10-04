@@ -100,8 +100,8 @@ export enum PRORATION_MODE {
   IMMEDIATE_WITHOUT_PRORATION = 3,
 
   /**
-   * Replacement takes effect immediately, and the user is charged full price 
-   * of new plan and is given a full billing cycle of subscription, 
+   * Replacement takes effect immediately, and the user is charged full price
+   * of new plan and is given a full billing cycle of subscription,
    * plus remaining prorated time from the old plan.
    */
   IMMEDIATE_AND_CHARGE_FULL_PRICE = 5,
@@ -180,6 +180,31 @@ export enum LOG_LEVEL {
   INFO = "INFO",
   WARN = "WARN",
   ERROR = "ERROR"
+}
+
+/**
+ * Enum for in-app message types.
+ * This can be used if you disable automatic in-app message from showing automatically.
+ * Then, you can pass what type of messages you want to show in the `showInAppMessages`
+ * method in Purchases.
+ */
+export enum IN_APP_MESSAGE_TYPE {
+  // Make sure the enum values are in sync with those defined in iOS/Android
+  /**
+   * In-app messages to indicate there has been a billing issue charging the user.
+   */
+  BILLING_ISSUE = 0,
+
+  /**
+   * iOS-only. This message will show if you increase the price of a subscription and
+   * the user needs to opt-in to the increase.
+   */
+  PRICE_INCREASE_CONSENT = 1,
+
+  /**
+   * iOS-only. StoreKit generic messages.
+   */
+  GENERIC = 2
 }
 
 /**
@@ -672,7 +697,7 @@ export interface PurchasesConfiguration {
    * iOS-only, will be ignored for Android.
    * Set this to TRUE to enable StoreKit2.
    * Default is FALSE.
-   * 
+   *
    * @deprecated RevenueCat currently uses StoreKit 1 for purchases, as its stability in production scenarios has
    * proven to be more performant than StoreKit 2.
    * We're collecting more data on the best approach, but StoreKit 1 vs StoreKit 2 is an implementation detail
@@ -684,6 +709,13 @@ export interface PurchasesConfiguration {
    * An optional boolean. Android only. Required to configure the plugin to be used in the Amazon Appstore.
    */
   useAmazon?: boolean;
+  /**
+   * Whether we should show store in-app messages automatically. Both Google Play and the App Store provide in-app
+   * messages for some situations like billing issues. By default, those messages will be shown automatically.
+   * This allows to disable that behavior, so you can display those messages at your convenience. For more information,
+   * check: https://rev.cat/storekit-message and https://rev.cat/googleplayinappmessaging
+   */
+  shouldShowInAppMessagesAutomatically?: boolean;
 }
 
 /**
@@ -821,7 +853,7 @@ export interface Price {
 
   /**
    * Price in micro-units, where 1,000,000 micro-units equal one unit of the currency.
-   * 
+   *
    * For example, if price is "€7.99", price_amount_micros is 7,990,000. This value represents
    * the localized, rounded price for a particular currency.
    */
@@ -829,7 +861,7 @@ export interface Price {
 
   /**
    * Returns ISO 4217 currency code for price and original price.
-   * 
+   *
    * For example, if price is specified in British pounds sterling, price_currency_code is "GBP".
    * If currency code cannot be determined, currency symbol is returned.
    */
@@ -940,6 +972,13 @@ class Purchases {
   public static LOG_LEVEL = LOG_LEVEL;
 
   /**
+   * Enum of different possible in-app message types.
+   * @readonly
+   * @enum {string}
+   */
+  public static IN_APP_MESSAGE_TYPE = IN_APP_MESSAGE_TYPE;
+
+  /**
    * @deprecated Use {@link configureWith} instead. It accepts a {@link PurchasesConfiguration} object which offers more flexibility.
    *
    * Sets up Purchases with your API key and an app user id.
@@ -977,14 +1016,16 @@ class Purchases {
                                 observerMode = false,
                                 userDefaultsSuiteName,
                                 usesStoreKit2IfAvailable = false,
-                                useAmazon = false
+                                useAmazon = false,
+                                shouldShowInAppMessagesAutomatically = true
                               }: PurchasesConfiguration): void {
     window.cordova.exec(
       null,
       null,
       PLUGIN_NAME,
       "configure",
-      [apiKey, appUserID, observerMode, userDefaultsSuiteName, usesStoreKit2IfAvailable, useAmazon]
+      [apiKey, appUserID, observerMode, userDefaultsSuiteName, usesStoreKit2IfAvailable,
+        useAmazon, shouldShowInAppMessagesAutomatically]
     );
 
     window.cordova.exec(
@@ -1085,7 +1126,7 @@ class Purchases {
    * Make a purchase
    *
    * @param {PurchasesStoreProduct} product The product you want to purchase
-   * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you 
+   * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you
    * wish to upgrade from containing the oldProductIdentifier and the optional prorationMode.
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
    * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
@@ -1135,7 +1176,7 @@ class Purchases {
    * If user cancelled, userCancelled will be true
    * @param {UpgradeInfo} upgradeInfo Android only. Optional UpgradeInfo you wish to upgrade from containing the oldSKU
    * and the optional prorationMode.
-   * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you 
+   * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
    * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
    * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
@@ -1186,7 +1227,7 @@ class Purchases {
    * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchase.
    * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error or when the user cancels the purchase.
    * If user cancelled, userCancelled will be true
-   * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you 
+   * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you
    * wish to upgrade from containing the oldProductIdentifier and the optional prorationMode.
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
    * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
@@ -1965,6 +2006,28 @@ class Purchases {
       PLUGIN_NAME,
       "beginRefundRequestForProductId",
       [storeProduct.identifier]
+    );
+  }
+
+  /**
+   * Shows in-app messages available from the App Store or Google Play. You need to disable messages from showing
+   * automatically using [PurchasesConfiguration.shouldShowInAppMessagesAutomatically].
+   *
+   * Note: In iOS, this requires version 16+. In older versions the promise will be resolved successfully
+   * immediately.
+   *
+   * @param messageTypes An array of message types that the stores can display inside your app. Must be one of
+   *       [IN_APP_MESSAGE_TYPE]. By default, is undefined and all message types will be shown.
+   */
+  public static showInAppMessages(
+    messageTypes?: IN_APP_MESSAGE_TYPE[]
+  ): void {
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "showInAppMessages",
+      [messageTypes]
     );
   }
 

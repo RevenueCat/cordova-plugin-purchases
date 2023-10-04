@@ -39,7 +39,8 @@ import RevenueCat
         let observerMode = command.arguments[2] as? Bool ?? false
         let userDefaultsSuiteName = command.arguments[3] as? String
         let usesStoreKit2IfAvailable = command.arguments[4] as? Bool ?? false
-    
+        let shouldShowInAppMessagesAutomatically = command.arguments[5] as? Bool ?? true
+
         self.purchases = Purchases.configure(apiKey: apiKey,
                                              appUserID: appUserID,
                                              observerMode: observerMode,
@@ -47,7 +48,8 @@ import RevenueCat
                                              platformFlavor: self.platformFlavor,
                                              platformFlavorVersion: self.platformFlavorVersion,
                                              usesStoreKit2IfAvailable: usesStoreKit2IfAvailable,
-                                             dangerousSettings: nil)
+                                             dangerousSettings: nil,
+                                             shouldShowInAppMessagesAutomatically: shouldShowInAppMessagesAutomatically)
         self.purchases.delegate = self
         self.sendOKFor(command: command)
     }

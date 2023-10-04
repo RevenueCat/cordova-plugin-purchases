@@ -1,9 +1,10 @@
 import {
   BILLING_FEATURE,
-  PURCHASE_TYPE,
-  PACKAGE_TYPE,
+  IN_APP_MESSAGE_TYPE,
   INTRO_ELIGIBILITY_STATUS,
-  PRORATION_MODE
+  PACKAGE_TYPE,
+  PRORATION_MODE,
+  PURCHASE_TYPE
 } from '../www/plugin';
 
 function checkPurchaseType(type: PURCHASE_TYPE): boolean {
@@ -77,6 +78,17 @@ function checkProrationMode(mode: PRORATION_MODE): boolean {
     case PRORATION_MODE.IMMEDIATE_WITHOUT_PRORATION:
       return true;
     case PRORATION_MODE.IMMEDIATE_AND_CHARGE_FULL_PRICE:
+      return true;
+  }
+}
+
+function checkInAppMessageType(messageType: IN_APP_MESSAGE_TYPE): boolean {
+  switch (messageType) {
+    case IN_APP_MESSAGE_TYPE.BILLING_ISSUE:
+      return true;
+    case IN_APP_MESSAGE_TYPE.PRICE_INCREASE_CONSENT:
+      return true;
+    case IN_APP_MESSAGE_TYPE.GENERIC:
       return true;
   }
 }

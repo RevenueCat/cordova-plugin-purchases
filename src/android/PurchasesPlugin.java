@@ -1,6 +1,8 @@
 package com.revenuecat.purchases;
 
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -473,11 +475,15 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             CommonKt.showInAppMessagesIfNeeded(this.cordova.getActivity());
         } else {
             ArrayList<InAppMessageType> messageTypesList = new ArrayList<>();
-            for (int i = 0; i < messageTypes.size(); i++) {
-                int messageTypeInt = messageTypes.getInt(i);
-                InAppMessageType messageType = InAppMessageType.values()[messageTypeInt];
-                if (messageType != null) {
-                    messageTypesList.add(messageType);
+            for (int i = 0; i < messageTypes.length(); i++) {
+                try {
+                    int messageTypeInt = messageTypes.getInt(i);
+                    InAppMessageType messageType = InAppMessageType.values()[messageTypeInt];
+                    if (messageType != null) {
+                        messageTypesList.add(messageType);
+                    }
+                } catch (JSONException e) {
+                    Log.e("PurchasesPlugin", "Error parsing message type", e);
                 }
             }
             CommonKt.showInAppMessagesIfNeeded(this.cordova.getActivity(), messageTypesList);

@@ -16,7 +16,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, false, false]
+      ["api_key", "app_user_id", false, undefined, false, false, true]
     );
   });
 
@@ -28,7 +28,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, false, false]
+      ["api_key", "app_user_id", false, undefined, false, false, true]
     );
   });
 
@@ -40,7 +40,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", true, undefined, false, false]
+      ["api_key", "app_user_id", true, undefined, false, false, true]
     );
   });
 
@@ -52,7 +52,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", true, undefined, false, false]
+      ["api_key", "app_user_id", true, undefined, false, false, true]
     );
   });
 
@@ -66,7 +66,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, expected, false, false]
+      ["api_key", "app_user_id", false, expected, false, false, true]
     );
   });
 
@@ -80,7 +80,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, expected, false, false]
+      ["api_key", "app_user_id", false, expected, false, false, true]
     );
   });
 
@@ -92,7 +92,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, false, true]
+      ["api_key", "app_user_id", false, undefined, false, true, true]
     );
   });
 
@@ -104,7 +104,19 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, true, false]
+      ["api_key", "app_user_id", false, undefined, true, false, true]
+    );
+  });
+
+  it("configureWith fires PurchasesPlugin with the correct arguments when disabling in app messages from showing", () => {
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", useAmazon: true, shouldShowInAppMessagesAutomatically: false});
+
+    expect(execFn).toHaveBeenCalledWith(
+      null,
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", false, undefined, false, true, false]
     );
   });
 
@@ -267,6 +279,68 @@ describe("Purchases", () => {
           );
         });
       });
+  });
+
+  describe("showInAppMessages", () => {
+    describe("when no parameters are passed", () => {
+      it("calls Purchases with no parameters", () => {
+        Purchases.showInAppMessages();
+
+        expect(execFn).toHaveBeenCalledWith(
+          null,
+          null,
+          "PurchasesPlugin",
+          "showInAppMessages",
+          [undefined]
+        );
+      });
+    });
+    describe("when empty list is passed", () => {
+      it("calls Purchases with empty list", () => {
+        Purchases.showInAppMessages(
+          [],
+        );
+        expect(execFn).toHaveBeenCalledWith(
+          null,
+          null,
+          "PurchasesPlugin",
+          "showInAppMessages",
+          [[]]
+        );
+      });
+    });
+    describe("when list of parameters are passed", () => {
+      it("calls Purchases with list of message types", () => {
+        Purchases.showInAppMessages(
+          [Purchases.IN_APP_MESSAGE_TYPE.BILLING_ISSUE],
+        );
+        expect(execFn).toHaveBeenCalledWith(
+          null,
+          null,
+          "PurchasesPlugin",
+          "showInAppMessages",
+          [[0]]
+        );
+      });
+    });
+    describe("when list of parameters are passed", () => {
+      it("parameters are mapped successfully", () => {
+        const expected = [[0, 2, 1]]
+
+        Purchases.showInAppMessages(
+          [Purchases.IN_APP_MESSAGE_TYPE.BILLING_ISSUE,
+            Purchases.IN_APP_MESSAGE_TYPE.GENERIC,
+            Purchases.IN_APP_MESSAGE_TYPE.PRICE_INCREASE_CONSENT],
+        );
+        expect(execFn).toHaveBeenCalledWith(
+          null,
+          null,
+          "PurchasesPlugin",
+          "showInAppMessages",
+          expected
+        );
+      });
+    });
   });
 
   describe("beginRefundRequest", () => {

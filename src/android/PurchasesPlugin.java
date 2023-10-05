@@ -47,7 +47,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     private void configure(String apiKey, @Nullable String appUserID, boolean observerMode,
                            @Nullable String userDefaultsSuiteName, boolean usesStoreKit2IfAvailable,
                            boolean useAmazon, boolean shouldShowInAppMessagesAutomatically,
-                            CallbackContext callbackContext) {
+                           CallbackContext callbackContext) {
         PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
         Store store = Store.PLAY_STORE;
         if (useAmazon) {

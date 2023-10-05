@@ -44,6 +44,7 @@ const app = {
     document.getElementById("begin-refund-request-active-entitlement").addEventListener("click", this.beginRefundRequestForActiveEntitlement)
     document.getElementById("begin-refund-request-entitlement").addEventListener("click", this.beginRefundRequestForEntitlement)
     document.getElementById("begin-refund-request-product-id").addEventListener("click", this.beginRefundRequestForProduct)
+    document.getElementById("show-in-app-messages").addEventListener("click", this.showInAppMessages)
   },
 
   // deviceready Event Handler
@@ -88,7 +89,7 @@ const app = {
           var metadataDiv = document.createElement("div")
           paywallDiv.appendChild(metadataDiv);
           metadataDiv.appendChild(document.createTextNode(JSON.stringify(offerings.current.metadata)));
-          
+
           var packages = offerings.current.availablePackages;
           packages.forEach((package) => {
             // Packages div
@@ -442,6 +443,12 @@ const app = {
       }
     );
   },
+
+  showInAppMessages: function () {
+    setStatusLabelText("beginning showInAppMessages");
+    Purchases.showInAppMessages();
+    setStatusLabelText("finished showInAppMessages");
+  }
 
 };
 

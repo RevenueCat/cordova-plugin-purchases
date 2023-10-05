@@ -1,12 +1,15 @@
 package com.revenuecat.purchases;
 
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.appfeel.cordova.annotated.android.plugin.AnnotatedCordovaPlugin;
 import com.appfeel.cordova.annotated.android.plugin.ExecutionThread;
 import com.appfeel.cordova.annotated.android.plugin.PluginAction;
+import com.revenuecat.purchases.DangerousSettings;
 import com.revenuecat.purchases.common.PlatformInfo;
 import com.revenuecat.purchases.hybridcommon.CommonKt;
 import com.revenuecat.purchases.hybridcommon.ErrorContainer;
@@ -16,6 +19,7 @@ import com.revenuecat.purchases.hybridcommon.OnResultList;
 import com.revenuecat.purchases.hybridcommon.SubscriberAttributesKt;
 import com.revenuecat.purchases.hybridcommon.mappers.CustomerInfoMapperKt;
 import com.revenuecat.purchases.interfaces.UpdatedCustomerInfoListener;
+import com.revenuecat.purchases.models.InAppMessageType;
 
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.PluginResult;
@@ -42,13 +46,15 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     @PluginAction(thread = ExecutionThread.MAIN, actionName = "configure", isAutofinish = false)
     private void configure(String apiKey, @Nullable String appUserID, boolean observerMode,
                            @Nullable String userDefaultsSuiteName, boolean usesStoreKit2IfAvailable,
-                           boolean useAmazon, CallbackContext callbackContext) {
+                           boolean useAmazon, boolean shouldShowInAppMessagesAutomatically,
+                           CallbackContext callbackContext) {
         PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
         Store store = Store.PLAY_STORE;
         if (useAmazon) {
             store = Store.AMAZON;
         }
-        CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, observerMode, platformInfo, store);
+        CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, observerMode, platformInfo, store,
+            new DangerousSettings(), shouldShowInAppMessagesAutomatically);
         callbackContext.success();
     }
 
@@ -460,6 +466,34 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "beginRefundRequestForProductId")
     private void beginRefundRequestForProductId(CallbackContext callbackContext) {
         // noop
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "showInAppMessages")
+    private void showInAppMessages(JSONArray messageTypes, CallbackContext callbackContext) {
+        if (messageTypes == null) {
+            CommonKt.showInAppMessagesIfNeeded(this.cordova.getActivity());
+        } else {
+            ArrayList<InAppMessageType> messageTypesList = new ArrayList<>();
+            InAppMessageType[] inAppMessageTypes = InAppMessageType.values();
+            for (int i = 0; i < messageTypes.length(); i++) {
+                try {
+                    int messageTypeInt = messageTypes.getInt(i);
+                    InAppMessageType messageType = null;
+                    if (messageTypeInt < inAppMessageTypes.length) {
+                        messageType = inAppMessageTypes[messageTypeInt];
+                    }
+                    if (messageType != null) {
+                        messageTypesList.add(messageType);
+                    } else {
+                        Log.e("PurchasesPlugin", "Invalid in-app message type: " + messageTypeInt);
+                    }
+                } catch (JSONException e) {
+                    Log.e("PurchasesPlugin", "Error parsing message type", e);
+                }
+            }
+            CommonKt.showInAppMessagesIfNeeded(this.cordova.getActivity(), messageTypesList);
+        }
         callbackContext.success();
     }
 

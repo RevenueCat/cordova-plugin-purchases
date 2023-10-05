@@ -180,7 +180,7 @@ import PurchasesHybridCommon
     @objc(showInAppMessages:)
     func showInAppMessages(command: CDVInvokedUrlCommand) {
         let intMessageTypes = command.argument(at: 0, withDefault: nil) as? [Int]
-#if os(iOS) || targetEnvironment(macCatalyst) || VISION_OS
+#if os(iOS) || targetEnvironment(macCatalyst)
         if #available(iOS 16.0, *) {
             if let intMessageTypes {
                 let messageTypes = intMessageTypes.map({ intNumber in
@@ -195,9 +195,11 @@ import PurchasesHybridCommon
                 }
             }
         } else {
+            NSLog("[Purchases] Warning: tried to show in app messages, but it's only available on iOS 16.0+")
             self.sendOKFor(command: command)
         }
 #else
+        NSLog("[Purchases] Warning: tried to show in app messages, but it's only available on iOS or macCatalyst")
         self.sendOKFor(command: command)
 #endif
     }

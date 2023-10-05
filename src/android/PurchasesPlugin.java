@@ -475,12 +475,18 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             CommonKt.showInAppMessagesIfNeeded(this.cordova.getActivity());
         } else {
             ArrayList<InAppMessageType> messageTypesList = new ArrayList<>();
+            InAppMessageType[] inAppMessageTypes = InAppMessageType.values();
             for (int i = 0; i < messageTypes.length(); i++) {
                 try {
                     int messageTypeInt = messageTypes.getInt(i);
-                    InAppMessageType messageType = InAppMessageType.values()[messageTypeInt];
+                    InAppMessageType messageType = null;
+                    if (messageTypeInt < inAppMessageTypes.length) {
+                        messageType = inAppMessageTypes[messageTypeInt];
+                    }
                     if (messageType != null) {
                         messageTypesList.add(messageType);
+                    } else {
+                        Log.e("PurchasesPlugin", "Invalid in-app message type: " + messageTypeInt);
                     }
                 } catch (JSONException e) {
                     Log.e("PurchasesPlugin", "Error parsing message type", e);

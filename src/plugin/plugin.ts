@@ -446,12 +446,10 @@ export interface PurchasesStoreProduct {
   readonly title: string;
   /**
    * Price of the product in the local currency.
-   * Contains the currency code value of defaultOption for Google Play.
    */
   readonly price: number;
   /**
    * Formatted price of the item, including its currency sign, such as €3.99.
-   * Contains the currency code value of defaultOption for Google Play.
    */
   readonly priceString: string;
   /**
@@ -1155,7 +1153,7 @@ class Purchases {
    * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you
    * wish to upgrade from containing the oldProductIdentifier and the optional prorationMode.
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
-   * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
+   * For compliance with EU regulations. User will see "This price has been customized for you" in the purchase dialog when true.
    * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
    */
   public static purchaseStoreProduct(
@@ -1200,7 +1198,7 @@ class Purchases {
    * and the optional prorationMode.
    * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
-   * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
+   * For compliance with EU regulations. User will see "This price has been customized for you" in the purchase dialog when true.
    * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
    */
   public static purchasePackage(
@@ -1252,7 +1250,7 @@ class Purchases {
    * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you
    * wish to upgrade from containing the oldProductIdentifier and the optional prorationMode.
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
-   * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
+   * For compliance with EU regulations. User will see "This price has been customized for you" in the purchase dialog when true.
    * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
    */
   public static purchaseSubscriptionOption(

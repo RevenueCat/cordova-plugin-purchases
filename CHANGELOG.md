@@ -1,3 +1,7 @@
+## 5.1.1
+### Dependency Updates
+* Bump xcodeproj from 1.22.0 to 1.23.0 (#424) via dependabot[bot] (@dependabot[bot])
+
 ## 5.1.0
 ### Dependency Updates
 * [AUTOMATIC BUMP] Updates purchases-hybrid-common to 7.1.0 (#433) via RevenueCat Git Bot (@RCGitBot)

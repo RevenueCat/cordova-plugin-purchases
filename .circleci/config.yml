@@ -89,7 +89,7 @@ jobs:
   ios-integration-test:
     description: "Run iOS integration tests for Flutter"
     macos:
-      xcode: 13.1.0
+      xcode: 13.4.1
     steps:
       - checkout
       - run:

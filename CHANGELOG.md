@@ -1,3 +1,7 @@
+## 2.4.3
+
+- Update `purchases-ios` to version [3.14.4](https://github.com/RevenueCat/purchases-ios/releases/tag/3.14.4)
+
 ## 2.4.2
 
 - Setting type of module to `commonjs` https://github.com/RevenueCat/cordova-plugin-purchases/pull/192

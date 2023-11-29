@@ -446,12 +446,10 @@ export interface PurchasesStoreProduct {
   readonly title: string;
   /**
    * Price of the product in the local currency.
-   * Contains the currency code value of defaultOption for Google Play.
    */
   readonly price: number;
   /**
    * Formatted price of the item, including its currency sign, such as €3.99.
-   * Contains the currency code value of defaultOption for Google Play.
    */
   readonly priceString: string;
   /**
@@ -828,8 +826,19 @@ export interface PricingPhase {
  * Recurrence mode for a pricing phase
  */
 export enum RECURRENCE_MODE {
+  /**
+   * Pricing phase repeats infinitely until cancellation
+   */
   INFINITE_RECURRING = 1,
+
+  /**
+   * Pricing phase repeats for a fixed number of billing periods
+   */
   FINITE_RECURRING = 2,
+
+  /**
+   * Pricing phase does not repeat
+   */
   NON_RECURRING = 3,
 }
 
@@ -837,8 +846,20 @@ export enum RECURRENCE_MODE {
  * Payment mode for offer pricing phases. Google Play only.
  */
 export enum OFFER_PAYMENT_MODE {
+
+  /**
+   * Subscribers don't pay until the specified period ends
+   */
   FREE_TRIAL = "FREE_TRIAL",
+
+  /**
+   * Subscribers pay up front for a specified period
+   */
   SINGLE_PAYMENT = "SINGLE_PAYMENT",
+
+  /**
+   * Subscribers pay a discounted amount for a specified number of periods
+   */
   DISCOUNTED_RECURRING_PAYMENT = "DISCOUNTED_RECURRING_PAYMENT",
 }
 
@@ -1126,15 +1147,14 @@ class Purchases {
    * Make a purchase
    *
    * @param {PurchasesStoreProduct} product The product you want to purchase
+   * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchase.
+   * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error or when the user cancels the purchase
+   * If user cancelled, userCancelled will be true
    * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you
    * wish to upgrade from containing the oldProductIdentifier and the optional prorationMode.
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
-   * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
+   * For compliance with EU regulations. User will see "This price has been customized for you" in the purchase dialog when true.
    * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
-   * @returns {Promise<{ productIdentifier: string, customerInfo:CustomerInfo }>} A promise of an object containing
-   * a customer info object and a product identifier. Rejections return an error code,
-   * a boolean indicating if the user cancelled the purchase, and an object with more information. The promise will
-   * also be rejected if configure has not been called yet.
    */
   public static purchaseStoreProduct(
     product: PurchasesStoreProduct,
@@ -1178,7 +1198,7 @@ class Purchases {
    * and the optional prorationMode.
    * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
-   * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
+   * For compliance with EU regulations. User will see "This price has been customized for you" in the purchase dialog when true.
    * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
    */
   public static purchasePackage(
@@ -1230,7 +1250,7 @@ class Purchases {
    * @param {GoogleProductChangeInfo} googleProductChangeInfo Android only. Optional GoogleProductChangeInfo you
    * wish to upgrade from containing the oldProductIdentifier and the optional prorationMode.
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
-   * For compliance with EU regulations. User will see "This price has been customize for you" in the purchase dialog when true.
+   * For compliance with EU regulations. User will see "This price has been customized for you" in the purchase dialog when true.
    * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
    */
   public static purchaseSubscriptionOption(

@@ -1,3 +1,7 @@
+## 5.4.1
+### Other Changes
+* Fix some docs (#460) via Cesar de la Vega (@vegaro)
+
 ## 5.4.0
 ### Dependency Updates
 * [AUTOMATIC BUMP] Updates purchases-hybrid-common to 8.0.0 (#456) via RevenueCat Git Bot (@RCGitBot)

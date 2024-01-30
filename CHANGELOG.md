@@ -1,3 +1,30 @@
+## 5.7.0
+### Dependency Updates
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 9.3.0 (#490) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 7.4.1](https://github.com/RevenueCat/purchases-android/releases/tag/7.4.1)
+  * [Android 7.4.0](https://github.com/RevenueCat/purchases-android/releases/tag/7.4.0)
+  * [Android 7.3.6](https://github.com/RevenueCat/purchases-android/releases/tag/7.3.6)
+  * [Android 7.3.5](https://github.com/RevenueCat/purchases-android/releases/tag/7.3.5)
+  * [Android 7.3.4](https://github.com/RevenueCat/purchases-android/releases/tag/7.3.4)
+  * [Android 7.3.3](https://github.com/RevenueCat/purchases-android/releases/tag/7.3.3)
+  * [iOS 4.33.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.33.0)
+  * [iOS 4.32.4](https://github.com/RevenueCat/purchases-ios/releases/tag/4.32.4)
+  * [iOS 4.32.3](https://github.com/RevenueCat/purchases-ios/releases/tag/4.32.3)
+  * [iOS 4.32.2](https://github.com/RevenueCat/purchases-ios/releases/tag/4.32.2)
+  * [iOS 4.32.1](https://github.com/RevenueCat/purchases-ios/releases/tag/4.32.1)
+  * [iOS 4.32.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.32.0)
+  * [iOS 4.31.9](https://github.com/RevenueCat/purchases-ios/releases/tag/4.31.9)
+  * [iOS 4.31.8](https://github.com/RevenueCat/purchases-ios/releases/tag/4.31.8)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 9.2.1 (#489) via RevenueCat Git Bot (@RCGitBot)
+* Bump xcodeproj from 1.23.0 to 1.24.0 (#488) via dependabot[bot] (@dependabot[bot])
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 9.2.0 (#487) via RevenueCat Git Bot (@RCGitBot)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 9.1.0 (#486) via RevenueCat Git Bot (@RCGitBot)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 9.0.1 (#485) via RevenueCat Git Bot (@RCGitBot)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 9.0.0 (#484) via RevenueCat Git Bot (@RCGitBot)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 8.12.0 (#483) via RevenueCat Git Bot (@RCGitBot)
+### Other Changes
+* Update `fastlane-plugin-revenuecat_internal` (#491) via NachoSoto (@NachoSoto)
+
 ## 5.6.1
 ### Dependency Updates
 * [AUTOMATIC BUMP] Updates purchases-hybrid-common to 8.2.2 (#480) via RevenueCat Git Bot (@RCGitBot)

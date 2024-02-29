@@ -178,7 +178,7 @@ jobs:
       - npm-dependencies
       - npm-install-cordova-paramedic
       - replace-api-key-linux
-      - run: sdk install gradle 7.5
+      - run: sdk install gradle 8.0
       - run: rm -rf ~/.gradle/caches/
       - run: npm run test:android
     environment:

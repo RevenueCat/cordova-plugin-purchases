@@ -103,7 +103,7 @@ extension CDVPurchasesPlugin {
     }
 
     var platformFlavorVersion: String {
-        return "5.7.2"
+        return "5.7.3"
     }
 
 }

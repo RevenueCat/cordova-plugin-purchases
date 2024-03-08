@@ -39,7 +39,7 @@ import RevenueCat
         let observerMode = command.arguments[2] as? Bool ?? false
         let userDefaultsSuiteName = command.arguments[3] as? String
         let usesStoreKit2IfAvailable = command.arguments[4] as? Bool ?? false
-    
+
         self.purchases = Purchases.configure(apiKey: apiKey,
                                              appUserID: appUserID,
                                              observerMode: observerMode,
@@ -101,7 +101,7 @@ extension CDVPurchasesPlugin {
     }
 
     var platformFlavorVersion: String {
-        return "4.9.0"
+        return "4.9.1"
     }
 
 }

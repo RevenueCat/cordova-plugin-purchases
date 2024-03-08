@@ -1,3 +1,8 @@
+## 4.9.1
+### Dependency Updates
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 6.3.2 (#933) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 6.9.7](https://github.com/RevenueCat/purchases-android/releases/tag/6.9.7)
+
 ## 4.9.0
 ### Dependency Updates
 * [AUTOMATIC BUMP] Updates purchases-hybrid-common to 6.3.0 (#426) via RevenueCat Git Bot (@RCGitBot)

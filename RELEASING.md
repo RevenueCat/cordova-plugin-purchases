@@ -24,5 +24,5 @@ Sometimes you might need to release a patch on a version that's not the latest. 
 1. When the PR is approved, approve the hold job in CircleCI as you would do for any other release. If there is no hold job because the release is older than when we introduced that job, manually tag the last commit in `release/3.9.1` with `3.9.1`.
 1. CircleCI will start the deployment process
 1. Merge the PR after the release has been completed and delete both `release/3.9.0` and `release/3.9.1` branches.
-1. Do `npm dist-tag add react-native-purchases@x.x.x latest`. Being x.x.x the latest version of react-native-purchases. When doing the publish to npm, the latest version is overriden with the hotfix, so we need to set it back to the latest version.
+1. Do `npm dist-tag add cordova-plugin-purchases@x.x.x latest`. Being x.x.x the latest version of cordova-plugin-purchases. When doing the publish to npm, the latest version is overriden with the hotfix, so we need to set it back to the latest version.
 1. Remember to edit the CHANGELOG.md in `main` to include the version that has been just released

@@ -51,7 +51,7 @@ import PurchasesHybridCommon
         }
 
         CommonFunctionality.purchase(package: packageIdentifier,
-                                     offeringIdentifier: offeringIdentifier,
+                                     presentedOfferingContext: ["offeringIdentifier": offeringIdentifier],
                                      signedDiscountTimestamp: nil,
                                      completion: self.responseCompletion(forCommand: command))
     }

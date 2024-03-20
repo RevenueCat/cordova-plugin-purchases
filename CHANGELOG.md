@@ -1,3 +1,7 @@
+## 5.7.4
+### Other Changes
+* Add 4.9.1 to changelog (#510) via Cesar de la Vega (@vegaro)
+
 ## 5.7.3
 ### Dependency Updates
 * [AUTOMATIC BUMP] Updates purchases-hybrid-common to 9.9.0 (#505) via RevenueCat Git Bot (@RCGitBot)

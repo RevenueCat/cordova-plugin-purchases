@@ -122,7 +122,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             oldSKU,
             prorationMode,
             googleIsPersonalizedPrice,
-            presentedOfferingIdentifier,
+            convertToPresentedOfferingContextMap(presentedOfferingIdentifier),
             getOnResult(callbackContext));
     }
 
@@ -136,7 +136,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         CommonKt.purchasePackage(
             this.cordova.getActivity(),
             packageIdentifier,
-            offeringIdentifier,
+            convertToPresentedOfferingContextMap(offeringIdentifier),
             oldSKU,
             prorationMode,
             googleIsPersonalizedPrice,
@@ -158,7 +158,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
             oldSKU,
             prorationMode,
             googleIsPersonalizedPrice,
-            presentedOfferingIdentifier,
+            convertToPresentedOfferingContextMap(presentedOfferingIdentifier),
             getOnResult(callbackContext)
         );
     }
@@ -526,6 +526,15 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
                 e.printStackTrace();
             }
         }
+        return map;
+    }
+
+    private static Map<String, Object> convertToPresentedOfferingContextMap(String offeringIdentifier) {
+        if (offeringIdentifier == null) {
+            return null;
+        }
+        HashMap map = new HashMap();
+        map.put("offeringIdentifier", offeringIdentifier);
         return map;
     }
 

@@ -1,3 +1,26 @@
+## 5.7.4
+### Dependency Updates
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 10.3.2 (#519) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 7.8.1](https://github.com/RevenueCat/purchases-android/releases/tag/7.8.1)
+  * [Android 7.8.0](https://github.com/RevenueCat/purchases-android/releases/tag/7.8.0)
+  * [Android 7.7.3](https://github.com/RevenueCat/purchases-android/releases/tag/7.7.3)
+  * [Android 7.7.2](https://github.com/RevenueCat/purchases-android/releases/tag/7.7.2)
+  * [iOS 4.39.1](https://github.com/RevenueCat/purchases-ios/releases/tag/4.39.1)
+  * [iOS 4.39.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.39.0)
+  * [iOS 4.38.1](https://github.com/RevenueCat/purchases-ios/releases/tag/4.38.1)
+  * [iOS 4.38.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.38.0)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 10.2.0 (#514) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 7.8.1](https://github.com/RevenueCat/purchases-android/releases/tag/7.8.1)
+  * [Android 7.8.0](https://github.com/RevenueCat/purchases-android/releases/tag/7.8.0)
+  * [Android 7.7.3](https://github.com/RevenueCat/purchases-android/releases/tag/7.7.3)
+  * [Android 7.7.2](https://github.com/RevenueCat/purchases-android/releases/tag/7.7.2)
+  * [iOS 4.39.1](https://github.com/RevenueCat/purchases-ios/releases/tag/4.39.1)
+  * [iOS 4.39.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.39.0)
+  * [iOS 4.38.1](https://github.com/RevenueCat/purchases-ios/releases/tag/4.38.1)
+  * [iOS 4.38.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.38.0)
+### Other Changes
+* Add 4.9.1 to changelog (#510) via Cesar de la Vega (@vegaro)
+
 ## 5.7.3
 ### Dependency Updates
 * [AUTOMATIC BUMP] Updates purchases-hybrid-common to 9.9.0 (#505) via RevenueCat Git Bot (@RCGitBot)

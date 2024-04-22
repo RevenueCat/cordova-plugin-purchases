@@ -3,14 +3,16 @@ files_with_version_number = {
   './package.json' => ['"version": "{x}"'],
   './plugin.xml' => ['id="cordova-plugin-purchases" version="{x}"'],
   './src/android/PurchasesPlugin.java' => ['PLUGIN_VERSION = "{x}"'],
-  './src/ios/PurchasesPlugin.swift' => ['return "{x}"'],
-  './scripts/docs/index.html' => ['cordova-plugin-purchases-docs/{x}/']
+  './src/ios/PurchasesPlugin.swift' => ['return "{x}"']
 }
 files_to_update_phc_version = {
   'plugin.xml' => [
     'name="PurchasesHybridCommon" spec="{x}"',
     'com.revenuecat.purchases:purchases-hybrid-common:{x}'
   ]
+}
+files_to_update_on_latest_stable_releases = {
+  './scripts/docs/index.html' => ['cordova-plugin-purchases-docs/{x}/']
 }
 repo_name = 'cordova-plugin-purchases'
 changelog_latest_path = './CHANGELOG.latest.md'
@@ -30,6 +32,7 @@ lane :bump do |options|
     changelog_latest_path: changelog_latest_path,
     changelog_path: changelog_path,
     files_to_update: files_with_version_number,
+    files_to_update_on_latest_stable_releases: files_to_update_on_latest_stable_releases,
     repo_name: repo_name,
     github_rate_limit: options[:github_rate_limit],
     editor: options[:editor],

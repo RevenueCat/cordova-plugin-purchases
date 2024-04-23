@@ -187,9 +187,9 @@ jobs:
 
   ios-integration-test:
     description: "Run iOS integration tests for Cordova"
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     macos:
-      xcode: 14.3.1
+      xcode: '15.2'
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout

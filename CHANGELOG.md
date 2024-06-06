@@ -1,3 +1,19 @@
+## 5.7.7
+### Dependency Updates
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 10.8.0 (#540) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 7.11.0](https://github.com/RevenueCat/purchases-android/releases/tag/7.11.0)
+  * [Android 7.10.1](https://github.com/RevenueCat/purchases-android/releases/tag/7.10.1)
+  * [Android 7.10.0](https://github.com/RevenueCat/purchases-android/releases/tag/7.10.0)
+  * [Android 7.9.0](https://github.com/RevenueCat/purchases-android/releases/tag/7.9.0)
+  * [iOS 4.42.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.42.0)
+  * [iOS 4.41.2](https://github.com/RevenueCat/purchases-ios/releases/tag/4.41.2)
+  * [iOS 4.41.1](https://github.com/RevenueCat/purchases-ios/releases/tag/4.41.1)
+  * [iOS 4.41.0](https://github.com/RevenueCat/purchases-ios/releases/tag/4.41.0)
+* Bump rexml from 3.2.6 to 3.2.8 (#538) via dependabot[bot] (@dependabot[bot])
+### Other Changes
+* Update fastlane plugin (#535) via Toni Rico (@tonidero)
+* Only update docs index on latest stable releases (#525) via Toni Rico (@tonidero)
+
 ## 5.7.6
 ### Dependency Updates
 * [AUTOMATIC BUMP] Updates purchases-hybrid-common to 10.4.1 (#524) via RevenueCat Git Bot (@RCGitBot)

@@ -292,6 +292,8 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - runtest
+      - android-integration-test
+      - ios-integration-test
 
   deploy:
     when:

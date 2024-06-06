@@ -83,7 +83,7 @@ commands:
     steps:
       - run:
           name: Install Cordova Paramedic
-          command: npm install --location=global github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
+          command: npm install --location=global github:apache/cordova-paramedic#2243a96d23e9a27213cbbf17634df0beb3463bdb
 
   replace-api-key-linux:
     description: "Replace API_KEY"

@@ -11,5 +11,4 @@
 * Bump rexml from 3.2.6 to 3.2.8 (#538) via dependabot[bot] (@dependabot[bot])
 ### Other Changes
 * Update fastlane plugin (#535) via Toni Rico (@tonidero)
-* Update to use M1 CircleCI machines (#529) via Toni Rico (@tonidero)
 * Only update docs index on latest stable releases (#525) via Toni Rico (@tonidero)

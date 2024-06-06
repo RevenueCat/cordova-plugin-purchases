@@ -194,8 +194,8 @@ jobs:
     steps:
       - checkout
       - macos/preboot-simulator:
-          device: iPhone 14
-          version: '16.4'
+          device: iPhone 15
+          version: '17.2'
       - npm-dependencies
       - npm-install-cordova-paramedic
       - npm-ios-dependencies

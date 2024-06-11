@@ -83,7 +83,7 @@ commands:
     steps:
       - run:
           name: Install Cordova Paramedic
-          command: npm install --location=global github:apache/cordova-paramedic#c394568c093b13da6a1fe69546aef0a66c21a7de
+          command: npm install --location=global github:apache/cordova-paramedic#2243a96d23e9a27213cbbf17634df0beb3463bdb
 
   replace-api-key-linux:
     description: "Replace API_KEY"
@@ -187,15 +187,15 @@ jobs:
 
   ios-integration-test:
     description: "Run iOS integration tests for Cordova"
-    resource_class: macos.x86.medium.gen2
+    resource_class: macos.m1.medium.gen1
     macos:
-      xcode: 14.3.1
+      xcode: '15.2'
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
       - macos/preboot-simulator:
-          device: iPhone 14
-          version: '16.4'
+          device: iPhone 15
+          version: '17.2'
       - npm-dependencies
       - npm-install-cordova-paramedic
       - npm-ios-dependencies

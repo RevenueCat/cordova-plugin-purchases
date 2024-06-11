@@ -29,7 +29,7 @@
     "prepare": "tsc",
     "test": "jest",
     "test:android": "cordova-paramedic --verbose --platform android@11 --plugin .",
-    "test:ios": "cordova-paramedic --verbose --platform ios --plugin . --target \"iPhone-15, 17.2\""
+    "test:ios": "cordova-paramedic --verbose --platform ios --plugin . --target \"iPhone-15\""
   },
   "author": "RevenueCat, Inc.",
   "license": "MIT",

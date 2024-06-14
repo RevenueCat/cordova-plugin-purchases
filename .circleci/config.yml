@@ -157,6 +157,7 @@ jobs:
     description: "Run Android integration tests for Cordova"
     executor:
       name: android/android-machine
+      tag: 2024.01.1
       resource-class: large
     shell: /bin/bash --login -o pipefail
     steps:

@@ -290,7 +290,6 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - runtest
-      - android-integration-test
 
   deploy:
     when:

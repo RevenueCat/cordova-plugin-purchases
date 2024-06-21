@@ -163,9 +163,6 @@ jobs:
     steps:
       - checkout
       - install-sdkman
-      - run: sdkmanager "platforms;android-32"
-      - run: sdkmanager "build-tools;32.0.0"
-      - android/accept-licenses
       - android/create-avd:
           avd-name: myavd
           system-image: system-images;android-32;google_apis;x86_64

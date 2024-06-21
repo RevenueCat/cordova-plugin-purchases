@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
   macos: circleci/macos@2.3.2
-  android: circleci/android@1.0
+  android: circleci/android@2.5.0
   revenuecat: revenuecat/sdks-common-config@2.1.0
 
 aliases:
@@ -158,13 +158,11 @@ jobs:
     executor:
       name: android/android-machine
       resource-class: large
+      tag: 2024.04.1
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
       - install-sdkman
-      - run: sdkmanager "platforms;android-32"
-      - run: sdkmanager "build-tools;32.0.0"
-      - android/accept-licenses
       - android/create-avd:
           avd-name: myavd
           system-image: system-images;android-32;google_apis;x86_64

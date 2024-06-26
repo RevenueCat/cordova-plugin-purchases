@@ -1,3 +1,9 @@
+## 5.7.9
+### Dependency Updates
+* Bump fastlane from 2.220.0 to 2.221.0 (#546) via dependabot[bot] (@dependabot[bot])
+### Other Changes
+* Update android executor (#549) via Toni Rico (@tonidero)
+
 ## 5.7.8
 ### Dependency Updates
 * [AUTOMATIC BUMP] Updates purchases-hybrid-common to 10.9.0 (#543) via RevenueCat Git Bot (@RCGitBot)

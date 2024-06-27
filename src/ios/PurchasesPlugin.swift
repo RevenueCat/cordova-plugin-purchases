@@ -43,7 +43,8 @@ import RevenueCat
 
         self.purchases = Purchases.configure(apiKey: apiKey,
                                              appUserID: appUserID,
-                                             observerMode: observerMode,
+                                             purchasesAreCompletedBy: observerMode ?
+                                             PurchasesAreCompletedBy.myApp : PurchasesAreCompletedBy.revenueCat,
                                              userDefaultsSuiteName: userDefaultsSuiteName,
                                              platformFlavor: self.platformFlavor,
                                              platformFlavorVersion: self.platformFlavorVersion,

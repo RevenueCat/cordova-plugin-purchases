@@ -53,8 +53,9 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         if (useAmazon) {
             store = Store.AMAZON;
         }
-        CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, observerMode, platformInfo, store,
-            new DangerousSettings(), shouldShowInAppMessagesAutomatically);
+        CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID,
+            observerMode ? PurchasesAreCompletedBy.MY_APP : PurchasesAreCompletedBy.REVENUECAT,
+            platformInfo, store, new DangerousSettings(), shouldShowInAppMessagesAutomatically);
         callbackContext.success();
     }
 
@@ -177,11 +178,11 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
                                                Double price,
                                                CallbackContext callbackContext) {
         Purchases.getSharedInstance().syncObserverModeAmazonPurchase(
-                productID,
-                receiptID,
-                amazonUserID,
-                isoCurrencyCode,
-                price);
+            productID,
+            receiptID,
+            amazonUserID,
+            isoCurrencyCode,
+            price);
         callbackContext.success();
     }
 

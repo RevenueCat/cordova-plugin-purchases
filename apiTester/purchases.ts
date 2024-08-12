@@ -19,7 +19,7 @@ import {
 } from '../www/plugin';
 
 import Purchases from '../www/plugin';
-import {IN_APP_MESSAGE_TYPE} from "../src/plugin/plugin";
+import {IN_APP_MESSAGE_TYPE, PURCHASES_ARE_COMPLETED_BY_TYPE, PurchasesAreCompletedBy, STOREKIT_VERSION} from "../src/plugin/plugin";
 
 const errorCallback = (error: PurchasesError) => {
 };
@@ -97,13 +97,11 @@ function checkConfigure() {
 
   Purchases.configure(
     apiKey,
-    appUserID,
-    observerMode
+    appUserID
   );
   Purchases.configure(
     apiKey,
     appUserID,
-    observerMode,
     userDefaultsSuiteName
   );
 
@@ -132,33 +130,34 @@ function checkLogLevels(level: LOG_LEVEL) {
 function checkPurchasesConfiguration() {
   const apiKey: string = "";
   const appUserID: string | null = "";
-  const observerMode: boolean = false;
+  const purchasesAreCompletedBy: PurchasesAreCompletedBy = PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT;
   const userDefaultsSuiteName: string = "";
   const useAmazon: boolean = false;
   const shouldShowInAppMessagesAutomatically: boolean = true;
+  const storeKitVersion: STOREKIT_VERSION = STOREKIT_VERSION.STOREKIT_2;
 
   Purchases.configureWith({
     apiKey,
     appUserID,
-    observerMode
+    purchasesAreCompletedBy
   });
   Purchases.configureWith({
     apiKey,
     appUserID,
-    observerMode,
+    purchasesAreCompletedBy,
     userDefaultsSuiteName
   });
   Purchases.configureWith({
     apiKey,
     appUserID,
-    observerMode,
+    purchasesAreCompletedBy,
     userDefaultsSuiteName,
     useAmazon
   });
   Purchases.configureWith({
     apiKey,
     appUserID,
-    observerMode,
+    purchasesAreCompletedBy,
     userDefaultsSuiteName,
     useAmazon,
     shouldShowInAppMessagesAutomatically
@@ -167,8 +166,9 @@ function checkPurchasesConfiguration() {
   const configuration: PurchasesConfiguration = {
     apiKey,
     appUserID,
-    observerMode,
+    purchasesAreCompletedBy,
     userDefaultsSuiteName,
+    storeKitVersion,
     useAmazon
   }
 
@@ -198,12 +198,14 @@ function checkListeners() {
   Purchases.removeShouldPurchasePromoProductListener(shouldPurchaseListener);
 }
 
-function checkSyncObserverModeAmazonPurchase(productID: string,
-                                             receiptID: string,
-                                             amazonUserID: string,
-                                             isoCurrencyCode?: string | null,
-                                             price?: number | null) {
+function checkSyncAmazonPurchase(productID: string,
+                                 receiptID: string,
+                                 amazonUserID: string,
+                                 isoCurrencyCode?: string | null,
+                                 price?: number | null) {
   Purchases.syncObserverModeAmazonPurchase(
+    productID, receiptID, amazonUserID, isoCurrencyCode, price);
+  Purchases.syncAmazonPurchase(
     productID, receiptID, amazonUserID, isoCurrencyCode, price);
 }
 

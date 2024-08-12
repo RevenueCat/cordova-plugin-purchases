@@ -36,18 +36,18 @@ import RevenueCat
             return
         }
         let appUserID = command.arguments[1] as? String
-        let observerMode = command.arguments[2] as? Bool ?? false
+        let purchasesAreCompletedBy = command.arguments[2] as? String ?? nil
         let userDefaultsSuiteName = command.arguments[3] as? String
-        let usesStoreKit2IfAvailable = command.arguments[4] as? Bool ?? false
+        let storeKitVersion = command.arguments[4] as? String ?? "DEFAULT"
         let shouldShowInAppMessagesAutomatically = command.arguments[5] as? Bool ?? true
 
         self.purchases = Purchases.configure(apiKey: apiKey,
                                              appUserID: appUserID,
-                                             purchasesAreCompletedBy: observerMode ? .myApp : .revenueCat,
+                                             purchasesAreCompletedBy: purchasesAreCompletedBy,
                                              userDefaultsSuiteName: userDefaultsSuiteName,
                                              platformFlavor: self.platformFlavor,
                                              platformFlavorVersion: self.platformFlavorVersion,
-                                             usesStoreKit2IfAvailable: usesStoreKit2IfAvailable,
+                                             storeKitVersion: storeKitVersion,
                                              dangerousSettings: nil,
                                              shouldShowInAppMessagesAutomatically: shouldShowInAppMessagesAutomatically)
         self.purchases.delegate = self

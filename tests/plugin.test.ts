@@ -1,5 +1,5 @@
 import Purchases from "../src/plugin/plugin";
-import {LOG_LEVEL, PurchasesError, PurchasesEntitlementInfo, PurchasesStoreProduct, PRODUCT_CATEGORY, PURCHASES_ARE_COMPLETED_BY_TYPE, STOREKIT_VERSION, PurchasesAreCompletedByMyApp} from "../www/plugin";
+import {LOG_LEVEL, PurchasesError, PurchasesEntitlementInfo, PurchasesStoreProduct, PRODUCT_CATEGORY, PURCHASES_ARE_COMPLETED_BY_TYPE, STOREKIT_VERSION, PurchasesAreCompletedByMyApp, PurchasesStoreTransaction} from "../www/plugin";
 
 const execFn = jest.fn();
 
@@ -700,6 +700,25 @@ describe("Purchases", () => {
             'isoCurrencyCode_test',
             3.4
           ]
+      );
+    });
+  });
+
+
+  describe("recordPurchase", () => {
+    it("calls Purchases with the correct arguments", () => {
+      Purchases.recordPurchase(
+          'productID_test',
+          (transaction: PurchasesStoreTransaction) => {},
+          (error: PurchasesError) => {},
+      );
+
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.any(Function),
+        "PurchasesPlugin",
+        "recordPurchase",
+        ['productID_test']
       );
     });
   });

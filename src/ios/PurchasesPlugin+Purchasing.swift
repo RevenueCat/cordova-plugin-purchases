@@ -66,6 +66,23 @@ import PurchasesHybridCommon
         CommonFunctionality.syncPurchases(completion: self.responseCompletion(forCommand: command))
     }
 
+    @objc(recordPurchase:)
+    func recordPurchase(command: CDVInvokedUrlCommand) {
+        guard let productIdentifier = command.arguments[0] as? String else {
+            self.sendBadParameterFor(command: command, 
+                                     parameterNamed: "productIdentifier", 
+                                     expectedType: String.self)
+            return
+        }
+        if #available(iOS 15.0, macOS 12.0, tvOS 15.0, watchOS 8.0, *) {
+            CommonFunctionality.recordPurchase(productID: productIdentifier,
+                                               completion: self.responseCompletion(forCommand: command))
+        } else {
+            NSLog("[Purchases] Warning: tried to record purchase, but it's only available on iOS 15.0+")
+            sendUnsupportedErrorFor(command: command)
+        }
+    }
+
     @objc(setSimulatesAskToBuyInSandbox:)
     func setSimulatesAskToBuyInSandbox(command: CDVInvokedUrlCommand) {
         guard let askToBuyInSandbox = command.arguments[0] as? Bool else {

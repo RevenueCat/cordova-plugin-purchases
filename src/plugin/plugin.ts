@@ -1595,6 +1595,35 @@ class Purchases {
   }
 
   /**
+   * iOS only. Always returns an error on iOS < 15.
+   *
+   * Use this method only if you already have your own IAP implementation using StoreKit 2 and want to use
+   * RevenueCat's backend. If you are using StoreKit 1 for your implementation, you do not need this method.
+   *
+   * You only need to use this method with *new* purchases. Subscription updates are observed automatically.
+   *
+   * Important: This should only be used if you have set PurchasesAreCompletedBy to MY_APP during SDK configuration.
+   *
+   * @warning You need to finish the transaction yourself after calling this method.
+   *
+   * @param {string} productID Product ID that was just purchased
+   * @returns {Promise<PurchasesStoreTransaction>} If there was a transacton found and handled for the provided product ID.
+   */
+  public static recordPurchase(
+    productID: string,
+    callback: (transaction: PurchasesStoreTransaction) => void,
+    errorCallback: (error: PurchasesError) => void
+  ): void {
+    window.cordova.exec(
+      callback,
+      errorCallback,
+      PLUGIN_NAME,
+      "recordPurchase",
+      [productID]
+    );
+  }
+
+  /**
    * Enable automatic collection of Apple Search Ads attribution using AdServices. Disabled by default.
    */
   public static enableAdServicesAttributionTokenCollection(): void {

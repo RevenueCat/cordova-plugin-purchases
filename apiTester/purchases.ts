@@ -16,6 +16,7 @@ import {
   LogHandler,
   REFUND_REQUEST_STATUS,
   PurchasesEntitlementInfo,
+  PurchasesStoreTransaction,
 } from '../www/plugin';
 
 import Purchases from '../www/plugin';
@@ -193,6 +194,7 @@ function checkMisc() {
   Purchases.showInAppMessages();
   const messageTypes: IN_APP_MESSAGE_TYPE[] = [];
   Purchases.showInAppMessages(messageTypes);
+  Purchases.recordPurchase("product_id", (transaction: PurchasesStoreTransaction) => {}, (error: PurchasesError) => {});
 }
 
 function checkListeners() {

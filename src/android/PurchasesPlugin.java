@@ -169,20 +169,27 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success();
     }
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "syncObserverModeAmazonPurchase")
-    public void syncObserverModeAmazonPurchase(String productID,
+    @PluginAction(thread = ExecutionThread.UI, actionName = "syncAmazonPurchase")
+    public void syncPurchase(String productID,
                                                String receiptID,
                                                String amazonUserID,
                                                String isoCurrencyCode,
                                                Double price,
                                                CallbackContext callbackContext) {
-        Purchases.getSharedInstance().syncObserverModeAmazonPurchase(
+        Purchases.getSharedInstance().syncAmazonPurchase(
             productID,
             receiptID,
             amazonUserID,
             isoCurrencyCode,
             price);
         callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "recordPurchase")
+    public void recordPurchase(String productID,
+                               CallbackContext callbackContext) {
+        // NOOP
+        callbackContext.error(new JSONObject());
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "getAppUserID", isAutofinish = false)

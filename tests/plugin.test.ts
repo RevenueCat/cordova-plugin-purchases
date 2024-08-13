@@ -32,18 +32,6 @@ describe("Purchases", () => {
     );
   });
 
-  it("configure fires PurchasesPlugin with the correct arguments when specifying observermode", () => {
-    Purchases.configure("api_key", "app_user_id");
-
-    expect(execFn).toHaveBeenCalledWith(
-      null,
-      null,
-      "PurchasesPlugin",
-      "configure",
-      ["api_key", "app_user_id", undefined, undefined, undefined, false, true]
-    );
-  });
-
   it("configureWith fires PurchasesPlugin with the correct arguments when specifying PurchasesAreCompletedBy.REVENUECAT", () => {
     Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", purchasesAreCompletedBy: PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT});
 
@@ -59,6 +47,19 @@ describe("Purchases", () => {
   it("configureWith fires PurchasesPlugin with the correct arguments when specifying PurchasesAreCompletedByMyApp", () => {
     let purchasesAreCompletedByMyApp: PurchasesAreCompletedByMyApp = {type: PURCHASES_ARE_COMPLETED_BY_TYPE.MY_APP, storeKitVersion: STOREKIT_VERSION.STOREKIT_2};
     Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", purchasesAreCompletedBy: purchasesAreCompletedByMyApp});
+
+    expect(execFn).toHaveBeenCalledWith(
+      null,
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", "MY_APP", undefined, "STOREKIT_2", false, true]
+    );
+  });
+
+  it("configureWith fires PurchasesPlugin with the PurchasesAreCompletedByMyApp storekit version if conflict present", () => {
+    let purchasesAreCompletedByMyApp: PurchasesAreCompletedByMyApp = {type: PURCHASES_ARE_COMPLETED_BY_TYPE.MY_APP, storeKitVersion: STOREKIT_VERSION.STOREKIT_2};
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", purchasesAreCompletedBy: purchasesAreCompletedByMyApp, storeKitVersion: STOREKIT_VERSION.STOREKIT_1});
 
     expect(execFn).toHaveBeenCalledWith(
       null,

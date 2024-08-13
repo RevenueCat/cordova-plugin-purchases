@@ -127,6 +127,11 @@ function checkLogLevels(level: LOG_LEVEL) {
   }
 }
 
+function checkPurchasesAreCompletedBy() {
+  const purchasesAreCompletedByRevenueCat: PurchasesAreCompletedBy = PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT;
+  const purchasesAreCompletedByMyApp: PurchasesAreCompletedBy = {type: PURCHASES_ARE_COMPLETED_BY_TYPE.MY_APP, storeKitVersion: STOREKIT_VERSION.STOREKIT_2};
+}
+
 function checkPurchasesConfiguration() {
   const apiKey: string = "";
   const appUserID: string | null = "";

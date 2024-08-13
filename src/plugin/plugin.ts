@@ -1147,7 +1147,14 @@ class Purchases {
       purchasesCompletedByToUse = PURCHASES_ARE_COMPLETED_BY_TYPE.MY_APP;
       storeKitVersionToUse = purchasesAreCompletedBy.storeKitVersion;
 
-      if (storeKitVersionToUse !== storeKitVersion) {
+      if (storeKitVersionToUse === STOREKIT_VERSION.DEFAULT) {
+        // tslint:disable-next-line:no-console
+        console.warn(
+          "Warning: You should provide the specific StoreKit version you're using in your implementation, and not rely on the DEFAULT."
+        );
+      }
+
+      if (storeKitVersion && storeKitVersionToUse !== storeKitVersion) {
         // Typically, console messages aren't used in TS libraries, but in this case it's worth calling out the difference in
         // StoreKit versions, and since the difference isn't possible farther down the call chain, we should go ahead
         // and log it here.

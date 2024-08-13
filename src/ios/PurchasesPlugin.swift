@@ -39,7 +39,7 @@ import RevenueCat
         let purchasesAreCompletedBy = command.arguments[2] as? String ?? nil
         let userDefaultsSuiteName = command.arguments[3] as? String
         let storeKitVersion = command.arguments[4] as? String ?? "DEFAULT"
-        let shouldShowInAppMessagesAutomatically = command.arguments[5] as? Bool ?? true
+        let shouldShowInAppMessagesAutomatically = command.arguments[6] as? Bool ?? true
 
         self.purchases = Purchases.configure(apiKey: apiKey,
                                              appUserID: appUserID,

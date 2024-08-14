@@ -1,5 +1,5 @@
 import Purchases from "../src/plugin/plugin";
-import {LOG_LEVEL, PurchasesError, PurchasesEntitlementInfo, PurchasesStoreProduct, PRODUCT_CATEGORY} from "../www/plugin";
+import {LOG_LEVEL, PurchasesError, PurchasesEntitlementInfo, PurchasesStoreProduct, PRODUCT_CATEGORY, PURCHASES_ARE_COMPLETED_BY_TYPE, STOREKIT_VERSION, PurchasesAreCompletedByMyApp, PurchasesStoreTransaction} from "../www/plugin";
 
 const execFn = jest.fn();
 
@@ -16,7 +16,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, false, false, true]
+      ["api_key", "app_user_id", undefined, undefined, undefined, false, true]
     );
   });
 
@@ -28,59 +28,59 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, false, false, true]
+      ["api_key", "app_user_id", undefined, undefined, undefined, false, true]
     );
   });
 
-  it("configure fires PurchasesPlugin with the correct arguments when specifying observermode", () => {
-    Purchases.configure("api_key", "app_user_id", true);
+  it("configureWith fires PurchasesPlugin with the correct arguments when specifying PurchasesAreCompletedBy.REVENUECAT", () => {
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", purchasesAreCompletedBy: PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT});
 
     expect(execFn).toHaveBeenCalledWith(
       null,
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", true, undefined, false, false, true]
+      ["api_key", "app_user_id", "REVENUECAT", undefined, undefined, false, true]
     );
   });
 
-  it("configureWith fires PurchasesPlugin with the correct arguments when specifying observermode", () => {
-    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", observerMode: true});
+  it("configureWith fires PurchasesPlugin with the correct arguments when specifying PurchasesAreCompletedByMyApp", () => {
+    let purchasesAreCompletedByMyApp: PurchasesAreCompletedByMyApp = {type: PURCHASES_ARE_COMPLETED_BY_TYPE.MY_APP, storeKitVersion: STOREKIT_VERSION.STOREKIT_2};
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", purchasesAreCompletedBy: purchasesAreCompletedByMyApp});
 
     expect(execFn).toHaveBeenCalledWith(
       null,
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", true, undefined, false, false, true]
+      ["api_key", "app_user_id", "MY_APP", undefined, "STOREKIT_2", false, true]
+    );
+  });
+
+  it("configureWith fires PurchasesPlugin with the PurchasesAreCompletedByMyApp storekit version if conflict present", () => {
+    let purchasesAreCompletedByMyApp: PurchasesAreCompletedByMyApp = {type: PURCHASES_ARE_COMPLETED_BY_TYPE.MY_APP, storeKitVersion: STOREKIT_VERSION.STOREKIT_2};
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", purchasesAreCompletedBy: purchasesAreCompletedByMyApp, storeKitVersion: STOREKIT_VERSION.STOREKIT_1});
+
+    expect(execFn).toHaveBeenCalledWith(
+      null,
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", "MY_APP", undefined, "STOREKIT_2", false, true]
     );
   });
 
   it("configure fires PurchasesPlugin with the correct arguments when setting user defaults suite name", () => {
     const expected = "suite-name";
 
-    Purchases.configure("api_key", "app_user_id", false, expected);
+    Purchases.configure("api_key", "app_user_id", expected);
 
     expect(execFn).toHaveBeenCalledWith(
       null,
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, expected, false, false, true]
-    );
-  });
-
-  it("configure fires PurchasesPlugin with the correct arguments when setting user defaults suite name", () => {
-    const expected = "suite-name";
-
-    Purchases.configure("api_key", "app_user_id", false, expected);
-
-    expect(execFn).toHaveBeenCalledWith(
-      null,
-      null,
-      "PurchasesPlugin",
-      "configure",
-      ["api_key", "app_user_id", false, expected, false, false, true]
+      ["api_key", "app_user_id", undefined, expected, undefined, false, true]
     );
   });
 
@@ -92,19 +92,19 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, false, true, true]
+      ["api_key", "app_user_id", undefined, undefined, undefined, true, true]
     );
   });
 
   it("configureWith fires PurchasesPlugin with the correct arguments when using StoreKit 2", () => {
-    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", usesStoreKit2IfAvailable: true});
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", storeKitVersion: STOREKIT_VERSION.STOREKIT_2});
 
     expect(execFn).toHaveBeenCalledWith(
       null,
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, true, false, true]
+      ["api_key", "app_user_id", undefined, undefined, "STOREKIT_2", false, true]
     );
   });
 
@@ -116,7 +116,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", false, undefined, false, true, false]
+      ["api_key", "app_user_id", undefined, undefined, undefined, true, false]
     );
   });
 
@@ -678,9 +678,9 @@ describe("Purchases", () => {
     });
   });
 
-  describe("syncObserverModeAmazonPurchase", () => {
+  describe("syncAmazonPurchase", () => {
     it("calls Purchases with the correct arguments", () => {
-      Purchases.syncObserverModeAmazonPurchase(
+      Purchases.syncAmazonPurchase(
           'productID_test',
           'receiptID_test',
           'amazonUserID_test',
@@ -692,7 +692,7 @@ describe("Purchases", () => {
           null,
           null,
           "PurchasesPlugin",
-          "syncObserverModeAmazonPurchase",
+          "syncAmazonPurchase",
           [
             'productID_test',
             'receiptID_test',
@@ -700,6 +700,25 @@ describe("Purchases", () => {
             'isoCurrencyCode_test',
             3.4
           ]
+      );
+    });
+  });
+
+
+  describe("recordPurchase", () => {
+    it("calls Purchases with the correct arguments", () => {
+      Purchases.recordPurchase(
+          'productID_test',
+          (transaction: PurchasesStoreTransaction) => {},
+          (error: PurchasesError) => {},
+      );
+
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.any(Function),
+        "PurchasesPlugin",
+        "recordPurchase",
+        ['productID_test']
       );
     });
   });

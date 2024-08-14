@@ -45,6 +45,7 @@ const app = {
     document.getElementById("begin-refund-request-entitlement").addEventListener("click", this.beginRefundRequestForEntitlement)
     document.getElementById("begin-refund-request-product-id").addEventListener("click", this.beginRefundRequestForProduct)
     document.getElementById("show-in-app-messages").addEventListener("click", this.showInAppMessages)
+    document.getElementById("record-purchase").addEventListener("click", this.recordPurchase)
   },
 
   // deviceready Event Handler
@@ -448,6 +449,19 @@ const app = {
     setStatusLabelText("beginning showInAppMessages");
     Purchases.showInAppMessages();
     setStatusLabelText("finished showInAppMessages");
+  },
+
+  recordPurchase: function () {
+    setStatusLabelText("beginning recordPurchase");
+    Purchases.recordPurchase(
+      "test_product_id",
+      transaction => {
+        setStatusLabelText(transaction);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
   }
 
 };

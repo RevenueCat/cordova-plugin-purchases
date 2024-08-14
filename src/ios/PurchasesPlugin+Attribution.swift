@@ -10,19 +10,6 @@ import PurchasesHybridCommon
 
 @objc public extension CDVPurchasesPlugin {
 
-    @objc(setAutomaticAppleSearchAdsAttributionCollection:)
-    func setAutomaticAppleSearchAdsAttributionCollection(command: CDVInvokedUrlCommand) {
-        guard let automaticCollection = command.arguments[0] as? Bool else {
-            self.sendBadParameterFor(command: command,
-                                     parameterNamed: "AutomaticAppleSearchAdsAttributionCollection",
-                                     expectedType: Bool.self)
-            return
-        }
-
-        CommonFunctionality.setAutomaticAppleSearchAdsAttributionCollection(automaticCollection)
-        self.sendOKFor(command: command)
-    }
-
     @objc(enableAdServicesAttributionTokenCollection:)
     func enableAdServicesAttributionTokenCollection(command: CDVInvokedUrlCommand) {
         if #available(iOS 14.3, macOS 11.1, macCatalyst 14.3, *) {

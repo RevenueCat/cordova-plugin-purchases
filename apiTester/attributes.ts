@@ -26,6 +26,5 @@ function checkAttributes(purchases: Purchases) {
   Purchases.setCreative(stringOrNull);
 
   Purchases.collectDeviceIdentifiers();
-  Purchases.setAutomaticAppleSearchAdsAttributionCollection(true);
   Purchases.enableAdServicesAttributionTokenCollection();
 }

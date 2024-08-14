@@ -44,8 +44,8 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     // Otherwise, the configure plugin call will complete before configure finishes, and
     // other calls to the plugin will fail with UninitializedPropertyAccessException
     @PluginAction(thread = ExecutionThread.MAIN, actionName = "configure", isAutofinish = false)
-    private void configure(String apiKey, @Nullable String appUserID, boolean observerMode,
-                           @Nullable String userDefaultsSuiteName, boolean usesStoreKit2IfAvailable,
+    private void configure(String apiKey, @Nullable String appUserID, @Nullable String purchasesAreCompletedBy,
+                           @Nullable String userDefaultsSuiteName, @Nullable String storeKitVersion,
                            boolean useAmazon, boolean shouldShowInAppMessagesAutomatically,
                            CallbackContext callbackContext) {
         PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
@@ -53,8 +53,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         if (useAmazon) {
             store = Store.AMAZON;
         }
-        CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID,
-            observerMode ? PurchasesAreCompletedBy.MY_APP : PurchasesAreCompletedBy.REVENUECAT,
+        CommonKt.configure(this.cordova.getActivity(), apiKey, appUserID, purchasesAreCompletedBy,
             platformInfo, store, new DangerousSettings(), shouldShowInAppMessagesAutomatically);
         callbackContext.success();
     }
@@ -170,20 +169,27 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success();
     }
 
-    @PluginAction(thread = ExecutionThread.UI, actionName = "syncObserverModeAmazonPurchase")
-    public void syncObserverModeAmazonPurchase(String productID,
+    @PluginAction(thread = ExecutionThread.UI, actionName = "syncAmazonPurchase")
+    public void syncAmazonPurchase(String productID,
                                                String receiptID,
                                                String amazonUserID,
                                                String isoCurrencyCode,
                                                Double price,
                                                CallbackContext callbackContext) {
-        Purchases.getSharedInstance().syncObserverModeAmazonPurchase(
+        Purchases.getSharedInstance().syncAmazonPurchase(
             productID,
             receiptID,
             amazonUserID,
             isoCurrencyCode,
             price);
         callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "recordPurchase")
+    public void recordPurchase(String productID,
+                               CallbackContext callbackContext) {
+        // NOOP
+        callbackContext.error(new JSONObject());
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "getAppUserID", isAutofinish = false)
@@ -240,11 +246,6 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setSimulatesAskToBuyInSandbox")
     private void setSimulatesAskToBuyInSandbox(boolean enabled, CallbackContext callbackContext) {
-        // NOOP
-    }
-
-    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAutomaticAppleSearchAdsAttributionCollection")
-    private void setAutomaticAppleSearchAdsAttributionCollection(boolean enabled, CallbackContext callbackContext) {
         // NOOP
     }
 

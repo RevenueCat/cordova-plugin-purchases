@@ -105,6 +105,14 @@ export enum PRORATION_MODE {
    * plus remaining prorated time from the old plan.
    */
   IMMEDIATE_AND_CHARGE_FULL_PRICE = 5,
+
+  /**
+   * Replacement takes effect when the old plan expires, and the new price will be charged at the same time.
+   *
+   * Example: Samwise's Tier 1 subscription continues until it expires on April 30. On May 1st, the
+   * Tier 2 subscription takes effect, and Samwise is charged $36 for his new subscription tier.
+   */
+  DEFERRED = 6,
 }
 
 export enum PACKAGE_TYPE {
@@ -668,6 +676,85 @@ export interface LogInResult {
 }
 
 /**
+ * Defines which version of StoreKit may be used
+ */
+export enum STOREKIT_VERSION {
+  /**
+   * Always use StoreKit 1.
+   */
+  STOREKIT_1 = "STOREKIT_1",
+  /**
+   * Always use StoreKit 2 (StoreKit 1 will be used if StoreKit 2 is not available in the current device.)
+   * - Warning: Make sure you have an In-App Purchase Key configured in your app.
+   * Please see https://rev.cat/in-app-purchase-key-configuration for more info.
+   */
+  STOREKIT_2 = "STOREKIT_2",
+  /**
+   * Let RevenueCat use the most appropiate version of StoreKit
+   */
+  DEFAULT = "DEFAULT",
+}
+
+/**
+ * Modes for completing the purchase process.
+ */
+export enum PURCHASES_ARE_COMPLETED_BY_TYPE {
+  /**
+   * RevenueCat will **not** automatically acknowledge any purchases. You will have to do so manually.
+   *
+   * **Note:** failing to acknowledge a purchase within 3 days will lead to Google Play automatically issuing a
+   * refund to the user.
+   *
+   * For more info, see [revenuecat.com](https://docs.revenuecat.com/docs/observer-mode#option-2-client-side).
+   */
+  MY_APP = "MY_APP",
+  /**
+   * RevenueCat will automatically acknowledge verified purchases. No action is required by you.
+   */
+  REVENUECAT = "REVENUECAT",
+}
+
+/**
+ * Configuration option that specifies that your app will complete purchases.
+ */
+export type PurchasesAreCompletedByMyApp = {
+  type: PURCHASES_ARE_COMPLETED_BY_TYPE.MY_APP;
+
+  /**
+   * The version of StoreKit that your app is using to make purchases. This value is ignored
+   * on Android, so if your app is Android-only, you may provide any value.
+   */
+  storeKitVersion: STOREKIT_VERSION;
+}
+
+/**
+ * Allows you to specify whether you want RevenueCat to complete your app's purchases
+ * or if your app will do so.
+ *
+ * You can configure RevenueCat to complete your purchases like so:
+ * ```typescript
+ * Purchases.configure({
+ *  apiKey: "123",
+ *  purchasesAreCompletedBy: PURCHASES_ARE_COMPLETED_BY.REVENUECAT,
+ * });
+ * ```
+ *
+ * You can specify that purchase are completed by your app like so:
+ * ```typescript
+ * Purchases.configure({
+ *  apiKey: "123",
+ *  purchasesAreCompletedBy: {
+ *    type: PURCHASES_ARE_COMPLETED_BY.MY_APP,
+ *    storeKitVersion: STOREKIT_VERSION.STOREKIT_1
+ *  },
+ * });
+ * ```
+ */
+export type PurchasesAreCompletedBy =
+  | PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT
+  | PurchasesAreCompletedByMyApp;
+
+/**
  * Holds parameters to initialize the SDK.
  */
 export interface PurchasesConfiguration {
@@ -680,11 +767,14 @@ export interface PurchasesConfiguration {
    */
   appUserID?: string | null;
   /**
-   * An optional boolean. Set this to TRUE if you have your own IAP implementation and
-   * want to use only RevenueCat's backend. Default is FALSE. If you are on Android and setting this to ON, you will have
-   * to acknowledge the purchases yourself.
+   * Set this to MY_APP and provide a STOREKIT_VERSION if you have your own IAP implementation and
+   * want to only use RevenueCat's backend. Defaults to PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT.
+   *
+   * If you are on Android and setting this to MY_APP, will have to acknowledge the purchases yourself.
+   * If your app is only on Android, you may specify any StoreKit version, as it is ignored by the
+   * Android SDK.
    */
-  observerMode?: boolean;
+  purchasesAreCompletedBy?: PurchasesAreCompletedBy;
   /**
    * An optional string. iOS-only, will be ignored for Android.
    * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults
@@ -693,16 +783,17 @@ export interface PurchasesConfiguration {
   userDefaultsSuiteName?: string;
   /**
    * iOS-only, will be ignored for Android.
-   * Set this to TRUE to enable StoreKit2.
-   * Default is FALSE.
    *
-   * @deprecated RevenueCat currently uses StoreKit 1 for purchases, as its stability in production scenarios has
-   * proven to be more performant than StoreKit 2.
-   * We're collecting more data on the best approach, but StoreKit 1 vs StoreKit 2 is an implementation detail
-   * that you shouldn't need to care about.
-   * We recommend not using this parameter, letting RevenueCat decide for you which StoreKit implementation to use.
+   * By selecting the DEFAULT value, RevenueCat will automatically select the most appropriate StoreKit version
+   * for the app's runtime environment.
+   *
+   * - Warning: Make sure you have an In-App Purchase Key configured in your app.
+   * Please see https://rev.cat/in-app-purchase-key-configuration for more info.
+   *
+   * - Note: StoreKit 2 is only available on iOS 16+. StoreKit 1 will be used for previous iOS versions
+   * regardless of this setting.
    */
-  usesStoreKit2IfAvailable?: boolean;
+  storeKitVersion?: STOREKIT_VERSION;
   /**
    * An optional boolean. Android only. Required to configure the plugin to be used in the Amazon Appstore.
    */
@@ -1000,14 +1091,25 @@ class Purchases {
   public static IN_APP_MESSAGE_TYPE = IN_APP_MESSAGE_TYPE;
 
   /**
+   * Modes for completing the purchase process.
+   * @readonly
+   * @enum {string}
+   */
+  public static PURCHASES_ARE_COMPLETED_BY_TYPE = PURCHASES_ARE_COMPLETED_BY_TYPE;
+
+  /**
+   * Defines which version of StoreKit may be used.
+   * @readonly
+   * @enum {string}
+   */
+  public static STOREKIT_VERSION = STOREKIT_VERSION;
+
+  /**
    * @deprecated Use {@link configureWith} instead. It accepts a {@link PurchasesConfiguration} object which offers more flexibility.
    *
    * Sets up Purchases with your API key and an app user id.
    * @param {string} apiKey RevenueCat API Key. Needs to be a string
    * @param {string?} appUserID A unique id for identifying the user
-   * @param {boolean} observerMode An optional boolean. Set this to TRUE if you have your own IAP implementation and
-   * want to use only RevenueCat's backend. Default is FALSE. If you are on Android and setting this to ON, you will have
-   * to acknowledge the purchases yourself.
    * @param {string?} userDefaultsSuiteName An optional string. iOS-only, will be ignored for Android.
    * Set this if you would like the RevenueCat SDK to store its preferences in a different NSUserDefaults
    * suite, otherwise it will use standardUserDefaults. Default is null, which will make the SDK use standardUserDefaults.
@@ -1015,13 +1117,11 @@ class Purchases {
   public static configure(
     apiKey: string,
     appUserID?: string | null,
-    observerMode: boolean = false,
     userDefaultsSuiteName?: string
   ): void {
     this.configureWith({
       apiKey,
       appUserID,
-      observerMode,
       userDefaultsSuiteName,
       useAmazon: false
     })
@@ -1034,18 +1134,42 @@ class Purchases {
   public static configureWith({
                                 apiKey,
                                 appUserID = null,
-                                observerMode = false,
+                                purchasesAreCompletedBy,
                                 userDefaultsSuiteName,
-                                usesStoreKit2IfAvailable = false,
+                                storeKitVersion,
                                 useAmazon = false,
                                 shouldShowInAppMessagesAutomatically = true
                               }: PurchasesConfiguration): void {
+    let purchasesCompletedByToUse: PURCHASES_ARE_COMPLETED_BY_TYPE | undefined = purchasesAreCompletedBy === PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT ? PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT : undefined;
+    let storeKitVersionToUse = storeKitVersion;
+
+    if (purchasesAreCompletedBy && Purchases.isPurchasesAreCompletedByMyApp(purchasesAreCompletedBy)) {
+      purchasesCompletedByToUse = PURCHASES_ARE_COMPLETED_BY_TYPE.MY_APP;
+      storeKitVersionToUse = purchasesAreCompletedBy.storeKitVersion;
+
+      if (storeKitVersionToUse === STOREKIT_VERSION.DEFAULT) {
+        // tslint:disable-next-line:no-console
+        console.warn(
+          "Warning: You should provide the specific StoreKit version you're using in your implementation, and not rely on the DEFAULT."
+        );
+      }
+
+      if (storeKitVersion && storeKitVersionToUse !== storeKitVersion) {
+        // Typically, console messages aren't used in TS libraries, but in this case it's worth calling out the difference in
+        // StoreKit versions, and since the difference isn't possible farther down the call chain, we should go ahead
+        // and log it here.
+        // tslint:disable-next-line:no-console
+        console.warn(
+          "Warning: The storeKitVersion in purchasesAreCompletedBy does not match the function's storeKitVersion parameter. We will use the value found in purchasesAreCompletedBy."
+        );
+      }
+    }
     window.cordova.exec(
       null,
       null,
       PLUGIN_NAME,
       "configure",
-      [apiKey, appUserID, observerMode, userDefaultsSuiteName, usesStoreKit2IfAvailable,
+      [apiKey, appUserID, purchasesCompletedByToUse, userDefaultsSuiteName, storeKitVersionToUse,
         useAmazon, shouldShowInAppMessagesAutomatically]
     );
 
@@ -1429,6 +1553,7 @@ class Purchases {
   }
 
   /**
+   * @deprecated Use {@link syncAmazonPurchase} instead.
    * This method will send a purchase to the RevenueCat backend. This function should only be called if you are
    * in Amazon observer mode or performing a client side migration of your current users to RevenueCat.
    *
@@ -1443,26 +1568,58 @@ class Purchases {
   public static syncObserverModeAmazonPurchase(productID: string, receiptID: string,
                                                amazonUserID: string, isoCurrencyCode?: string | null,
                                                price?: number | null): void {
-    window.cordova.exec(
+    this.syncAmazonPurchase(productID, receiptID, amazonUserID, isoCurrencyCode, price);
+  }
+
+  /**
+   * This method will send a purchase to the RevenueCat backend. This function should only be called if you are
+   * in Amazon observer mode or performing a client side migration of your current users to RevenueCat.
+   *
+   * The receipt IDs are cached if successfully posted so they are not posted more than once.
+   *
+   * @param {string} productID Product ID associated to the purchase.
+   * @param {string} receiptID ReceiptId that represents the Amazon purchase.
+   * @param {string} amazonUserID Amazon's userID. This parameter will be ignored when syncing a Google purchase.
+   * @param {(string|null|undefined)} isoCurrencyCode Product's currency code in ISO 4217 format.
+   * @param {(number|null|undefined)} price Product's price.
+   */
+  public static syncAmazonPurchase(productID: string, receiptID: string,
+    amazonUserID: string, isoCurrencyCode?: string | null,
+    price?: number | null): void {
+      window.cordova.exec(
       null,
       null,
       PLUGIN_NAME,
-      "syncObserverModeAmazonPurchase",
+      "syncAmazonPurchase",
       [productID, receiptID, amazonUserID, isoCurrencyCode, price]);
   }
 
   /**
-   * Enable automatic collection of Apple Search Ads attribution. Disabled by default.
+   * iOS only. Always returns an error on iOS < 15.
    *
-   * @param {boolean} enabled Enable or not automatic collection
+   * Use this method only if you already have your own IAP implementation using StoreKit 2 and want to use
+   * RevenueCat's backend. If you are using StoreKit 1 for your implementation, you do not need this method.
+   *
+   * You only need to use this method with *new* purchases. Subscription updates are observed automatically.
+   *
+   * Important: This should only be used if you have set PurchasesAreCompletedBy to MY_APP during SDK configuration.
+   *
+   * @warning You need to finish the transaction yourself after calling this method.
+   *
+   * @param {string} productID Product ID that was just purchased
+   * @returns {Promise<PurchasesStoreTransaction>} If there was a transacton found and handled for the provided product ID.
    */
-  public static setAutomaticAppleSearchAdsAttributionCollection(enabled: boolean): void {
+  public static recordPurchase(
+    productID: string,
+    callback: (transaction: PurchasesStoreTransaction) => void,
+    errorCallback: (error: PurchasesError) => void
+  ): void {
     window.cordova.exec(
-      null,
-      null,
+      callback,
+      errorCallback,
       PLUGIN_NAME,
-      "setAutomaticAppleSearchAdsAttributionCollection",
-      [enabled]
+      "recordPurchase",
+      [productID]
     );
   }
 
@@ -2078,6 +2235,17 @@ class Purchases {
       default:
         return REFUND_REQUEST_STATUS.ERROR;
     }
+  }
+
+  private static isPurchasesAreCompletedByMyApp(
+    obj: PurchasesAreCompletedBy
+  ): obj is PurchasesAreCompletedByMyApp {
+    return (
+      typeof obj === "object" &&
+      obj !== null &&
+      (obj as PurchasesAreCompletedByMyApp).type ===
+        PURCHASES_ARE_COMPLETED_BY_TYPE.MY_APP
+    );
   }
 }
 

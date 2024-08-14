@@ -80,6 +80,8 @@ Purchases.configure({
 * Add deprecation note in README (#564) via Toni Rico (@tonidero)
 * Update android executor (#549) via Toni Rico (@tonidero)
 
+Full migration guide to V6: [Cordova Plugin purchases - V6 API Migration Guide](migrations/v6-MIGRATION.md)
+
 ## 5.7.8
 ### Dependency Updates
 * [AUTOMATIC BUMP] Updates purchases-hybrid-common to 10.9.0 (#543) via RevenueCat Git Bot (@RCGitBot)

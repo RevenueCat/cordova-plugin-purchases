@@ -37,7 +37,7 @@ import java.util.Map;
 public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     public static final String PLATFORM_NAME = "cordova";
-    public static final String PLUGIN_VERSION = "5.7.8";
+    public static final String PLUGIN_VERSION = "6.0.0";
 
     // Needs to run on ExecutionThread.MAIN so it blocks the JavaBridge thread created by Cordova
     // That way we guarantee any other call to the plugin happen after configure has completed

@@ -170,7 +170,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "syncAmazonPurchase")
-    public void syncPurchase(String productID,
+    public void syncAmazonPurchase(String productID,
                                                String receiptID,
                                                String amazonUserID,
                                                String isoCurrencyCode,

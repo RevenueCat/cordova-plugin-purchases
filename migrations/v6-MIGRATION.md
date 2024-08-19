@@ -68,15 +68,6 @@ Purchases.configure({
 });
 ```
 
-### Dependency Updates
-* Bump xcodeproj from 1.24.0 to 1.25.0 (#566) via dependabot[bot] (@dependabot[bot])
-* Bump danger from 9.4.3 to 9.5.0 (#563) via dependabot[bot] (@dependabot[bot])
-* Bump fastlane from 2.221.1 to 2.222.0 (#558) via dependabot[bot] (@dependabot[bot])
-* Bump fastlane from 2.221.0 to 2.221.1 (#548) via dependabot[bot] (@dependabot[bot])
-* Bump fastlane from 2.220.0 to 2.221.0 (#546) via dependabot[bot] (@dependabot[bot])
-### Other Changes
-* Fix ios integration tests (#570) via Toni Rico (@tonidero)
-* Add deprecation note in README (#564) via Toni Rico (@tonidero)
-* Update android executor (#549) via Toni Rico (@tonidero)
+### Reporting undocumented issues:
 
-Full migration guide to V6: [Cordova Plugin purchases - V6 API Migration Guide](migrations/v6-MIGRATION.md)
+Feel free to file an issue! [New RevenueCat Issue](https://github.com/RevenueCat/cordova-plugin-purchases/issues/new/).

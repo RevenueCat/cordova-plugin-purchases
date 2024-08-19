@@ -23,7 +23,7 @@ In order to use StoreKit 2, you must configure your In-App Purchase Key in the R
 
 When configuring the SDK, the `usesStoreKit2IfAvailable` parameter has been replaced by an optional `storeKitVersion: STOREKIT_VERSION` parameter. It defaults to letting the iOS SDK determine the most appropriate version of StoreKit at runtime. If you'd like to use a specific version of StoreKit, you may provide a value for `storeKitVersion` like so:
 
-```dart
+```typescript
 Purchases.configureWith({
     apiKey,
     storeKitVersion: STOREKIT_VERSION.STOREKIT_1,
@@ -36,7 +36,7 @@ Version 6.0 of the SDK deprecates the term "Observer Mode" (and the APIs where t
 
 You can enable it when configuring the SDK:
 
-```dart
+```typescript
 Purchases.configure({
     apiKey,
     purchasesAreCompletedBy: {a
@@ -50,7 +50,7 @@ Purchases.configure({
 
 By default, when purchases are completed by your app using StoreKit 2 on macOS, the SDK does not detect a user's purchase until after the user foregrounds the app after the purchase has been made. If you'd like RevenueCat to immediately detect the user's purchase, call `Purchases.recordPurchase(productID)` for any new purchases, like so:
 
-```dart
+```typescript
 Purchases.recordPurchase(productID, (transaction: PurchasesStoreTransaction) => {}, (error: PurchasesError) => {});
 ```
 
@@ -58,7 +58,7 @@ Purchases.recordPurchase(productID, (transaction: PurchasesStoreTransaction) => 
 
 If purchases are completed by your app using StoreKit 1, you will need to explicitly configure the SDK to use StoreKit 1:
 
-```dart
+```typescript
 Purchases.configure({
     apiKey,
     purchasesAreCompletedBy: {a

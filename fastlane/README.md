@@ -45,14 +45,6 @@ Creates GitHub release and publishes package
 
 Make github release
 
-### prepare_next_version
-
-```sh
-[bundle exec] fastlane prepare_next_version
-```
-
-Creates PR changing version to next minor adding a -SNAPSHOT suffix
-
 ### tag_current_branch
 
 ```sh

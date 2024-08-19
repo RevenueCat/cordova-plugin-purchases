@@ -26,6 +26,7 @@
             <feature name="PurchasesPlugin">
                 <param name="ios-package" value="CDVPurchasesPlugin"/>
             </feature>
+            <preference name="deployment-target" value="13.0" />
         </config-file>
         <source-file src="src/ios/PurchasesPlugin.swift" />
         <source-file src="src/ios/PurchasesPlugin+APIHelpers.swift" />

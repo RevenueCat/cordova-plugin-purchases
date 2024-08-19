@@ -290,6 +290,7 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - runtest
+      - ios-integration-test
 
   deploy:
     when:

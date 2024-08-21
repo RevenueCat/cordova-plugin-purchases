@@ -1,7 +1,7 @@
 > [!WARNING]  
 > This library is now deprecated. We suggest using our [Capacitor SDK](https://github.com/revenuecat/purchases-capacitor) instead.
 >
-> The Cordova SDK will receive maintainence updates, but new RevenueCat features and new major versions will not be made available. Because this SDK uses Billing Client v6, Google will not allow updates to your app after August 31st, 2025.
+> The Cordova SDK will receive maintenance updates, but new RevenueCat features and new major versions will not be made available. Billing Client v7 will be the latest version this SDK will ever support (it won't be updated to v8), which means that Google will not allow updates to your app after August 31st, 2026 [Read more about Google's Billing Client deprecation schedule](https://developer.android.com/google/play/billing/deprecation-faq)
 
 <h3 align="center">😻 In-app Subscriptions Made Easy 😻</h1>
 

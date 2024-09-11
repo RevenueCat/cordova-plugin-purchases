@@ -1,3 +1,10 @@
+## 6.0.1
+### Dependency Updates
+* Bump rexml from 3.3.4 to 3.3.6 (#575) via dependabot[bot] (@dependabot[bot])
+### Other Changes
+* Update fastlane-plugin-revenuecat_internal (#579) via Cesar de la Vega (@vegaro)
+* Update SDK expiration date (#572) via Toni Rico (@tonidero)
+
 ## 6.0.0
 This release updates the Android SDK dependency from v7 to [v8](https://github.com/RevenueCat/purchases-android/releases/tag/6.0.0) to use BillingClient 7 and updates the iOS SDK dependency from v4 to v5 to use StoreKit 2 by default in the SDK.
 

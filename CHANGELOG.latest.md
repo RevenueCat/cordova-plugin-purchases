@@ -1,82 +1,18 @@
-This release updates the Android SDK dependency from v7 to [v8](https://github.com/RevenueCat/purchases-android/releases/tag/6.0.0) to use BillingClient 7 and updates the iOS SDK dependency from v4 to v5 to use StoreKit 2 by default in the SDK.
+## RevenueCat SDK
+### 📦 Dependency Updates
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 13.2.1 (#581) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 8.7.2](https://github.com/RevenueCat/purchases-android/releases/tag/8.7.2)
+  * [Android 8.7.1](https://github.com/RevenueCat/purchases-android/releases/tag/8.7.1)
+  * [Android 8.7.0](https://github.com/RevenueCat/purchases-android/releases/tag/8.7.0)
+  * [Android 8.6.0](https://github.com/RevenueCat/purchases-android/releases/tag/8.6.0)
+  * [Android 8.5.0](https://github.com/RevenueCat/purchases-android/releases/tag/8.5.0)
+  * [iOS 5.3.3](https://github.com/RevenueCat/purchases-ios/releases/tag/5.3.3)
+  * [iOS 5.3.2](https://github.com/RevenueCat/purchases-ios/releases/tag/5.3.2)
+  * [iOS 5.3.1](https://github.com/RevenueCat/purchases-ios/releases/tag/5.3.1)
+  * [iOS 5.3.0](https://github.com/RevenueCat/purchases-ios/releases/tag/5.3.0)
+* Bump rexml from 3.3.4 to 3.3.6 (#575) via dependabot[bot] (@dependabot[bot])
 
-### Migration Guides
-
-- See [Android Native - V8 API Migration Guide](https://github.com/RevenueCat/purchases-android/blob/main/migrations/v8-MIGRATION.md) for a more thorough explanation of the Android changes.
-- See [iOS Native - V5 Migration Guide](https://github.com/RevenueCat/purchases-ios/blob/main/Sources/DocCDocumentation/DocCDocumentation.docc/V5_API_Migration_guide.md) for a more thorough explanation of the iOS changes. Notably, this version uses StoreKit 2 to process purchases by default.
-
-### New Minimum OS Versions
-
-This release raises the minumum required OS versions to the following:
-
-- iOS 13.0
-- tvOS 13.0
-- watchOS 6.2
-- macOS 10.15
-- Android: SDK 21 (Android 5.0)
-
-### In-App Purchase Key Required for StoreKit 2
-
-In order to use StoreKit 2, you must configure your In-App Purchase Key in the RevenueCat dashboard. You can find instructions describing how to do this [here](https://www.revenuecat.com/docs/in-app-purchase-key-configuration).
-
-### `usesStoreKit2IfAvailable` is now `storeKitVersion`
-
-When configuring the SDK, the `usesStoreKit2IfAvailable` parameter has been replaced by an optional `storeKitVersion: STOREKIT_VERSION` parameter. It defaults to letting the iOS SDK determine the most appropriate version of StoreKit at runtime. If you'd like to use a specific version of StoreKit, you may provide a value for `storeKitVersion` like so:
-
-```typescript
-Purchases.configureWith({
-    apiKey,
-    storeKitVersion: STOREKIT_VERSION.STOREKIT_1,
-});
-```
-
-### Observer Mode is now PurchasesAreCompletedBy
-
-Version 6.0 of the SDK deprecates the term "Observer Mode" (and the APIs where this term was used), and replaces it with `PurchasesAreCompletedBy` (either RevenueCat or your app). When specifying that your app will complete purchases, you must provide the StoreKit version that your app is using to make purchases on iOS. If your app is only available on Android, you may provide any value since the native Android SDK ignores this value.
-
-You can enable it when configuring the SDK:
-
-```typescript
-Purchases.configure({
-    apiKey,
-    purchasesAreCompletedBy: {a
-	type: PURCHASES_ARE_COMPLETED_BY_TYPE.MY_APP,
-        storeKitVersion: STOREKIT_VERSION.STOREKIT_2,
-    },
-});
-```
-
-#### ⚠️ Observing Purchases Completed by Your App on macOS
-
-By default, when purchases are completed by your app using StoreKit 2 on macOS, the SDK does not detect a user's purchase until after the user foregrounds the app after the purchase has been made. If you'd like RevenueCat to immediately detect the user's purchase, call `Purchases.recordPurchase(productID)` for any new purchases, like so:
-
-```typescript
-Purchases.recordPurchase(productID, (transaction: PurchasesStoreTransaction) => {}, (error: PurchasesError) => {});
-```
-
-#### Observing Purchases Completed by Your App with StoreKit 1
-
-If purchases are completed by your app using StoreKit 1, you will need to explicitly configure the SDK to use StoreKit 1:
-
-```typescript
-Purchases.configure({
-    apiKey,
-    purchasesAreCompletedBy: {a
-        type: PURCHASES_ARE_COMPLETED_BY_TYPE.MY_APP,
-        storeKitVersion: STOREKIT_VERSION.STOREKIT_1,
-    },
-});
-```
-
-### Dependency Updates
-* Bump xcodeproj from 1.24.0 to 1.25.0 (#566) via dependabot[bot] (@dependabot[bot])
-* Bump danger from 9.4.3 to 9.5.0 (#563) via dependabot[bot] (@dependabot[bot])
-* Bump fastlane from 2.221.1 to 2.222.0 (#558) via dependabot[bot] (@dependabot[bot])
-* Bump fastlane from 2.221.0 to 2.221.1 (#548) via dependabot[bot] (@dependabot[bot])
-* Bump fastlane from 2.220.0 to 2.221.0 (#546) via dependabot[bot] (@dependabot[bot])
-### Other Changes
-* Fix ios integration tests (#570) via Toni Rico (@tonidero)
-* Add deprecation note in README (#564) via Toni Rico (@tonidero)
-* Update android executor (#549) via Toni Rico (@tonidero)
-
-Full migration guide to V6: [Cordova Plugin purchases - V6 API Migration Guide](migrations/v6-MIGRATION.md)
+### 🔄 Other Changes
+* Bump fastlane-plugin-revenuecat_internal from 5140dbc to 55a0455 (#582) via Cesar de la Vega (@vegaro)
+* Update fastlane-plugin-revenuecat_internal (#579) via Cesar de la Vega (@vegaro)
+* Update SDK expiration date (#572) via Toni Rico (@tonidero)

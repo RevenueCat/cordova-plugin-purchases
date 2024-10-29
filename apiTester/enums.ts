@@ -92,5 +92,7 @@ function checkInAppMessageType(messageType: IN_APP_MESSAGE_TYPE): boolean {
       return true;
     case IN_APP_MESSAGE_TYPE.GENERIC:
       return true;
+    case IN_APP_MESSAGE_TYPE.WIN_BACK_OFFER:
+      return true;
   }
 }

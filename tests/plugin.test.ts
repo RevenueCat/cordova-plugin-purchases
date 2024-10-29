@@ -325,12 +325,13 @@ describe("Purchases", () => {
     });
     describe("when list of parameters are passed", () => {
       it("parameters are mapped successfully", () => {
-        const expected = [[0, 2, 1]]
+        const expected = [[0, 2, 1, 3]]
 
         Purchases.showInAppMessages(
           [Purchases.IN_APP_MESSAGE_TYPE.BILLING_ISSUE,
             Purchases.IN_APP_MESSAGE_TYPE.GENERIC,
-            Purchases.IN_APP_MESSAGE_TYPE.PRICE_INCREASE_CONSENT],
+            Purchases.IN_APP_MESSAGE_TYPE.PRICE_INCREASE_CONSENT,
+            Purchases.IN_APP_MESSAGE_TYPE.WIN_BACK_OFFER],
         );
         expect(execFn).toHaveBeenCalledWith(
           null,

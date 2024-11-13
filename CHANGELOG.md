@@ -1,3 +1,8 @@
+## 6.1.2
+## RevenueCat SDK
+### 📦 Dependency Updates
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 13.9.0 (#606) via RevenueCat Git Bot (@RCGitBot)
+
 ## 6.1.1
 ## RevenueCat SDK
 ### 📦 Dependency Updates

@@ -445,6 +445,8 @@ export interface PurchasesStoreProductDiscount {
   readonly periodNumberOfUnits: number;
 }
 
+export interface PurchasesWinBackOffer extends PurchasesStoreProductDiscount {}
+
 export interface PurchasesStoreProduct {
   /**
    * Product Id.
@@ -1228,6 +1230,29 @@ class Purchases {
       PLUGIN_NAME,
       "getProducts",
       [productIdentifiers, type]
+    );
+  }
+
+  /**
+   * iOS only. Use this function to retrieve the eligible win-back offers that a subscriber
+   * is eligible for for a given product.
+   *
+   * @param {PurchasesStoreProduct} product The product the user intends to purchase.
+   * @param {function(PurchasesWinBackOffer[]):void} callback Callback triggered after a successful getEligibleWinBackOffersForProduct call.
+   * It will receive an array of eligible win-back objects for the provided product.
+   * @param {function(PurchasesError):void} errorCallback Callback triggered after an error or when retrieving eligible win-back offers.
+   */
+  public static async getEligibleWinBackOffersForProduct(
+    product: PurchasesStoreProduct,
+    callback: (products: PurchasesWinBackOffer[]) => void,
+    errorCallback: (error: PurchasesError) => void
+  ) {
+    window.cordova.exec(
+      callback,
+      errorCallback,
+      PLUGIN_NAME,
+      "getEligibleWinBackOffersForProduct",
+      [product.identifier]
     );
   }
 

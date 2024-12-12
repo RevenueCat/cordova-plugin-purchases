@@ -1,4 +1,14 @@
 {
+  "appPolicies" : {
+    "eula" : "",
+    "policies" : [
+      {
+        "locale" : "en_US",
+        "policyText" : "",
+        "policyURL" : ""
+      }
+    ]
+  },
   "identifier" : "3B56BC8C",
   "nonRenewingSubscriptions" : [
 
@@ -51,7 +61,60 @@
     }
   ],
   "settings" : {
-
+    "_compatibilityTimeRate" : {
+      "3" : 6
+    },
+    "_failTransactionsEnabled" : false,
+    "_locale" : "en_US",
+    "_storefront" : "USA",
+    "_storeKitErrors" : [
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Load Products"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Purchase"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Verification"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Store Sync"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Subscription Status"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "App Transaction"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Manage Subscriptions Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Refund Request Sheet"
+      },
+      {
+        "current" : null,
+        "enabled" : false,
+        "name" : "Offer Code Redeem Sheet"
+      }
+    ],
+    "_timeRate" : 1002
   },
   "subscriptionGroups" : [
     {
@@ -84,7 +147,10 @@
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Test Increase 29.99 -> 49.99",
           "subscriptionGroupID" : "D833F705",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         },
         {
           "adHocOffers" : [
@@ -109,7 +175,10 @@
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Monthly $10.99",
           "subscriptionGroupID" : "D833F705",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         },
         {
           "adHocOffers" : [
@@ -138,7 +207,17 @@
           "recurringSubscriptionPeriod" : "P1M",
           "referenceName" : "Monthly $4.99, 1-week free",
           "subscriptionGroupID" : "D833F705",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+            {
+              "internalID" : "D11E21B6",
+              "isEligible" : true,
+              "offerID" : "winback.1m0",
+              "paymentMode" : "free",
+              "referenceName" : "Winback 1m0",
+              "subscriptionPeriod" : "P1M"
+            }
+          ]
         },
         {
           "adHocOffers" : [
@@ -192,7 +271,45 @@
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "Annual $39.99, 2-weeks free",
           "subscriptionGroupID" : "D833F705",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "FB2C956C",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "Monthly $4.99",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.revenuecat.monthly_4.99",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly $4.99",
+          "subscriptionGroupID" : "D833F705",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+            {
+              "internalID" : "D11E21B6",
+              "isEligible" : true,
+              "offerID" : "winback.1m0",
+              "paymentMode" : "free",
+              "referenceName" : "Winback 1m0",
+              "subscriptionPeriod" : "P1M"
+            }
+          ]
         }
       ]
     },
@@ -226,13 +343,16 @@
           "recurringSubscriptionPeriod" : "P1Y",
           "referenceName" : "Annual $39.99, 1-week free",
           "subscriptionGroupID" : "CAB34497",
-          "type" : "RecurringSubscription"
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+
+          ]
         }
       ]
     }
   ],
   "version" : {
-    "major" : 1,
-    "minor" : 2
+    "major" : 4,
+    "minor" : 0
   }
 }

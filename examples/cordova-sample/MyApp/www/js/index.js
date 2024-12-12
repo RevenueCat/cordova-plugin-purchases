@@ -47,6 +47,15 @@ const app = {
     document.getElementById("show-in-app-messages").addEventListener("click", this.showInAppMessages)
     document.getElementById("record-purchase").addEventListener("click", this.recordPurchase)
     document
+      .getElementById("load-and-purchase-product-for-winback-testing")
+      .addEventListener("click", this.loadProductForWinbackTesting);
+    document
+      .getElementById("fetch-and-purchase-eligible-winback-offers-for-product")
+      .addEventListener(
+        "click",
+        this.fetchAndPurchaseEligibleWinbackOffersForProduct
+      );
+    document
       .getElementById("load-and-purchase-package-for-winback-testing")
       .addEventListener("click", this.loadPackageForWinbackTesting);
     document

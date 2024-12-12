@@ -234,14 +234,12 @@ function checkFetchAndPurchaseWinBackOffersForProduct(
   Purchases.getEligibleWinBackOffersForProduct(
     product,
     (winBackOffers) => {
-      if (winBackOffers.length > 0) {
-        Purchases.purchaseProductWithWinBackOffer(
-          product,
-          winBackOffers[0],
-          ({productIdentifier, customerInfo}) => {},
-          ({error, userCancelled}) => {}
-        );
-      }
+      Purchases.purchaseProductWithWinBackOffer(
+        product,
+        winBackOffers[0],
+        ({productIdentifier, customerInfo}) => {},
+        ({error, userCancelled}) => {}
+      );
     },
     errorCallback
   );
@@ -253,14 +251,12 @@ function checkFetchAndPurchaseWinBackOffersForPackage(
   Purchases.getEligibleWinBackOffersForPackage(
     aPackage,
     (winBackOffers) => {
-      if (winBackOffers.length > 0) {
-        Purchases.purchasePackageWithWinBackOffer(
-          aPackage,
-          winBackOffers[0],
-          ({productIdentifier, customerInfo}) => {},
-          ({error, userCancelled}) => {}
-        );
-      }
+      Purchases.purchasePackageWithWinBackOffer(
+        aPackage,
+        winBackOffers[0],
+        ({productIdentifier, customerInfo}) => {},
+        ({error, userCancelled}) => {}
+      );
     },
     errorCallback
   );

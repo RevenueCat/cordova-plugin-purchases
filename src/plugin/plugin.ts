@@ -1285,7 +1285,6 @@ class Purchases {
     );
   }
 
-    /**
   /**
    * iOS only. Use this function to retrieve the eligible win-back offers that a subscriber
    * is eligible for for a given package.

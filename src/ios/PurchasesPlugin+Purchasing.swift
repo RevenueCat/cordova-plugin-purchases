@@ -57,7 +57,6 @@ import PurchasesHybridCommon
             return
         }
 
-      
         CommonFunctionality.purchase(
             product: productIdentifier,
             winBackOfferID: winBackOfferIdentifier,

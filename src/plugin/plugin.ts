@@ -1333,7 +1333,7 @@ class Purchases {
       },
       PLUGIN_NAME,
       "purchasePackageWithWinBackOffer",
-      [aPackage.product.identifier, aPackage.offeringIdentifier, winBackOffer.identifier]
+      [aPackage.identifier, aPackage.offeringIdentifier, winBackOffer.identifier]
     );
   }
 

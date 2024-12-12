@@ -1332,8 +1332,8 @@ class Purchases {
         });
       },
       PLUGIN_NAME,
-      "purchaseProductWithWinBackOffer",
-      [aPackage.product.identifier, winBackOffer.identifier]
+      "purchasePackageWithWinBackOffer",
+      [aPackage.product.identifier, aPackage.offeringIdentifier, winBackOffer.identifier]
     );
   }
 

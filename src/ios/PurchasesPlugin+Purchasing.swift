@@ -36,7 +36,12 @@ import PurchasesHybridCommon
         }
 
         CommonFunctionality.eligibleWinBackOffers(for: productIdentifier) { eligibleOffers, error in
+          if let error = error {
+              let result = CDVPluginResult(status: .error, messageAs: error.info)
+              self.commandDelegate.send(result, callbackId: command.callbackId)
+          } else {
             self.sendOKFor(command: command, messageAsArray: eligibleOffers)
+          }
         }
     }
 

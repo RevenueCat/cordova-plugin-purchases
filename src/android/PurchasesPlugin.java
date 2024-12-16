@@ -106,6 +106,29 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         });
     }
 
+    @PluginAction(thread = ExecutionThread.UI, actionName = "getEligibleWinBackOffersForProduct")
+    private void getEligibleWinBackOffersForProduct(String productIdentifier, CallbackContext callbackContext) {
+        // NOOP
+        callbackContext.error(new JSONObject());
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "purchaseProductWithWinBackOffer")
+    private void purchaseProductWithWinBackOffer(String productIdentifier, String winBackOfferIdentifier, CallbackContext callbackContext) {
+        // NOOP
+        callbackContext.error(new JSONObject());
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "purchasePackageWithWinBackOffer")
+    private void purchaseProductWithWinBackOffer(
+        String productIdentifier, 
+        String offeringIdentifier,
+        String winBackOfferIdentifier,
+        CallbackContext callbackContext
+    ) {
+        // NOOP
+        callbackContext.error(new JSONObject());
+    }
+
     @PluginAction(thread = ExecutionThread.UI, actionName = "purchaseProduct", isAutofinish = false)
     private void purchaseProduct(final String productIdentifier,
                                  @Nullable final String oldSKU,

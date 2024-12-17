@@ -28,6 +28,67 @@ import PurchasesHybridCommon
         }
     }
 
+    @objc(getEligibleWinBackOffersForProduct:)
+    func getEligibleWinBackOffersForProduct(command: CDVInvokedUrlCommand) {
+        guard let productIdentifier = command.arguments[0] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "productIdentifier", expectedType: String.self)
+            return
+        }
+
+        CommonFunctionality.eligibleWinBackOffers(for: productIdentifier) { eligibleOffers, error in
+          if let error = error {
+              let result = CDVPluginResult(status: .error, messageAs: error.info)
+              self.commandDelegate.send(result, callbackId: command.callbackId)
+          } else {
+            self.sendOKFor(command: command, messageAsArray: eligibleOffers)
+          }
+        }
+    }
+
+    @objc(purchaseProductWithWinBackOffer:)
+    func purchaseProductWithWinBackOffer(command: CDVInvokedUrlCommand) {
+        guard let productIdentifier = command.arguments[0] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "productIdentifier", expectedType: String.self)
+            return
+        }
+
+        guard let winBackOfferIdentifier = command.arguments[1] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "winBackOfferIdentifier", expectedType: String.self)
+            return
+        }
+
+        CommonFunctionality.purchase(
+            product: productIdentifier,
+            winBackOfferID: winBackOfferIdentifier,
+            completion: self.responseCompletion(forCommand: command)
+        )
+    }
+
+    @objc(purchasePackageWithWinBackOffer:)
+    func purchasePackageWithWinBackOffer(command: CDVInvokedUrlCommand) {
+        guard let packageIdentifier = command.arguments[0] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "packageIdentifier", expectedType: String.self)
+            return
+        }
+
+        guard let offeringIdentifier = command.arguments[1] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "offeringIdentifier", expectedType: String.self)
+            return
+        }
+
+        guard let winBackOfferIdentifier = command.arguments[2] as? String else {
+            self.sendBadParameterFor(command: command, parameterNamed: "winBackOfferIdentifier", expectedType: String.self)
+            return
+        }
+
+        CommonFunctionality.purchase(
+            package: packageIdentifier,
+            presentedOfferingContext: ["offeringIdentifier": offeringIdentifier],
+            winBackOfferID: winBackOfferIdentifier,
+            completion: self.responseCompletion(forCommand: command)
+        )
+    }
+
     @objc(purchaseProduct:)
     func purchaseProduct(command: CDVInvokedUrlCommand) {
         guard let productIdentifier = command.arguments[0] as? String else {

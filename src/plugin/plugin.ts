@@ -1261,8 +1261,8 @@ class Purchases {
    *
    * @param {PurchasesStoreProduct} product The product the user intends to purchase.
    * @param {PurchasesWinBackOffer} winBackOffer The win-back offer the user intends to purchase.
-   * @param {function(PurchasesWinBackOffer[]):void} callback Callback triggered after a successful purchaseProductWithWinBackOffer call.
-   * @param {function(PurchasesError):void} errorCallback Callback triggered after an error.
+   * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchaseProductWithWinBackOffer call.
+   * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error.
    */
   public static async purchaseProductWithWinBackOffer(
     product: PurchasesStoreProduct,
@@ -1313,8 +1313,8 @@ class Purchases {
    *
    * @param {PurchasesPackage} aPackage The package the user intends to purchase.
    * @param {PurchasesWinBackOffer} winBackOffer The win-back offer the user intends to purchase.
-   * @param {function(PurchasesWinBackOffer[]):void} callback Callback triggered after a successful purchaseProductWithWinBackOffer call.
-   * @param {function(PurchasesError):void} errorCallback Callback triggered after an error.
+   * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchaseProductWithWinBackOffer call.
+   * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error.
    */
   public static async purchasePackageWithWinBackOffer(
     aPackage: PurchasesPackage,

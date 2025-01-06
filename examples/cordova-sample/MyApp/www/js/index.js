@@ -48,7 +48,7 @@ const app = {
     document.getElementById("record-purchase").addEventListener("click", this.recordPurchase)
     document
       .getElementById("load-and-purchase-product-for-winback-testing")
-      .addEventListener("click", this.loadProductForWinbackTesting);
+      .addEventListener("click", this.loadAndPurchaseProductForWinbackTesting);
     document
       .getElementById("fetch-and-purchase-eligible-winback-offers-for-product")
       .addEventListener(
@@ -57,7 +57,7 @@ const app = {
       );
     document
       .getElementById("load-and-purchase-package-for-winback-testing")
-      .addEventListener("click", this.loadPackageForWinbackTesting);
+      .addEventListener("click", this.loadAndPurchasePackageForWinbackTesting);
     document
       .getElementById("fetch-and-purchase-eligible-winback-offers-for-package")
       .addEventListener(
@@ -482,7 +482,7 @@ const app = {
     );
   },
 
-  loadProductForWinbackTesting: function() {
+  loadAndPurchaseProductForWinbackTesting: function() {
     Purchases.getProducts(["com.revenuecat.monthly_4.99"], products => {
       if (products && products.length > 0) {
         const product = products[0];
@@ -529,10 +529,10 @@ const app = {
                   product,
                   winBackOffer,
                   ({ productIdentifier, customerInfo }) => {
-                    setStatusLabelText({ productIdentifier, customerInfo });
+                     setStatusLabelText("product identifier: " + productIdentifier)
                   },
                   ({ error, userCancelled }) => {
-                    setStatusLabelText({ error, userCancelled });
+                    setStatusLabelText({ 'error': error, 'userCancelled': userCancelled });
                   }
                 );
               } else {
@@ -555,7 +555,7 @@ const app = {
     );
   },
 
-  loadPackageForWinbackTesting: function() {
+  loadAndPurchasePackageForWinbackTesting: function() {
     setStatusLabelText("Loading package for winback testing");
     Purchases.getOfferings(
       offerings => {
@@ -581,7 +581,7 @@ const app = {
                 setStatusLabelText({ productIdentifier, customerInfo });
               },
               ({ error, userCancelled }) => {
-                setStatusLabelText({ error, userCancelled });
+                setStatusLabelText({ 'error': error, 'userCancelled': userCancelled });
               }
             );
           } else {

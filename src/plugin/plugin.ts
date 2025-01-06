@@ -1234,7 +1234,7 @@ class Purchases {
   }
 
   /**
-   * iOS only. Use this function to retrieve the eligible win-back offers that a subscriber
+   * iOS 18.0+ only. Use this function to retrieve the eligible win-back offers that a subscriber
    * is eligible for for a given product.
    *
    * @param {PurchasesStoreProduct} product The product the user intends to purchase.
@@ -1257,7 +1257,8 @@ class Purchases {
   }
 
   /**
-   * iOS only. Use this function to purchase a product with a win-back offer. Fetch eligible win-back offers with getEligibleWinBackOffersForProduct.
+   * iOS 18.0+ only. Use this function to purchase a product with a win-back offer.
+   * Fetch eligible win-back offers with getEligibleWinBackOffersForProduct.
    *
    * @param {PurchasesStoreProduct} product The product the user intends to purchase.
    * @param {PurchasesWinBackOffer} winBackOffer The win-back offer the user intends to purchase.
@@ -1286,7 +1287,7 @@ class Purchases {
   }
 
   /**
-   * iOS only. Use this function to retrieve the eligible win-back offers that a subscriber
+   * iOS 18.0+ only. Use this function to retrieve the eligible win-back offers that a subscriber
    * is eligible for for a given package.
    *
    * @param {PurchasesPackage} package The package the user intends to purchase.
@@ -1309,7 +1310,8 @@ class Purchases {
   }
 
   /**
-   * iOS only. Use this function to purchase a product with a win-back offer. Fetch eligible win-back offers with getEligibleWinBackOffersForProduct.
+   * iOS 18.0+ only. Use this function to purchase a product with a win-back offer. 
+   * Fetch eligible win-back offers with getEligibleWinBackOffersForProduct.
    *
    * @param {PurchasesPackage} aPackage The package the user intends to purchase.
    * @param {PurchasesWinBackOffer} winBackOffer The win-back offer the user intends to purchase.

@@ -119,7 +119,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "purchasePackageWithWinBackOffer")
-    private void purchaseProductWithWinBackOffer(
+    private void purchasePackageWithWinBackOffer(
         String productIdentifier, 
         String offeringIdentifier,
         String winBackOfferIdentifier,

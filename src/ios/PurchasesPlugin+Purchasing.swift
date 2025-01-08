@@ -35,13 +35,18 @@ import PurchasesHybridCommon
             return
         }
 
-        CommonFunctionality.eligibleWinBackOffers(for: productIdentifier) { eligibleOffers, error in
-          if let error = error {
-              let result = CDVPluginResult(status: .error, messageAs: error.info)
-              self.commandDelegate.send(result, callbackId: command.callbackId)
-          } else {
-            self.sendOKFor(command: command, messageAsArray: eligibleOffers)
-          }
+        if #available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *) {
+            CommonFunctionality.eligibleWinBackOffers(for: productIdentifier) { eligibleOffers, error in
+                if let error = error {
+                    let result = CDVPluginResult(status: .error, messageAs: error.info)
+                    self.commandDelegate.send(result, callbackId: command.callbackId)
+                } else {
+                    self.sendOKFor(command: command, messageAsArray: eligibleOffers)
+                }
+            }
+        } else {
+            NSLog("[Purchases] Warning: tried to call fetch eligible win-back offers, but it's only available on iOS 18.0+")
+            sendUnsupportedErrorFor(command: command)
         }
     }
 
@@ -57,11 +62,16 @@ import PurchasesHybridCommon
             return
         }
 
-        CommonFunctionality.purchase(
-            product: productIdentifier,
-            winBackOfferID: winBackOfferIdentifier,
-            completion: self.responseCompletion(forCommand: command)
-        )
+        if #available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *) {
+            CommonFunctionality.purchase(
+                product: productIdentifier,
+                winBackOfferID: winBackOfferIdentifier,
+                completion: self.responseCompletion(forCommand: command)
+            )
+        } else {
+            NSLog("[Purchases] Warning: tried to purchase a product with a win-back offer, but win-back offers are only available on iOS 18.0+")
+            sendUnsupportedErrorFor(command: command)
+        }
     }
 
     @objc(purchasePackageWithWinBackOffer:)
@@ -81,12 +91,17 @@ import PurchasesHybridCommon
             return
         }
 
-        CommonFunctionality.purchase(
-            package: packageIdentifier,
-            presentedOfferingContext: ["offeringIdentifier": offeringIdentifier],
-            winBackOfferID: winBackOfferIdentifier,
-            completion: self.responseCompletion(forCommand: command)
-        )
+        if #available(iOS 18.0, macOS 15.0, tvOS 18.0, watchOS 11.0, visionOS 2.0, *) {
+            CommonFunctionality.purchase(
+                package: packageIdentifier,
+                presentedOfferingContext: ["offeringIdentifier": offeringIdentifier],
+                winBackOfferID: winBackOfferIdentifier,
+                completion: self.responseCompletion(forCommand: command)
+            )
+        } else {
+            NSLog("[Purchases] Warning: tried to purchase a package with a win-back offer, but win-back offers are only available on iOS 18.0+")
+            sendUnsupportedErrorFor(command: command)
+        }
     }
 
     @objc(purchaseProduct:)

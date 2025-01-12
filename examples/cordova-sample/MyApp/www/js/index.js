@@ -529,7 +529,7 @@ const app = {
                   product,
                   winBackOffer,
                   ({ productIdentifier, customerInfo }) => {
-                     setStatusLabelText("product identifier: " + productIdentifier)
+                     setStatusLabelText({ productIdentifier, customerInfo });
                   },
                   ({ error, userCancelled }) => {
                     setStatusLabelText({ 'error': error, 'userCancelled': userCancelled });

@@ -182,45 +182,6 @@
         },
         {
           "adHocOffers" : [
-
-          ],
-          "codeOffers" : [
-
-          ],
-          "displayPrice" : "4.99",
-          "familyShareable" : false,
-          "groupNumber" : 1,
-          "internalID" : "9D3DBCD0",
-          "introductoryOffer" : {
-            "internalID" : "56E28AFE",
-            "paymentMode" : "free",
-            "subscriptionPeriod" : "P1W"
-          },
-          "localizations" : [
-            {
-              "description" : "",
-              "displayName" : "Monthly $4.99, 1-week free",
-              "locale" : "en_US"
-            }
-          ],
-          "productID" : "com.revenuecat.monthly_4.99.1_week_intro",
-          "recurringSubscriptionPeriod" : "P1M",
-          "referenceName" : "Monthly $4.99, 1-week free",
-          "subscriptionGroupID" : "D833F705",
-          "type" : "RecurringSubscription",
-          "winbackOffers" : [
-            {
-              "internalID" : "D11E21B6",
-              "isEligible" : true,
-              "offerID" : "winback.1m0",
-              "paymentMode" : "free",
-              "referenceName" : "Winback 1m0",
-              "subscriptionPeriod" : "P1M"
-            }
-          ]
-        },
-        {
-          "adHocOffers" : [
             {
               "displayPrice" : "4.00",
               "internalID" : "05E9D55A",
@@ -308,6 +269,41 @@
               "paymentMode" : "free",
               "referenceName" : "Winback 1m0",
               "subscriptionPeriod" : "P1M"
+            }
+          ]
+        },
+        {
+          "adHocOffers" : [
+
+          ],
+          "codeOffers" : [
+
+          ],
+          "displayPrice" : "4.99",
+          "familyShareable" : false,
+          "groupNumber" : 1,
+          "internalID" : "4AF169E0",
+          "introductoryOffer" : null,
+          "localizations" : [
+            {
+              "description" : "",
+              "displayName" : "Monthly $4.99",
+              "locale" : "en_US"
+            }
+          ],
+          "productID" : "com.revenuecat.monthly_4.99.1_week_intro",
+          "recurringSubscriptionPeriod" : "P1M",
+          "referenceName" : "Monthly $4.99 1 week intro",
+          "subscriptionGroupID" : "D833F705",
+          "type" : "RecurringSubscription",
+          "winbackOffers" : [
+            {
+              "internalID" : "D11E21B6",
+              "isEligible" : true,
+              "offerID" : "winback.2m0",
+              "paymentMode" : "free",
+              "referenceName" : "Winback 2m0",
+              "subscriptionPeriod" : "P2M"
             }
           ]
         }

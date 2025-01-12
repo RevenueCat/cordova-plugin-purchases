@@ -10,7 +10,9 @@ import com.appfeel.cordova.annotated.android.plugin.AnnotatedCordovaPlugin;
 import com.appfeel.cordova.annotated.android.plugin.ExecutionThread;
 import com.appfeel.cordova.annotated.android.plugin.PluginAction;
 import com.revenuecat.purchases.DangerousSettings;
+import com.revenuecat.purchases.PurchasesError;
 import com.revenuecat.purchases.common.PlatformInfo;
+import com.revenuecat.purchases.PurchasesErrorCode;
 import com.revenuecat.purchases.hybridcommon.CommonKt;
 import com.revenuecat.purchases.hybridcommon.ErrorContainer;
 import com.revenuecat.purchases.hybridcommon.OnResult;
@@ -18,6 +20,7 @@ import com.revenuecat.purchases.hybridcommon.OnResultAny;
 import com.revenuecat.purchases.hybridcommon.OnResultList;
 import com.revenuecat.purchases.hybridcommon.SubscriberAttributesKt;
 import com.revenuecat.purchases.hybridcommon.mappers.CustomerInfoMapperKt;
+import com.revenuecat.purchases.hybridcommon.mappers.PurchasesErrorKt;
 import com.revenuecat.purchases.interfaces.UpdatedCustomerInfoListener;
 import com.revenuecat.purchases.models.InAppMessageType;
 
@@ -109,24 +112,54 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     @PluginAction(thread = ExecutionThread.UI, actionName = "getEligibleWinBackOffersForProduct")
     private void getEligibleWinBackOffersForProduct(String productIdentifier, CallbackContext callbackContext) {
         // NOOP
-        callbackContext.error(new JSONObject());
+        PurchasesError error = new PurchasesError(
+            PurchasesErrorCode.UnsupportedError,
+            "Win-back offers are not supported on Android."
+        );
+
+        ErrorContainer errorContainer = PurchasesErrorKt.map(
+            error,
+            new HashMap<>()
+        );
+
+        callbackContext.error(convertMapToJson(errorContainer.getInfo()));
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "purchaseProductWithWinBackOffer")
     private void purchaseProductWithWinBackOffer(String productIdentifier, String winBackOfferIdentifier, CallbackContext callbackContext) {
         // NOOP
-        callbackContext.error(new JSONObject());
+        PurchasesError error = new PurchasesError(
+            PurchasesErrorCode.UnsupportedError,
+            "Win-back offers are not supported on Android."
+        );
+
+        ErrorContainer errorContainer = PurchasesErrorKt.map(
+            error,
+            new HashMap<>()
+        );
+
+        callbackContext.error(convertMapToJson(errorContainer.getInfo()));
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "purchasePackageWithWinBackOffer")
     private void purchasePackageWithWinBackOffer(
-        String productIdentifier, 
+        String productIdentifier,
         String offeringIdentifier,
         String winBackOfferIdentifier,
         CallbackContext callbackContext
     ) {
         // NOOP
-        callbackContext.error(new JSONObject());
+        PurchasesError error = new PurchasesError(
+            PurchasesErrorCode.UnsupportedError,
+            "Win-back offers are not supported on Android."
+        );
+
+        ErrorContainer errorContainer = PurchasesErrorKt.map(
+            error,
+            new HashMap<>()
+        );
+
+        callbackContext.error(convertMapToJson(errorContainer.getInfo()));
     }
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "purchaseProduct", isAutofinish = false)

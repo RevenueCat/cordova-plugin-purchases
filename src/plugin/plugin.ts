@@ -1315,7 +1315,7 @@ class Purchases {
    *
    * @param {PurchasesPackage} aPackage The package the user intends to purchase.
    * @param {PurchasesWinBackOffer} winBackOffer The win-back offer the user intends to purchase.
-   * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchaseProductWithWinBackOffer call.
+   * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchasePackageWithWinBackOffer call.
    * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error.
    */
   public static async purchasePackageWithWinBackOffer(

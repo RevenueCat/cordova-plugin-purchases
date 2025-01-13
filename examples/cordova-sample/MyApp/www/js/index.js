@@ -46,6 +46,24 @@ const app = {
     document.getElementById("begin-refund-request-product-id").addEventListener("click", this.beginRefundRequestForProduct)
     document.getElementById("show-in-app-messages").addEventListener("click", this.showInAppMessages)
     document.getElementById("record-purchase").addEventListener("click", this.recordPurchase)
+    document
+      .getElementById("load-and-purchase-product-for-winback-testing")
+      .addEventListener("click", this.loadAndPurchaseProductForWinbackTesting);
+    document
+      .getElementById("fetch-and-purchase-eligible-winback-offers-for-product")
+      .addEventListener(
+        "click",
+        this.fetchAndPurchaseEligibleWinbackOffersForProduct
+      );
+    document
+      .getElementById("load-and-purchase-package-for-winback-testing")
+      .addEventListener("click", this.loadAndPurchasePackageForWinbackTesting);
+    document
+      .getElementById("fetch-and-purchase-eligible-winback-offers-for-package")
+      .addEventListener(
+        "click",
+        this.fetchAndPurchaseEligibleWinbackOffersForPackage
+      );
   },
 
   // deviceready Event Handler
@@ -462,8 +480,183 @@ const app = {
         setStatusLabelText(error);
       }
     );
-  }
+  },
 
+  loadAndPurchaseProductForWinbackTesting: function() {
+    Purchases.getProducts(["com.revenuecat.monthly_4.99"], products => {
+      if (products && products.length > 0) {
+        const product = products[0];
+        Purchases.purchaseProduct(
+          product.identifier,
+          customerInfo => {
+            setStatusLabelText(customerInfo);
+          },
+          error => {
+            setStatusLabelText(error);
+          }
+        );
+      } else {
+        setStatusLabelText("No product found");
+      }
+    });
+  },
+
+  fetchAndPurchaseEligibleWinbackOffersForProduct: function() {
+    setStatusLabelText(
+      "fetching and purchasing eligible winback offers for product"
+    );
+    Purchases.getProducts(
+      ["com.revenuecat.monthly_4.99"],
+      products => {
+        if (products && products.length > 0) {
+          const product = products[0];
+          setStatusLabelText(
+            "About to fetch eligible winback offers for product"
+          );
+          Purchases.getEligibleWinBackOffersForProduct(
+            product,
+            winBackOffers => {
+              setStatusLabelText(
+                "Winback offers: " + JSON.stringify(winBackOffers)
+              );
+
+              if (winBackOffers && winBackOffers.length > 0) {
+                const winBackOffer = winBackOffers[0];
+                setStatusLabelText(
+                  "About to purchase product with winback offer"
+                );
+                Purchases.purchaseProductWithWinBackOffer(
+                  product,
+                  winBackOffer,
+                  ({ productIdentifier, customerInfo }) => {
+                     setStatusLabelText({ productIdentifier, customerInfo });
+                  },
+                  ({ error, userCancelled }) => {
+                    setStatusLabelText({ 'error': error, 'userCancelled': userCancelled });
+                  }
+                );
+              } else {
+                setStatusLabelText("No eligible winback offers found");
+              }
+            },
+            error => {
+              setStatusLabelText(
+                "Error getting winback offers: " + JSON.stringify(error)
+              );
+            }
+          );
+        } else {
+          setStatusLabelText("No product found");
+        }
+      },
+      error => {
+        setStatusLabelText("Error getting products: " + JSON.stringify(error));
+      }
+    );
+  },
+
+  loadAndPurchasePackageForWinbackTesting: function() {
+    setStatusLabelText("Loading package for winback testing");
+    Purchases.getOfferings(
+      offerings => {
+        setStatusLabelText("Got offerings: " + JSON.stringify(offerings));
+        if (
+          offerings &&
+          offerings.current &&
+          offerings.current.availablePackages
+        ) {
+          const package = offerings.current.availablePackages.find(
+            pkg =>
+              pkg.product.identifier ===
+              "com.revenuecat.monthly_4.99.1_week_intro"
+          );
+          if (package) {
+            setStatusLabelText(
+              "Found package with product: " + package.product.identifier
+            );
+
+            Purchases.purchasePackage(
+              package,
+              ({ productIdentifier, customerInfo }) => {
+                setStatusLabelText({ productIdentifier, customerInfo });
+              },
+              ({ error, userCancelled }) => {
+                setStatusLabelText({ 'error': error, 'userCancelled': userCancelled });
+              }
+            );
+          } else {
+            setStatusLabelText(
+              "Could not find package with product com.revenuecat.monthly_4.99.1_week_intro"
+            );
+          }
+        } else {
+          setStatusLabelText("No packages available in current offering");
+        }
+      },
+      error => {
+        setStatusLabelText("Error getting offerings: " + JSON.stringify(error));
+      }
+    );
+  },
+
+  fetchAndPurchaseEligibleWinbackOffersForPackage: function() {
+    setStatusLabelText("Loading package for winback testing");
+    Purchases.getOfferings(
+      offerings => {
+        setStatusLabelText("Got offerings: " + JSON.stringify(offerings));
+        if (
+          offerings &&
+          offerings.current &&
+          offerings.current.availablePackages
+        ) {
+          const package = offerings.current.availablePackages.find(
+            pkg =>
+              pkg.product.identifier ===
+              "com.revenuecat.monthly_4.99.1_week_intro"
+          );
+          if (package) {
+            setStatusLabelText(
+              "Found package with product: " + package.product.identifier
+            );
+
+            Purchases.getEligibleWinBackOffersForPackage(
+              package,
+              winBackOffers => {
+                setStatusLabelText("Got win back offers: " + JSON.stringify(winBackOffers));
+                if (winBackOffers && winBackOffers.length > 0) {
+                  const winBackOffer = winBackOffers[0];
+                  Purchases.purchasePackageWithWinBackOffer(
+                    package,
+                    winBackOffer,
+                    ({ productIdentifier, customerInfo }) => {
+                      setStatusLabelText({ productIdentifier, customerInfo });
+                    },
+                    ({ error, userCancelled }) => {
+                      setStatusLabelText({ error, userCancelled });
+                    }
+                  );
+                } else {
+                  setStatusLabelText("No win back offers available");
+                }
+              },
+              error => {
+                setStatusLabelText("Error getting win back offers: " + JSON.stringify(error));
+              }
+            );
+          } else {
+            setStatusLabelText(
+              "Could not find package with product com.revenuecat.monthly_4.99.1_week_intro"
+            );
+          }
+        } else {
+          setStatusLabelText("No packages available in current offering");
+        }
+      },
+      error => {
+        setStatusLabelText("Error getting offerings: " + JSON.stringify(error));
+      }
+    );
+  },
 };
 
 initializePurchasesSDK = function() {

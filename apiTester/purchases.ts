@@ -227,3 +227,37 @@ function checkBeginRefundRequest(
   Purchases.beginRefundRequestForProduct(purchasesStoreProduct, (refundRequestStatus: REFUND_REQUEST_STATUS) => {
   }, errorCallback);
 }
+
+function checkFetchAndPurchaseWinBackOffersForProduct(
+  product: PurchasesStoreProduct,
+) {
+  Purchases.getEligibleWinBackOffersForProduct(
+    product,
+    (winBackOffers) => {
+      Purchases.purchaseProductWithWinBackOffer(
+        product,
+        winBackOffers[0],
+        ({productIdentifier, customerInfo}) => {},
+        ({error, userCancelled}) => {}
+      );
+    },
+    errorCallback
+  );
+}
+
+function checkFetchAndPurchaseWinBackOffersForPackage(
+  aPackage: PurchasesPackage,
+) {
+  Purchases.getEligibleWinBackOffersForPackage(
+    aPackage,
+    (winBackOffers) => {
+      Purchases.purchasePackageWithWinBackOffer(
+        aPackage,
+        winBackOffers[0],
+        ({productIdentifier, customerInfo}) => {},
+        ({error, userCancelled}) => {}
+      );
+    },
+    errorCallback
+  );
+}

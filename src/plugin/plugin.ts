@@ -445,6 +445,8 @@ export interface PurchasesStoreProductDiscount {
   readonly periodNumberOfUnits: number;
 }
 
+export interface PurchasesWinBackOffer extends PurchasesStoreProductDiscount {}
+
 export interface PurchasesStoreProduct {
   /**
    * Product Id.
@@ -1228,6 +1230,112 @@ class Purchases {
       PLUGIN_NAME,
       "getProducts",
       [productIdentifiers, type]
+    );
+  }
+
+  /**
+   * iOS 18.0+ only. Use this function to retrieve the eligible win-back offers that a subscriber
+   * is eligible for for a given product.
+   *
+   * @param {PurchasesStoreProduct} product The product the user intends to purchase.
+   * @param {function(PurchasesWinBackOffer[]):void} callback Callback triggered after a successful getEligibleWinBackOffersForProduct call.
+   * It will receive an array of eligible win-back objects for the provided product.
+   * @param {function(PurchasesError):void} errorCallback Callback triggered after an error when retrieving eligible win-back offers.
+   */
+  public static async getEligibleWinBackOffersForProduct(
+    product: PurchasesStoreProduct,
+    callback: (winBackOffers: PurchasesWinBackOffer[]) => void,
+    errorCallback: (error: PurchasesError) => void
+  ) {
+    window.cordova.exec(
+      callback,
+      errorCallback,
+      PLUGIN_NAME,
+      "getEligibleWinBackOffersForProduct",
+      [product.identifier]
+    );
+  }
+
+  /**
+   * iOS 18.0+ only. Use this function to purchase a product with a win-back offer.
+   * Fetch eligible win-back offers with getEligibleWinBackOffersForProduct.
+   *
+   * @param {PurchasesStoreProduct} product The product the user intends to purchase.
+   * @param {PurchasesWinBackOffer} winBackOffer The win-back offer the user intends to purchase.
+   * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchaseProductWithWinBackOffer call.
+   * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error.
+   */
+  public static async purchaseProductWithWinBackOffer(
+    product: PurchasesStoreProduct,
+    winBackOffer: PurchasesWinBackOffer,
+    callback: ({productIdentifier, customerInfo,}: { productIdentifier: string; customerInfo: CustomerInfo; }) => void,
+    errorCallback: ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => void,
+  ) {
+    window.cordova.exec(
+      callback,
+      (response: { [key: string]: any }) => {
+        const { userCancelled, ...error } = response;
+        errorCallback({
+          error: error as PurchasesError,
+          userCancelled,
+        });
+      },
+      PLUGIN_NAME,
+      "purchaseProductWithWinBackOffer",
+      [product.identifier, winBackOffer.identifier]
+    );
+  }
+
+  /**
+   * iOS 18.0+ only. Use this function to retrieve the eligible win-back offers that a subscriber
+   * is eligible for for a given package.
+   *
+   * @param {PurchasesPackage} package The package the user intends to purchase.
+   * @param {function(PurchasesWinBackOffer[]):void} callback Callback triggered after a successful getEligibleWinBackOffersForPackage call.
+   * It will receive an array of eligible win-back objects for the provided package.
+   * @param {function(PurchasesError):void} errorCallback Callback triggered after an error when retrieving eligible win-back offers.
+   */
+  public static async getEligibleWinBackOffersForPackage(
+    aPackage: PurchasesPackage,
+    callback: (winBackOffers: PurchasesWinBackOffer[]) => void,
+    errorCallback: (error: PurchasesError) => void
+  ) {
+    window.cordova.exec(
+      callback,
+      errorCallback,
+      PLUGIN_NAME,
+      "getEligibleWinBackOffersForProduct",
+      [aPackage.product.identifier]
+    );
+  }
+
+  /**
+   * iOS 18.0+ only. Use this function to purchase a product with a win-back offer. 
+   * Fetch eligible win-back offers with getEligibleWinBackOffersForProduct.
+   *
+   * @param {PurchasesPackage} aPackage The package the user intends to purchase.
+   * @param {PurchasesWinBackOffer} winBackOffer The win-back offer the user intends to purchase.
+   * @param {function(string, CustomerInfo):void} callback Callback triggered after a successful purchasePackageWithWinBackOffer call.
+   * @param {function(PurchasesError, boolean):void} errorCallback Callback triggered after an error.
+   */
+  public static async purchasePackageWithWinBackOffer(
+    aPackage: PurchasesPackage,
+    winBackOffer: PurchasesWinBackOffer,
+    callback: ({productIdentifier, customerInfo,}: { productIdentifier: string; customerInfo: CustomerInfo; }) => void,
+    errorCallback: ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => void,
+  ) {
+    window.cordova.exec(
+      callback,
+      (response: { [key: string]: any }) => {
+        const { userCancelled, ...error } = response;
+        errorCallback({
+          error: error as PurchasesError,
+          userCancelled,
+        });
+      },
+      PLUGIN_NAME,
+      "purchasePackageWithWinBackOffer",
+      [aPackage.identifier, aPackage.offeringIdentifier, winBackOffer.identifier]
     );
   }
 

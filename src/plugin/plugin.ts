@@ -238,7 +238,7 @@ export interface PurchasesEntitlementInfo {
    */
   readonly willRenew: boolean;
   /**
-   * The last period type this entitlement was in. Either: NORMAL, INTRO, TRIAL.
+   * The last period type this entitlement was in. Either: NORMAL, INTRO, TRIAL, PREPAID.
    */
   readonly periodType: string;
   /**

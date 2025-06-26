@@ -36,6 +36,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import kotlin.Unit;
+
 
 public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
@@ -66,9 +68,15 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         Purchases.getSharedInstance().setUpdatedCustomerInfoListener(new UpdatedCustomerInfoListener() {
             @Override
             public void onReceived(@NonNull CustomerInfo customerInfo) {
-                PluginResult result = new PluginResult(PluginResult.Status.OK, convertMapToJson(CustomerInfoMapperKt.map(customerInfo)));
-                result.setKeepCallback(true);
-                callbackContext.sendPluginResult(result);
+                CustomerInfoMapperKt.mapAsync(
+                    customerInfo,
+                    map -> {
+                        PluginResult result = new PluginResult(PluginResult.Status.OK, convertMapToJson(map));
+                        result.setKeepCallback(true);
+                        callbackContext.sendPluginResult(result);
+                        return Unit.INSTANCE;
+                    }
+                );
             }
         });
         PluginResult result = new PluginResult(PluginResult.Status.NO_RESULT);

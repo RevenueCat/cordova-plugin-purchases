@@ -2377,6 +2377,42 @@ class Purchases {
     );
   }
 
+  /**
+   * Invalidates the cache for virtual currencies.
+   * 
+   * This is useful for cases where a virtual currency's balance might have been updated
+   * outside of the app, like if you decreased a user's balance from the user spending a virtual currency,
+   * or if you increased the balance from your backend using the server APIs.
+   */
+  public static invalidateVirtualCurrenciesCache() {
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "invalidateVirtualCurrenciesCache",
+      []
+    );
+  }
+
+  /**
+   * The currently cached `PurchasesVirtualCurrencies` if one is available.
+   * This value will remain null until virtual currencies have been fetched at 
+   * least once with `Purchases.getVirtualCurrencies` or an equivalent function.
+   * 
+   * @param {function(PurchasesVirtualCurrencies):void} callback Callback that will be triggered with the currently cached virtual currencies for the current subscriber. 
+   */
+  public static getCachedVirtualCurrencies(
+    callback: (cachedVirtualCurrencies: PurchasesVirtualCurrencies | null) => void
+  ) {
+    return window.cordova.exec(
+      callback,
+      null,
+      PLUGIN_NAME,
+      "getCachedVirtualCurrencies",
+      []
+    );
+  }
+
   private static setupShouldPurchasePromoProductCallback(): void {
     window.cordova.exec(
       ({callbackID}: { callbackID: number }) => {

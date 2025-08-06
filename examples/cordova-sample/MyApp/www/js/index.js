@@ -47,6 +47,8 @@ const app = {
     document.getElementById("show-in-app-messages").addEventListener("click", this.showInAppMessages)
     document.getElementById("record-purchase").addEventListener("click", this.recordPurchase)
     document.getElementById("get-virtual-currencies").addEventListener("click", this.getVirtualCurrencies);
+    document.getElementById("invalidate-virtual-currencies-cache").addEventListener("click", this.invalidateVirtualCurrenciesCache);
+    document.getElementById("get-cached-virtual-currencies").addEventListener("click", this.getCachedVirtualCurrencies);
     document
       .getElementById("load-and-purchase-product-for-winback-testing")
       .addEventListener("click", this.loadAndPurchaseProductForWinbackTesting);
@@ -667,6 +669,21 @@ const app = {
       },
       error => {
         setStatusLabelText(error);
+      }
+    );
+  },
+
+  invalidateVirtualCurrenciesCache: function() {
+    setStatusLabelText("Invalidating virtual currencies cache");
+    Purchases.invalidateVirtualCurrenciesCache();
+    setStatusLabelText("Invalidated virtual currencies cache");
+  },
+
+  getCachedVirtualCurrencies: function() {
+    setStatusLabelText("Getting cached virtual currencies");
+    Purchases.getCachedVirtualCurrencies(
+      cachedVirtualCurrencies => {
+        setStatusLabelText(cachedVirtualCurrencies);
       }
     );
   }

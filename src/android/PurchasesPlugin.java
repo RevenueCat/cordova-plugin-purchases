@@ -572,6 +572,17 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         CommonKt.getVirtualCurrencies(getOnResult(callbackContext));
     }
 
+    @PluginAction(thread = ExecutionThread.UI, actionName = "invalidateVirtualCurrenciesCache")
+    private void invalidateVirtualCurrenciesCache(CallbackContext callbackContext) {
+        CommonKt.invalidateVirtualCurrenciesCache();
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "getCachedVirtualCurrencies", isAutofinish = false)
+    private void getCachedVirtualCurrencies(CallbackContext callbackContext) {
+        CommonKt.getCachedVirtualCurrencies(getOnResult(callbackContext));
+    }
+
     //================================================================================
     // Private methods
     //================================================================================

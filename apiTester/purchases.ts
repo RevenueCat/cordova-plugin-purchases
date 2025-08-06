@@ -269,3 +269,13 @@ function checkGetVirtualCurrencies() {
     errorCallback
   );
 }
+
+function checkInvalidateVirtualCurrenciesCache() {
+  Purchases.invalidateVirtualCurrenciesCache();
+}
+
+function checkGetCachedVirtualCurrencies() {
+  Purchases.getCachedVirtualCurrencies(
+    (cachedVirtualCurrencies: PurchasesVirtualCurrencies | null) => {}
+  );
+}

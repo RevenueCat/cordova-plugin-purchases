@@ -15,4 +15,16 @@ import PurchasesHybridCommon
         CommonFunctionality.getVirtualCurrencies(completion: self.responseCompletion(forCommand: command))
     }
 
+    @objc(invalidateVirtualCurrenciesCache:)
+    func invalidateVirtualCurrenciesCache(command: CDVInvokedUrlCommand) {
+        CommonFunctionality.invalidateVirtualCurrenciesCache()
+        self.sendOKFor(command: command)
+    }
+
+    @objc(getCachedVirtualCurrencies:)
+    func getCachedVirtualCurrencies(command: CDVInvokedUrlCommand) {
+        let cachedVirtualCurrencies = CommonFunctionality.getCachedVirtualCurrencies()
+        let result = CDVPluginResult(status: .ok, messageAs: cachedVirtualCurrencies)
+        self.commandDelegate.send(result, callbackId: command.callbackId)
+    }
 }

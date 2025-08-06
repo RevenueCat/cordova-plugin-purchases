@@ -580,7 +580,13 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     @PluginAction(thread = ExecutionThread.UI, actionName = "getCachedVirtualCurrencies", isAutofinish = false)
     private void getCachedVirtualCurrencies(CallbackContext callbackContext) {
-        CommonKt.getCachedVirtualCurrencies(getOnResult(callbackContext));
+        Map<String, ?> cachedVirtualCurrencies = CommonKt.getCachedVirtualCurrencies();
+        if(cachedVirtualCurrencies == null) {
+            // Send null result
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, (String) null));
+        } else {
+            callbackContext.success(convertMapToJson(cachedVirtualCurrencies));
+        }
     }
 
     //================================================================================

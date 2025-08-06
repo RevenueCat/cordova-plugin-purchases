@@ -564,6 +564,15 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     //================================================================================
+    // Virtual Currencies
+    //================================================================================
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "getVirtualCurrencies", isAutofinish = false)
+    private void getVirtualCurrencies(CallbackContext callbackContext) {
+        CommonKt.getVirtualCurrencies(getOnResult(callbackContext));
+    }
+
+    //================================================================================
     // Private methods
     //================================================================================
 

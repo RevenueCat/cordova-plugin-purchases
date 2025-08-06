@@ -46,6 +46,7 @@ const app = {
     document.getElementById("begin-refund-request-product-id").addEventListener("click", this.beginRefundRequestForProduct)
     document.getElementById("show-in-app-messages").addEventListener("click", this.showInAppMessages)
     document.getElementById("record-purchase").addEventListener("click", this.recordPurchase)
+    document.getElementById("get-virtual-currencies").addEventListener("click", this.getVirtualCurrencies);
     document
       .getElementById("load-and-purchase-product-for-winback-testing")
       .addEventListener("click", this.loadAndPurchaseProductForWinbackTesting);
@@ -657,6 +658,18 @@ const app = {
       }
     );
   },
+
+  getVirtualCurrencies: function() {
+    setStatusLabelText("Getting virtual currencies");
+    Purchases.getVirtualCurrencies(
+      virtualCurrencies => {
+        setStatusLabelText(virtualCurrencies);
+      },
+      error => {
+        setStatusLabelText(error);
+      }
+    );
+  }
 };
 
 initializePurchasesSDK = function() {

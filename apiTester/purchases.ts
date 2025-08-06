@@ -17,6 +17,7 @@ import {
   REFUND_REQUEST_STATUS,
   PurchasesEntitlementInfo,
   PurchasesStoreTransaction,
+  PurchasesVirtualCurrencies,
 } from '../www/plugin';
 
 import Purchases from '../www/plugin';
@@ -258,6 +259,13 @@ function checkFetchAndPurchaseWinBackOffersForPackage(
         ({error, userCancelled}) => {}
       );
     },
+    errorCallback
+  );
+}
+
+function checkGetVirtualCurrencies() {
+  Purchases.getVirtualCurrencies(
+    (virtualCurrencies: PurchasesVirtualCurrencies) => {}, 
     errorCallback
   );
 }

@@ -2358,6 +2358,25 @@ class Purchases {
     );
   }
 
+  /**
+   * Fetches the virtual currencies for the current subscriber.
+   * 
+   * @param {function(PurchasesVirtualCurrencies):void} callback Callback that will receive the subscriber's virtual currencies.
+   * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is a problem retrieving the subscriber's virtual currencies.
+   */
+  public static getVirtualCurrencies(
+    callback: (virtualCurrencies: PurchasesVirtualCurrencies) => void,
+    errorCallback: (error: PurchasesError) => void
+  ) {
+    window.cordova.exec(
+      callback,
+      errorCallback,
+      PLUGIN_NAME,
+      "getVirtualCurrencies",
+      []
+    );
+  }
+
   private static setupShouldPurchasePromoProductCallback(): void {
     window.cordova.exec(
       ({callbackID}: { callbackID: number }) => {

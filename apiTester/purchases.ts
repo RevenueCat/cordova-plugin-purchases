@@ -17,6 +17,7 @@ import {
   REFUND_REQUEST_STATUS,
   PurchasesEntitlementInfo,
   PurchasesStoreTransaction,
+  PurchasesVirtualCurrencies,
 } from '../www/plugin';
 
 import Purchases from '../www/plugin';
@@ -259,5 +260,22 @@ function checkFetchAndPurchaseWinBackOffersForPackage(
       );
     },
     errorCallback
+  );
+}
+
+function checkGetVirtualCurrencies() {
+  Purchases.getVirtualCurrencies(
+    (virtualCurrencies: PurchasesVirtualCurrencies) => {}, 
+    errorCallback
+  );
+}
+
+function checkInvalidateVirtualCurrenciesCache() {
+  Purchases.invalidateVirtualCurrenciesCache();
+}
+
+function checkGetCachedVirtualCurrencies() {
+  Purchases.getCachedVirtualCurrencies(
+    (cachedVirtualCurrencies: PurchasesVirtualCurrencies | null) => {}
   );
 }

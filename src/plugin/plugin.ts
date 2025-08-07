@@ -1021,6 +1021,42 @@ export enum PERIOD_UNIT {
   UNKNOWN = "UNKNOWN",
 }
 
+/**
+ * The VirtualCurrencies object contains all the virtual currencies associated to the user.
+ */
+export interface PurchasesVirtualCurrencies {
+  /**
+   * Map of all `PurchasesVirtualCurrency` objects keyed by virtual currency code.
+   */
+  readonly all: { [key: string]: PurchasesVirtualCurrency };
+}
+
+/**
+ * The VirtualCurrency object represents information about a virtual currency in the app.
+ * Use this object to access information about a virtual currency, such as its current balance.
+ */
+export interface PurchasesVirtualCurrency {
+  /**
+   * The virtual currency's balance.
+   */
+  readonly balance: number;
+
+  /**
+   * The virtual currency's name.
+   */
+  readonly name: string;
+
+  /**
+   * The virtual currency's code.
+   */
+  readonly code: string;
+
+  /**
+   * The virtual currency's description defined in the RevenueCat dashboard.
+   */
+  readonly serverDescription: string | null;
+}
+
 export type ShouldPurchasePromoProductListener = (deferredPurchase: () => void) => void;
 let shouldPurchasePromoProductListeners: ShouldPurchasePromoProductListener[] = [];
 
@@ -2319,6 +2355,61 @@ class Purchases {
       PLUGIN_NAME,
       "showInAppMessages",
       [messageTypes]
+    );
+  }
+
+  /**
+   * Fetches the virtual currencies for the current subscriber.
+   * 
+   * @param {function(PurchasesVirtualCurrencies):void} callback Callback that will receive the subscriber's virtual currencies.
+   * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is a problem retrieving the subscriber's virtual currencies.
+   */
+  public static getVirtualCurrencies(
+    callback: (virtualCurrencies: PurchasesVirtualCurrencies) => void,
+    errorCallback: (error: PurchasesError) => void
+  ) {
+    window.cordova.exec(
+      callback,
+      errorCallback,
+      PLUGIN_NAME,
+      "getVirtualCurrencies",
+      []
+    );
+  }
+
+  /**
+   * Invalidates the cache for virtual currencies.
+   * 
+   * This is useful for cases where a virtual currency's balance might have been updated
+   * outside of the app, like if you decreased a user's balance from the user spending a virtual currency,
+   * or if you increased the balance from your backend using the server APIs.
+   */
+  public static invalidateVirtualCurrenciesCache() {
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "invalidateVirtualCurrenciesCache",
+      []
+    );
+  }
+
+  /**
+   * The currently cached `PurchasesVirtualCurrencies` if one is available.
+   * This value will remain null until virtual currencies have been fetched at 
+   * least once with `Purchases.getVirtualCurrencies` or an equivalent function.
+   * 
+   * @param {function(PurchasesVirtualCurrencies):void} callback Callback that will be triggered with the currently cached virtual currencies for the current subscriber. 
+   */
+  public static getCachedVirtualCurrencies(
+    callback: (cachedVirtualCurrencies: PurchasesVirtualCurrencies | null) => void
+  ) {
+    return window.cordova.exec(
+      callback,
+      null,
+      PLUGIN_NAME,
+      "getCachedVirtualCurrencies",
+      []
     );
   }
 

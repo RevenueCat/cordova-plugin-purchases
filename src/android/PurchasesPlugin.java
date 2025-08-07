@@ -564,6 +564,32 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     }
 
     //================================================================================
+    // Virtual Currencies
+    //================================================================================
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "getVirtualCurrencies", isAutofinish = false)
+    private void getVirtualCurrencies(CallbackContext callbackContext) {
+        CommonKt.getVirtualCurrencies(getOnResult(callbackContext));
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "invalidateVirtualCurrenciesCache")
+    private void invalidateVirtualCurrenciesCache(CallbackContext callbackContext) {
+        CommonKt.invalidateVirtualCurrenciesCache();
+        callbackContext.success();
+    }
+
+    @PluginAction(thread = ExecutionThread.UI, actionName = "getCachedVirtualCurrencies", isAutofinish = false)
+    private void getCachedVirtualCurrencies(CallbackContext callbackContext) {
+        Map<String, ?> cachedVirtualCurrencies = CommonKt.getCachedVirtualCurrencies();
+        if(cachedVirtualCurrencies == null) {
+            // Send null result
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, (String) null));
+        } else {
+            callbackContext.success(convertMapToJson(cachedVirtualCurrencies));
+        }
+    }
+
+    //================================================================================
     // Private methods
     //================================================================================
 

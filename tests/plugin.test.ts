@@ -744,6 +744,13 @@ describe("Purchases", () => {
     return virtualCurrencies;
   }
 
+  function stubEmptyVirtualCurrencies() {
+    let emptyVirtualCurrencies: PurchasesVirtualCurrencies = {
+      all: {}
+    }
+    return emptyVirtualCurrencies;
+  }
+
   describe("getVirtualCurrencies", () => {
     it("calls Purchases with the correct arguments", () => {
       Purchases.getVirtualCurrencies(
@@ -760,7 +767,7 @@ describe("Purchases", () => {
       );
     });
 
-    it("returns correct virtual currencies response", () => {
+    it("returns correct virtual currencies response when there are virtual currencies", () => {
       let receivedVirtualCurrencies;
       Purchases.getVirtualCurrencies(
         (virtualCurrencies: PurchasesVirtualCurrencies) => {
@@ -774,6 +781,30 @@ describe("Purchases", () => {
       let expectedVirtualCurrencies = stubVirtualCurrencies();
       capturedCallback(expectedVirtualCurrencies);
       expect(receivedVirtualCurrencies).toEqual(expectedVirtualCurrencies);
+
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.any(Function),
+        "PurchasesPlugin",
+        "getVirtualCurrencies",
+        []
+      );
+    });
+
+    it("returns correct empty virtual currencies response when there are empty virtual currencies", () => {
+      let receivedVirtualCurrencies;
+      Purchases.getVirtualCurrencies(
+        (virtualCurrencies: PurchasesVirtualCurrencies) => {
+          receivedVirtualCurrencies = virtualCurrencies;
+        },
+        (error: PurchasesError) => {}
+      );
+
+      let callsToMock = execFn.mock.calls;
+      let capturedCallback = callsToMock[callsToMock.length - 1][0];
+      let expectedEmptyVirtualCurrencies = stubEmptyVirtualCurrencies();
+      capturedCallback(expectedEmptyVirtualCurrencies);
+      expect(receivedVirtualCurrencies).toEqual(expectedEmptyVirtualCurrencies);
 
       expect(execFn).toHaveBeenCalledWith(
         expect.any(Function),
@@ -829,7 +860,7 @@ describe("Purchases", () => {
       );
     });
 
-    it("returns correct virtual currencies response", () => {
+    it("returns correct virtual currencies response when there are cached virtual currencies", () => {
       let receivedVirtualCurrencies;
       Purchases.getCachedVirtualCurrencies(
         (cachedVirtualCurrencies: PurchasesVirtualCurrencies | null) => {
@@ -842,6 +873,29 @@ describe("Purchases", () => {
       let expectedVirtualCurrencies = stubVirtualCurrencies();
       capturedCallback(expectedVirtualCurrencies);
       expect(receivedVirtualCurrencies).toEqual(expectedVirtualCurrencies);
+
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        null,
+        "PurchasesPlugin",
+        "getCachedVirtualCurrencies",
+        []
+      );
+    });
+
+    it("returns correct empty cached virtual currencies response when there are empty cached virtual currencies", () => {
+      let receivedVirtualCurrencies;
+      Purchases.getCachedVirtualCurrencies(
+        (cachedVirtualCurrencies: PurchasesVirtualCurrencies | null) => {
+          receivedVirtualCurrencies = cachedVirtualCurrencies;
+        }
+      );
+
+      let callsToMock = execFn.mock.calls;
+      let capturedCallback = callsToMock[callsToMock.length - 1][0];
+      let expectedEmptyVirtualCurrencies = stubEmptyVirtualCurrencies();
+      capturedCallback(expectedEmptyVirtualCurrencies);
+      expect(receivedVirtualCurrencies).toEqual(expectedEmptyVirtualCurrencies);
 
       expect(execFn).toHaveBeenCalledWith(
         expect.any(Function),

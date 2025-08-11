@@ -42,7 +42,7 @@ import kotlin.Unit;
 public class PurchasesPlugin extends AnnotatedCordovaPlugin {
 
     public static final String PLATFORM_NAME = "cordova";
-    public static final String PLUGIN_VERSION = "7.0.1";
+    public static final String PLUGIN_VERSION = "7.1.0";
 
     // Needs to run on ExecutionThread.MAIN so it blocks the JavaBridge thread created by Cordova
     // That way we guarantee any other call to the plugin happen after configure has completed

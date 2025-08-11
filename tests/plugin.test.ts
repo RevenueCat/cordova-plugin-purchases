@@ -822,7 +822,7 @@ describe("Purchases", () => {
 
       expect(execFn).toHaveBeenCalledWith(
         expect.any(Function),
-        expect.any(Function),
+        null,
         "PurchasesPlugin",
         "getCachedVirtualCurrencies",
         []
@@ -845,7 +845,7 @@ describe("Purchases", () => {
 
       expect(execFn).toHaveBeenCalledWith(
         expect.any(Function),
-        expect.any(Function),
+        null,
         "PurchasesPlugin",
         "getCachedVirtualCurrencies",
         []
@@ -867,7 +867,7 @@ describe("Purchases", () => {
 
       expect(execFn).toHaveBeenCalledWith(
         expect.any(Function),
-        expect.any(Function),
+        null,
         "PurchasesPlugin",
         "getCachedVirtualCurrencies",
         []
@@ -880,8 +880,8 @@ describe("Purchases", () => {
       Purchases.invalidateVirtualCurrenciesCache();
 
       expect(execFn).toHaveBeenCalledWith(
-        expect.any(Function),
-        expect.any(Function),
+        null,
+        null,
         "PurchasesPlugin",
         "invalidateVirtualCurrenciesCache",
         []

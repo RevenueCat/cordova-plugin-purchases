@@ -1,5 +1,5 @@
 import Purchases from "../src/plugin/plugin";
-import {LOG_LEVEL, PurchasesError, PurchasesEntitlementInfo, PurchasesStoreProduct, PRODUCT_CATEGORY, PURCHASES_ARE_COMPLETED_BY_TYPE, STOREKIT_VERSION, PurchasesAreCompletedByMyApp, PurchasesStoreTransaction} from "../www/plugin";
+import {LOG_LEVEL, PurchasesError, PurchasesEntitlementInfo, PurchasesStoreProduct, PRODUCT_CATEGORY, PURCHASES_ARE_COMPLETED_BY_TYPE, STOREKIT_VERSION, PurchasesAreCompletedByMyApp, PurchasesStoreTransaction, PurchasesVirtualCurrencies} from "../www/plugin";
 
 const execFn = jest.fn();
 
@@ -720,6 +720,67 @@ describe("Purchases", () => {
         "PurchasesPlugin",
         "recordPurchase",
         ['productID_test']
+      );
+    });
+  });
+
+  function stubVirtualCurrencies() {
+    let virtualCurrencies: PurchasesVirtualCurrencies = {
+      all: {
+        'GLD': {
+          balance: 100,
+          name: 'Gold',
+          code: 'GLD',
+          serverDescription: 'It\'s gold'
+        },
+        'GEMS': {
+          balance: 50,
+          name: 'Gems',
+          code: 'GEMS',
+          serverDescription: null
+        }
+      }
+    }
+    return virtualCurrencies;
+  }
+
+  describe("getVirtualCurrencies", () => {
+    it("calls Purchases with the correct arguments", () => {
+      Purchases.getVirtualCurrencies(
+        (virtualCurrencies: PurchasesVirtualCurrencies) => {},
+        (error: PurchasesError) => {}
+      );
+
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.any(Function),
+        "PurchasesPlugin",
+        "getVirtualCurrencies",
+        []
+      );
+    });
+
+    it("returns correct virtual currencies response", () => {
+      let receivedVirtualCurrencies;
+      Purchases.getVirtualCurrencies(
+        (virtualCurrencies: PurchasesVirtualCurrencies) => {
+          receivedVirtualCurrencies = virtualCurrencies;
+        },
+        (error: PurchasesError) => {}
+      );
+
+      let callsToMock = execFn.mock.calls;
+      let capturedCallback = callsToMock[callsToMock.length - 1][0];
+      let expectedVirtualCurrencies = stubVirtualCurrencies();
+      capturedCallback(expectedVirtualCurrencies);
+      expect(receivedVirtualCurrencies).toEqual(expectedVirtualCurrencies);
+
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.any(Function),
+        "PurchasesPlugin",
+        "getVirtualCurrencies",
+        []
       );
     });
   });

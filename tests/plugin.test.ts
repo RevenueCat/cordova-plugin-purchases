@@ -783,6 +783,110 @@ describe("Purchases", () => {
         []
       );
     });
+
+    it("returns error", () => {
+      let receivedError;
+      Purchases.getVirtualCurrencies(
+        (virtualCurrencies: PurchasesVirtualCurrencies) => {},
+        (error: PurchasesError) => {
+          receivedError = error;
+        }
+      );
+
+      let callsToMock = execFn.mock.calls;
+      let capturedErrorCallback = callsToMock[callsToMock.length - 1][1];
+      let expectedError: PurchasesError = {
+        code: 32,
+        message: 'Error when trying to get virtual currencies',
+        readableErrorCode: 'GET_VIRTUAL_CURRENCIES_ERROR',
+        underlyingErrorMessage: 'Unable to retrieve virtual currencies'
+      };
+      capturedErrorCallback(expectedError);
+      expect(receivedError).toEqual(expectedError);
+
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.any(Function),
+        "PurchasesPlugin",
+        "getVirtualCurrencies",
+        []
+      );
+    });
+  });
+
+  describe("getCachedVirtualCurrencies", () => {
+    it("calls Purchases with the correct arguments", () => {
+      Purchases.getCachedVirtualCurrencies(
+        (cachedVirtualCurrencies: PurchasesVirtualCurrencies | null) => {}
+      );
+
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.any(Function),
+        "PurchasesPlugin",
+        "getCachedVirtualCurrencies",
+        []
+      );
+    });
+
+    it("returns correct virtual currencies response", () => {
+      let receivedVirtualCurrencies;
+      Purchases.getCachedVirtualCurrencies(
+        (cachedVirtualCurrencies: PurchasesVirtualCurrencies | null) => {
+          receivedVirtualCurrencies = cachedVirtualCurrencies;
+        }
+      );
+
+      let callsToMock = execFn.mock.calls;
+      let capturedCallback = callsToMock[callsToMock.length - 1][0];
+      let expectedVirtualCurrencies = stubVirtualCurrencies();
+      capturedCallback(expectedVirtualCurrencies);
+      expect(receivedVirtualCurrencies).toEqual(expectedVirtualCurrencies);
+
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.any(Function),
+        "PurchasesPlugin",
+        "getCachedVirtualCurrencies",
+        []
+      );
+    });
+
+    it("returns null when there are no cached virtual currencies", () => {
+      let receivedVirtualCurrencies;
+      Purchases.getCachedVirtualCurrencies(
+        (cachedVirtualCurrencies: PurchasesVirtualCurrencies | null) => {
+          receivedVirtualCurrencies = cachedVirtualCurrencies;
+        }
+      );
+
+      let callsToMock = execFn.mock.calls;
+      let capturedCallback = callsToMock[callsToMock.length - 1][0];
+      capturedCallback(null);
+      expect(receivedVirtualCurrencies).toBeNull();
+
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.any(Function),
+        "PurchasesPlugin",
+        "getCachedVirtualCurrencies",
+        []
+      );
+    });
+  });
+
+  describe("invalidateVirtualCurrenciesCache", () => {
+    it("calls Purchases with the correct arguments", () => {
+      Purchases.invalidateVirtualCurrenciesCache();
+
+      expect(execFn).toHaveBeenCalledWith(
+        expect.any(Function),
+        expect.any(Function),
+        "PurchasesPlugin",
+        "invalidateVirtualCurrenciesCache",
+        []
+      );
+    });
   });
 
   // Creates a new type from an enum with string values so we can be iterated over the keys of the enum

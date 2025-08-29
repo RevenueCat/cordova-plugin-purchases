@@ -236,7 +236,7 @@ jobs:
 
   docs-deploy:
     docker:
-      - image: cimg/ruby:2.6
+      - image: cimg/ruby:3.2
 
     steps:
       - checkout

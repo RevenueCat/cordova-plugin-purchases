@@ -128,7 +128,7 @@ commands:
       - run:
           name: Copy npmrc sample file to final location
           command: cp .npmrc.SAMPLE .npmrc
-  
+
   install-and-create-sim:
     parameters:
       install-simulator-name:
@@ -205,7 +205,7 @@ jobs:
 
   runtest:
     docker:
-      - image: cimg/ruby:2.6
+      - image: cimg/ruby:3.2
 
     steps:
       - checkout
@@ -219,7 +219,7 @@ jobs:
 
   api-tester:
     docker:
-      - image: cimg/ruby:2.6
+      - image: cimg/ruby:3.2
 
     steps:
       - checkout

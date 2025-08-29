@@ -8,6 +8,15 @@
   * [iOS 5.35.1](https://github.com/RevenueCat/purchases-ios/releases/tag/5.35.1)
   * [iOS 5.35.0](https://github.com/RevenueCat/purchases-ios/releases/tag/5.35.0)
 
+## 7.1.0
+## RevenueCat SDK
+### ✨ New Features
+* Add VC Support (#705) via Will Taylor (@fire-at-will)
+
+### 🔄 Other Changes
+* Add Virtual Currency Unit Tests (#709) via Will Taylor (@fire-at-will)
+* Fix Gemfile.lock (#707) via Toni Rico (@tonidero)
+
 ## 7.0.1
 ## RevenueCat SDK
 ### 📦 Dependency Updates
@@ -46,7 +55,7 @@
 ## 7.0.0
 ## RevenueCat SDK
 
-> [!WARNING]  
+> [!WARNING]
 > If you don't have any login system in your app, please make sure your one-time purchase products have been correctly configured in the RevenueCat dashboard as either consumable or non-consumable. If they're incorrectly configured as consumables, RevenueCat will consume these purchases. This means that users won't be able to restore them from version 7.0.0 onward.
 > Non-consumables are products that are meant to be bought only once, for example, lifetime subscriptions.
 

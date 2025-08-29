@@ -324,8 +324,10 @@ workflows:
       - api-tester
 
   danger:
-     jobs:
-       - revenuecat/danger
+    docker:
+      - image: cimg/ruby:3.2
+    jobs:
+      - revenuecat/danger
 
   weekly-run-workflow:
     when:

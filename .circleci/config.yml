@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   macos: circleci/macos@2.3.2
   android: circleci/android@2.5.0
-  revenuecat: revenuecat/sdks-common-config@dev:caba2193c27f99e3361019dc8c898e1f9295b69c
+  revenuecat: revenuecat/sdks-common-config@3.4.0
 
 aliases:
   release-tags: &release-tags

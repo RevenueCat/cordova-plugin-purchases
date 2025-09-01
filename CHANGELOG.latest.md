@@ -1,7 +1,8 @@
 ## RevenueCat SDK
-### ✨ New Features
-* Add VC Support (#705) via Will Taylor (@fire-at-will)
-
-### 🔄 Other Changes
-* Add Virtual Currency Unit Tests (#709) via Will Taylor (@fire-at-will)
-* Fix Gemfile.lock (#707) via Toni Rico (@tonidero)
+### 📦 Dependency Updates
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 17.0.0 (#713) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 9.3.2](https://github.com/RevenueCat/purchases-android/releases/tag/9.3.2)
+  * [Android 9.3.1](https://github.com/RevenueCat/purchases-android/releases/tag/9.3.1)
+  * [Android 9.3.0](https://github.com/RevenueCat/purchases-android/releases/tag/9.3.0)
+  * [iOS 5.35.1](https://github.com/RevenueCat/purchases-ios/releases/tag/5.35.1)
+  * [iOS 5.35.0](https://github.com/RevenueCat/purchases-ios/releases/tag/5.35.0)

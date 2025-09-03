@@ -47,6 +47,36 @@ commands:
       - run: npm install --legacy-peer-deps
       - run: npm install -g yarn
 
+  install-ruby:
+    parameters:
+      directory:
+        type: string
+        default: .
+    steps:
+      - restore_cache:
+          keys:
+            # This cache key should be updated whenever we change the Ruby version
+            - v4-gem-cache-{{ arch }}-ruby-3.2.0
+      # CircleCI images fail on Ruby 3.3
+      # https://github.com/fastlane/fastlane/issues/21794#issuecomment-2021331335
+      # Also, not using macos/switch-ruby because its broken
+      - run:
+          # We're using Ruby 3.2.0 here to avoid an issue that caused a crash with Fastlane and Ruby 3.2.2.
+          name: Set Ruby 3.2.0
+          command: |
+            eval "$(rbenv init -)"
+            rbenv install -s 3.2.0  # Replace with your required Ruby version
+            rbenv global 3.2.0
+            rbenv rehash
+      - run:
+          name: Verify Ruby version
+          command: ruby -v
+      - save_cache:
+          # This cache key should be updated whenever we change the Ruby version
+          key: v4-gem-cache-{{ arch }}-ruby-3.2.0
+          paths:
+            - ~/.rbenv/versions/3.2.0
+
   api-tester-dependencies:
     description: "Install API Tester dependencies"
     steps:
@@ -270,6 +300,7 @@ jobs:
     steps:
       - checkout
       - npm-dependencies
+      - install-ruby
       - revenuecat/install-gem-mac-dependencies:
           cache-version: v1
       - revenuecat/trust-github-key

@@ -270,6 +270,8 @@ jobs:
     steps:
       - checkout
       - npm-dependencies
+      - macos/switch-ruby:
+          version: 3.2.0
       - revenuecat/install-gem-mac-dependencies:
           cache-version: v1
       - revenuecat/trust-github-key

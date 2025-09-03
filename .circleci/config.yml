@@ -47,7 +47,7 @@ commands:
       - run: npm install --legacy-peer-deps
       - run: npm install -g yarn
 
-  install-bundle-dependencies:
+  install-ruby:
     parameters:
       directory:
         type: string
@@ -56,7 +56,7 @@ commands:
       - restore_cache:
           keys:
             # This cache key should be updated whenever we change the Ruby version
-            - v4-gem-cache-{{ checksum "Gemfile.lock" }}-{{ arch }}-ruby-3.2.0
+            - v4-gem-cache-{{ arch }}-ruby-3.2.0
       # CircleCI images fail on Ruby 3.3
       # https://github.com/fastlane/fastlane/issues/21794#issuecomment-2021331335
       # Also, not using macos/switch-ruby because its broken
@@ -71,18 +71,10 @@ commands:
       - run:
           name: Verify Ruby version
           command: ruby -v
-      - run:
-          name: Bundle install
-          working_directory: << parameters.directory >>
-          command: |
-            bundle config set --local clean 'true'
-            bundle config set --local path 'vendor/bundle'
-            bundle install
       - save_cache:
           # This cache key should be updated whenever we change the Ruby version
-          key: v4-gem-cache-{{ checksum "Gemfile.lock" }}-{{ arch }}-ruby-3.2.0
+          key: v4-gem-cache-{{ arch }}-ruby-3.2.0
           paths:
-            - vendor/bundle
             - ~/.rbenv/versions/3.2.0
 
   api-tester-dependencies:
@@ -308,7 +300,9 @@ jobs:
     steps:
       - checkout
       - npm-dependencies
-      - install-bundle-dependencies
+      - install-ruby
+      - revenuecat/install-gem-mac-dependencies:
+          cache-version: v1
       - revenuecat/trust-github-key
       - revenuecat/setup-git-credentials
       - run:

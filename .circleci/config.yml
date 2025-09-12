@@ -285,6 +285,7 @@ jobs:
     steps:
       - checkout
       - npm-dependencies
+      - install-ruby
       - revenuecat/install-gem-mac-dependencies:
           cache-version: v1
       - revenuecat/trust-github-key

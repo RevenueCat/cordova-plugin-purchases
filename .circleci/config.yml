@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   macos: circleci/macos@2.3.2
   android: circleci/android@2.5.0
-  revenuecat: revenuecat/sdks-common-config@3.5.0
+  revenuecat: revenuecat/sdks-common-config@3.6.0
 
 aliases:
   release-tags: &release-tags
@@ -338,6 +338,7 @@ workflows:
             # - android-integration-test
           <<: *release-branches
       - revenuecat/tag-current-branch:
+          ruby_version: "3.2"
           requires:
             - hold
           <<: *release-branches

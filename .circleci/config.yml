@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   macos: circleci/macos@2.3.2
   android: circleci/android@2.5.0
-  revenuecat: revenuecat/sdks-common-config@3.4.0
+  revenuecat: revenuecat/sdks-common-config@3.5.0
 
 aliases:
   release-tags: &release-tags
@@ -365,13 +365,15 @@ workflows:
         - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
         - equal: [ "release-train", << pipeline.schedule.name >> ]
     jobs:
-      - revenuecat/automatic-bump
+      - revenuecat/automatic-bump:
+          ruby_version: "3.2"
 
   manual-trigger-bump:
     when:
       equal: [ bump, << pipeline.parameters.action >> ]
     jobs:
-      - revenuecat/automatic-bump
+      - revenuecat/automatic-bump:
+          ruby_version: "3.2"
 
   update-hybrid-common-versions:
     when:

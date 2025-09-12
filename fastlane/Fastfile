@@ -202,7 +202,7 @@ def get_root_folder
 end
 
 def current_version_number
-  File.read("../.version")
+  File.read("../.version").to_s.strip
 end
 
 def check_no_git_tag_exists(version_number)

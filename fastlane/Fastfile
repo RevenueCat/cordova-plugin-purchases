@@ -40,15 +40,17 @@ lane :bump do |options|
     automatic_release: options[:automatic_release],
     hybrid_common_version: phc_version,
     versions_file_path: versions_path,
-    is_prerelease: options[:is_prerelease]
+    is_prerelease: options[:is_prerelease],
+    dry_run: options[:dry_run]
   )
-  update_hybrids_versions_file(
-    versions_file_path: versions_path,
-    new_sdk_version: current_version_number,
-    hybrid_common_version: phc_version
-  )
-  commit_current_changes(commit_message: 'Update VERSIONS.md')
-  push_to_git_remote(set_upstream: true)
+  # update_hybrids_versions_file(
+  #   versions_file_path: versions_path,
+  #   new_sdk_version: current_version_number,
+  #   hybrid_common_version: phc_version,
+  #   dry_run: options[:dry_run]
+  # )
+  # commit_current_changes(commit_message: 'Update VERSIONS.md')
+  # push_to_git_remote(set_upstream: true)
 end
 
 desc "Automatically bumps version, edit changelog, and create pull request"
@@ -56,6 +58,7 @@ lane :automatic_bump do |options|
   next_version, type_of_bump = determine_next_version_using_labels(
     repo_name: repo_name,
     github_rate_limit: options[:github_rate_limit],
+    github_token: options[:github_token],
     current_version: current_version_number
   )
   options[:next_version] = next_version

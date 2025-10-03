@@ -69,6 +69,14 @@ Update hybrid common in plugin.xml and pushes changes to a new branch if open_pr
 
 Generate docs
 
+### insert_changelog_latest_in_main_if_needed
+
+```sh
+[bundle exec] fastlane insert_changelog_latest_in_main_if_needed
+```
+
+If the release corresponds to a previous version, creates a PR to insert the release changelog into main's CHANGELOG.md
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

@@ -128,7 +128,7 @@ commands:
       - run:
           name: Copy npmrc sample file to final location
           command: cp .npmrc.SAMPLE .npmrc
-  
+
   install-and-create-sim:
     parameters:
       install-simulator-name:
@@ -282,6 +282,21 @@ jobs:
             open_pr:true \
             automatic_release:<< pipeline.parameters.automatic >>
 
+  insert-changelog-latest-in-main-if-needed:
+    description: "If the release corresponds to a previous version, creates a PR to insert the release changelog into main's CHANGELOG.md"
+    docker:
+      - image: cimg/ruby:2.6
+    steps:
+      - checkout
+      - revenuecat/trust-github-key
+      - revenuecat/setup-git-credentials
+      - run:
+          name: Insert changelog latest in main if needed
+          command: |
+            bundle exec fastlane insert_changelog_latest_in_main_if_needed \
+            version:<< pipeline.parameters.version >> \
+            automatic_release:<< pipeline.parameters.automatic >>
+
 workflows:
   version: 2
   build-test:
@@ -289,7 +304,7 @@ workflows:
       and:
         - not:
             equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
-        # Only run this workflow when the action is "build" (the default), 
+        # Only run this workflow when the action is "build" (the default),
         # so it doesn't run for other actions like "bump" on a release branch,
         # which should only open the release PR but not deploy it.
         # (Deployment happens after the hold job is approved on the release PR.)
@@ -318,6 +333,10 @@ workflows:
       - make-release:
           <<: *release-tags
       - docs-deploy:
+          <<: *release-tags
+          requires:
+            - make-release
+      - insert-changelog-latest-in-main-if-needed:
           <<: *release-tags
           requires:
             - make-release

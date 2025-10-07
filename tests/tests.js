@@ -31,6 +31,6 @@ exports.defineAutoTests = function() {
           done.fail("shouldn't be error");
         }
       );
-    }, 10000);
+    }, 20000);
   });
 };

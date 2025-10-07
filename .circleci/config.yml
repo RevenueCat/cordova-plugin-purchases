@@ -83,7 +83,7 @@ commands:
     steps:
       - run:
           name: Install Cordova Paramedic
-          command: npm install --location=global github:apache/cordova-paramedic#2243a96d23e9a27213cbbf17634df0beb3463bdb
+          command: npm install --location=global github:apache/cordova-paramedic#d676b316f572cbd828fca7ba71003ca5228e0a6d
 
   replace-api-key-linux:
     description: "Replace API_KEY"
@@ -185,15 +185,15 @@ jobs:
 
   ios-integration-test:
     description: "Run iOS integration tests for Cordova"
-    resource_class: macos.m1.medium.gen1
+    resource_class: m4pro.medium
     macos:
-      xcode: '15.2'
+      xcode: '16.4'
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
       - macos/preboot-simulator:
-          device: iPhone 15
-          version: '17.2'
+          device: iPhone 16
+          version: '18.5'
       - npm-dependencies
       - npm-install-cordova-paramedic
       - npm-ios-dependencies
@@ -251,7 +251,7 @@ jobs:
   make-release:
     description: "Publishes the new version and creates a github release"
     macos:
-      xcode: 13.4.0
+      xcode: 16.4.0
     steps:
       - checkout
       - npm-dependencies
@@ -293,9 +293,7 @@ jobs:
       - run:
           name: Insert changelog latest in main if needed
           command: |
-            bundle exec fastlane insert_changelog_latest_in_main_if_needed \
-            version:<< pipeline.parameters.version >> \
-            automatic_release:<< pipeline.parameters.automatic >>
+            bundle exec fastlane insert_changelog_latest_in_main_if_needed
 
 workflows:
   version: 2

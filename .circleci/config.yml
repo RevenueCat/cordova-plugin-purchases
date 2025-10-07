@@ -288,6 +288,8 @@ jobs:
       - image: cimg/ruby:2.6
     steps:
       - checkout
+      - revenuecat/install-gem-mac-dependencies:
+          cache-version: v1
       - revenuecat/trust-github-key
       - revenuecat/setup-git-credentials
       - run:
@@ -343,13 +345,7 @@ workflows:
     when:
       equal: [ make-release-action, << pipeline.parameters.action >> ]
     jobs:
-      - make-release
-      - docs-deploy:
-          requires:
-            - make-release
-      - insert-changelog-latest-in-main-if-needed:
-          requires:
-            - make-release
+      - insert-changelog-latest-in-main-if-needed
 
   api-tester-check:
     when:

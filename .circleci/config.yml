@@ -29,7 +29,7 @@ aliases:
 parameters:
   action:
     type: enum
-    enum: [build, upgrade-hybrid-common, bump, make-release-action]
+    enum: [build, upgrade-hybrid-common, bump]
     default: build
   version:
     type: string
@@ -251,7 +251,7 @@ jobs:
   make-release:
     description: "Publishes the new version and creates a github release"
     macos:
-      xcode: 13.4.0
+      xcode: 16.4.0
     steps:
       - checkout
       - npm-dependencies
@@ -285,11 +285,9 @@ jobs:
   insert-changelog-latest-in-main-if-needed:
     description: "If the release corresponds to a previous version, creates a PR to insert the release changelog into main's CHANGELOG.md"
     docker:
-      - image: cimg/ruby:3.2
+      - image: cimg/ruby:2.6
     steps:
       - checkout
-      - revenuecat/install-gem-mac-dependencies:
-          cache-version: v1
       - revenuecat/trust-github-key
       - revenuecat/setup-git-credentials
       - run:
@@ -340,12 +338,6 @@ workflows:
           <<: *release-tags
           requires:
             - make-release
-
-  manual-make-release:
-    when:
-      equal: [ make-release-action, << pipeline.parameters.action >> ]
-    jobs:
-      - insert-changelog-latest-in-main-if-needed
 
   api-tester-check:
     when:

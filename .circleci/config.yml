@@ -185,15 +185,15 @@ jobs:
 
   ios-integration-test:
     description: "Run iOS integration tests for Cordova"
-    resource_class: macos.m1.medium.gen1
+    resource_class: m4pro.medium
     macos:
-      xcode: '15.2'
+      xcode: '16.4'
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
       - macos/preboot-simulator:
-          device: iPhone 15
-          version: '17.2'
+          device: iPhone 16
+          version: '18.5'
       - npm-dependencies
       - npm-install-cordova-paramedic
       - npm-ios-dependencies
@@ -251,7 +251,7 @@ jobs:
   make-release:
     description: "Publishes the new version and creates a github release"
     macos:
-      xcode: 13.4.0
+      xcode: 16.4.0
     steps:
       - checkout
       - npm-dependencies

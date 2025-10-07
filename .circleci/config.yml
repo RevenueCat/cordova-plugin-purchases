@@ -251,7 +251,7 @@ jobs:
   make-release:
     description: "Publishes the new version and creates a github release"
     macos:
-      xcode: 16.4.0
+      xcode: 13.4.0
     steps:
       - checkout
       - npm-dependencies
@@ -285,9 +285,11 @@ jobs:
   insert-changelog-latest-in-main-if-needed:
     description: "If the release corresponds to a previous version, creates a PR to insert the release changelog into main's CHANGELOG.md"
     docker:
-      - image: cimg/ruby:2.6
+      - image: cimg/ruby:3.2
     steps:
       - checkout
+      - revenuecat/install-gem-mac-dependencies:
+          cache-version: v1
       - revenuecat/trust-github-key
       - revenuecat/setup-git-credentials
       - run:

@@ -288,6 +288,8 @@ jobs:
       - image: cimg/ruby:2.6
     steps:
       - checkout
+      - revenuecat/install-gem-mac-dependencies:
+          cache-version: v1
       - revenuecat/trust-github-key
       - revenuecat/setup-git-credentials
       - run:

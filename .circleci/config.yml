@@ -29,7 +29,7 @@ aliases:
 parameters:
   action:
     type: enum
-    enum: [build, upgrade-hybrid-common, bump]
+    enum: [build, upgrade-hybrid-common, bump, make-release-action]
     default: build
   version:
     type: string
@@ -336,6 +336,18 @@ workflows:
             - make-release
       - insert-changelog-latest-in-main-if-needed:
           <<: *release-tags
+          requires:
+            - make-release
+
+  manual-make-release:
+    when:
+      equal: [ make-release-action, << pipeline.parameters.action >> ]
+    jobs:
+      - make-release
+      - docs-deploy:
+          requires:
+            - make-release
+      - insert-changelog-latest-in-main-if-needed:
           requires:
             - make-release
 

@@ -293,9 +293,7 @@ jobs:
       - run:
           name: Insert changelog latest in main if needed
           command: |
-            bundle exec fastlane insert_changelog_latest_in_main_if_needed \
-            version:<< pipeline.parameters.version >> \
-            automatic_release:<< pipeline.parameters.automatic >>
+            bundle exec fastlane insert_changelog_latest_in_main_if_needed
 
 workflows:
   version: 2

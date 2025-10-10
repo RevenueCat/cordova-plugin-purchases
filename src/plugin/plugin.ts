@@ -256,7 +256,7 @@ export interface PurchasesEntitlementInfo {
   readonly expirationDate: string | null;
   /**
    * The store where this entitlement was unlocked from. Either: appStore, macAppStore, playStore, stripe,
-   * promotional, unknownStore
+   * promotional, unknownStore, amazon, rcBilling, external, paddle, testStore
    */
   readonly store: string;
   /**
@@ -1346,7 +1346,7 @@ class Purchases {
   }
 
   /**
-   * iOS 18.0+ only. Use this function to purchase a product with a win-back offer. 
+   * iOS 18.0+ only. Use this function to purchase a product with a win-back offer.
    * Fetch eligible win-back offers with getEligibleWinBackOffersForProduct.
    *
    * @param {PurchasesPackage} aPackage The package the user intends to purchase.
@@ -2360,7 +2360,7 @@ class Purchases {
 
   /**
    * Fetches the virtual currencies for the current subscriber.
-   * 
+   *
    * @param {function(PurchasesVirtualCurrencies):void} callback Callback that will receive the subscriber's virtual currencies.
    * @param {function(PurchasesError):void} errorCallback Callback that will be triggered whenever there is a problem retrieving the subscriber's virtual currencies.
    */
@@ -2379,7 +2379,7 @@ class Purchases {
 
   /**
    * Invalidates the cache for virtual currencies.
-   * 
+   *
    * This is useful for cases where a virtual currency's balance might have been updated
    * outside of the app, like if you decreased a user's balance from the user spending a virtual currency,
    * or if you increased the balance from your backend using the server APIs.
@@ -2396,10 +2396,10 @@ class Purchases {
 
   /**
    * The currently cached `PurchasesVirtualCurrencies` if one is available.
-   * This value will remain null until virtual currencies have been fetched at 
+   * This value will remain null until virtual currencies have been fetched at
    * least once with `Purchases.getVirtualCurrencies` or an equivalent function.
-   * 
-   * @param {function(PurchasesVirtualCurrencies):void} callback Callback that will be triggered with the currently cached virtual currencies for the current subscriber. 
+   *
+   * @param {function(PurchasesVirtualCurrencies):void} callback Callback that will be triggered with the currently cached virtual currencies for the current subscriber.
    */
   public static getCachedVirtualCurrencies(
     callback: (cachedVirtualCurrencies: PurchasesVirtualCurrencies | null) => void

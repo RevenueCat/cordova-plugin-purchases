@@ -37,6 +37,14 @@ Automatically bumps version, edit changelog, and create pull request
 
 Creates GitHub release and publishes package
 
+### release_bc7
+
+```sh
+[bundle exec] fastlane release_bc7
+```
+
+Publishes package with bc7 variant dependencies on bc7 npm tag
+
 ### github_release
 
 ```sh

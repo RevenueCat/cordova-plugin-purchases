@@ -294,6 +294,22 @@ jobs:
           name: release
           command: bundle exec fastlane release
 
+  make-release-bc7:
+    description: "Publishes the bc7 variant version with bc7 dependencies on bc7 npm tag"
+    macos:
+      xcode: 14.3.1
+    steps:
+      - checkout
+      - npm-dependencies
+      - install-ruby
+      - revenuecat/install-gem-mac-dependencies:
+          cache-version: v1
+      - revenuecat/trust-github-key
+      - copy-npm-rc
+      - run:
+          name: release-bc7
+          command: bundle exec fastlane release_bc7
+
   update-hybrid-common-versions:
     description: "Creates a PR updating purchases-hybrid-common to latest release"
     macos:
@@ -344,6 +360,10 @@ workflows:
           <<: *release-branches
       - make-release:
           <<: *release-tags
+      - make-release-bc7:
+          <<: *release-tags
+          requires:
+            - make-release
       - docs-deploy:
           <<: *release-tags
           requires:

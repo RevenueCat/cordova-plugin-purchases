@@ -87,6 +87,47 @@ lane :release do |options|
   github_release(version: version_number)
 end
 
+desc "Publishes package with bc7 variant dependencies on bc7 npm tag"
+lane :release_bc7 do |options|
+  version_number = current_version_number
+  is_prerelease = Gem::Version.new(version_number).prerelease?
+
+  if is_prerelease
+    UI.message("Skipping BC7 release for prerelease version #{version_number}")
+    next
+  end
+
+  bc7_version = "#{version_number}+bc7"
+  UI.message("Creating BC7 release with version #{bc7_version}")
+
+  # Modify plugin.xml to use BC7 dependencies
+  plugin_xml_path = File.join(get_root_folder, 'plugin.xml')
+  plugin_xml_content = File.read(plugin_xml_path)
+  modified_content = plugin_xml_content.gsub(
+    /com\.revenuecat\.purchases:purchases-hybrid-common:([^"]+)/,
+    'com.revenuecat.purchases:purchases-hybrid-common-bc7:\1'
+  )
+  File.write(plugin_xml_path, modified_content)
+  
+  # Modify package.json version for BC7 release
+  package_json_path = File.join(get_root_folder, 'package.json')
+  package_json_content = File.read(package_json_path)
+  modified_package_json = package_json_content.gsub(
+    /"version": "#{version_number}"/,
+    "\"version\": \"#{bc7_version}\""
+  )
+  File.write(package_json_path, modified_package_json)
+  
+  # Publish with bc7 tag
+  args = ['npm', 'publish', '--tag', 'bc7', '--dry-run']
+
+  Dir.chdir(get_root_folder) do
+    sh(args)
+  end
+  
+  UI.success("✓ Published BC7 package version #{bc7_version} with bc7 tag")
+end
+
 desc "Make github release"
 lane :github_release do |options|
   create_github_release(

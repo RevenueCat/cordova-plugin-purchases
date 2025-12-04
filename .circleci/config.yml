@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  macos: circleci/macos@2.3.2
+  macos: circleci/macos@2.3.6
   android: circleci/android@2.5.0
   revenuecat: revenuecat/sdks-common-config@3.6.0
 

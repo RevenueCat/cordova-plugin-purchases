@@ -294,6 +294,10 @@ jobs:
       - revenuecat/install-gem-mac-dependencies:
           cache-version: v1
       - revenuecat/trust-github-key
+      - copy-npm-rc
+      - run:
+          name: release
+          command: bundle exec fastlane release
 
   update-hybrid-common-versions:
     description: "Creates a PR updating purchases-hybrid-common to latest release"
@@ -322,7 +326,6 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - runtest
-      - make-release
 
   deploy:
     when:

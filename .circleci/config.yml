@@ -221,12 +221,15 @@ jobs:
 
   ios-integration-test:
     description: "Run iOS integration tests for Cordova"
-    <<: *base-mac-job
+    resource_class: macos.m1.medium.gen1
+    macos:
+      xcode: '15.4'
+    shell: /bin/bash --login -o pipefail
     steps:
       - checkout
       - macos/preboot-simulator:
-          device: iPhone 16 Plus
-          version: '18.5'
+          device: iPhone 15
+          version: '17.5'
       - npm-dependencies
       - npm-install-cordova-paramedic
       - npm-ios-dependencies

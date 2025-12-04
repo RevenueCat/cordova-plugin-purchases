@@ -281,7 +281,7 @@ jobs:
   make-release:
     description: "Publishes the new version and creates a github release"
     macos:
-      xcode: 16.4
+      xcode: 16.4.0
     steps:
       - checkout
       - npm-dependencies
@@ -293,7 +293,7 @@ jobs:
   update-hybrid-common-versions:
     description: "Creates a PR updating purchases-hybrid-common to latest release"
     macos:
-      xcode: 16.4
+      xcode: 16.4.0
     steps:
       - checkout
       - npm-dependencies

@@ -226,7 +226,7 @@ jobs:
       - checkout
       - macos/preboot-simulator:
           device: iPhone 16
-          version: '18.6'
+          version: '18.5'
       - npm-dependencies
       - npm-install-cordova-paramedic
       - npm-ios-dependencies

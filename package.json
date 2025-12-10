@@ -1,7 +1,7 @@
 {
   "name": "cordova-plugin-purchases",
   "type": "commonjs",
-  "version": "7.2.8",
+  "version": "7.2.9",
   "description": "Purchases Cordova Plugin",
   "types": "./www/plugin.d.ts",
   "cordova": {

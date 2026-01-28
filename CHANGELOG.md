@@ -1,3 +1,15 @@
+## 7.2.15
+## RevenueCat SDK
+### 📦 Dependency Updates
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 17.30.0 (#824) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 9.19.3](https://github.com/RevenueCat/purchases-android/releases/tag/9.19.3)
+  * [Android 9.19.2](https://github.com/RevenueCat/purchases-android/releases/tag/9.19.2)
+  * [iOS 5.56.0](https://github.com/RevenueCat/purchases-ios/releases/tag/5.56.0)
+  * [iOS 5.55.3](https://github.com/RevenueCat/purchases-ios/releases/tag/5.55.3)
+
+### 🔄 Other Changes
+* Updated CircleCI resources class from M1 to M4 (#825) via Rick (@rickvdl)
+
 ## 7.2.14
 ## RevenueCat SDK
 ### 📦 Dependency Updates

@@ -57,6 +57,7 @@ function checkPackage(pack: PurchasesPackage) {
   const packageType: PACKAGE_TYPE = pack.packageType;
   const product: PurchasesStoreProduct = pack.product;
   const offeringIdentifier: string = pack.offeringIdentifier;
+  const webCheckoutUrl: string | null = pack.webCheckoutUrl;
 }
 
 function checkOffering(offering: PurchasesOffering) {
@@ -71,6 +72,7 @@ function checkOffering(offering: PurchasesOffering) {
   const twoMonth: PurchasesPackage | null = offering.twoMonth;
   const monthly: PurchasesPackage | null = offering.monthly;
   const weekly: PurchasesPackage | null = offering.weekly;
+  const webCheckoutUrl: string | null = offering.webCheckoutUrl;
 }
 
 function checkOfferings(offerings: PurchasesOfferings) {

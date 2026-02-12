@@ -549,6 +549,10 @@ export interface PurchasesPackage {
    * Offering this package belongs to.
    */
   readonly offeringIdentifier: string;
+  /**
+   * URL to use for web checkout for this package. Null if not available.
+   */
+  readonly webCheckoutUrl: string | null;
 }
 
 /**
@@ -603,6 +607,10 @@ export interface PurchasesOffering {
    * Weekly package type configured in the RevenueCat dashboard, if available.
    */
   readonly weekly: PurchasesPackage | null;
+  /**
+   * URL to use for web checkout for this offering. Null if not available.
+   */
+  readonly webCheckoutUrl: string | null;
 }
 
 /**

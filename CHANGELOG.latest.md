@@ -1,14 +1,14 @@
 ## RevenueCat SDK
-### ✨ New Features
-* [SDK-4250] Add webCheckoutUrl to PurchasesPackage and PurchasesOffering (#837) via Toni Rico (@tonidero)
 ### 📦 Dependency Updates
-* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 17.40.0 (#847) via RevenueCat Git Bot (@RCGitBot)
-  * [Android 9.22.0](https://github.com/RevenueCat/purchases-android/releases/tag/9.22.0)
-  * [Android 9.21.0](https://github.com/RevenueCat/purchases-android/releases/tag/9.21.0)
-  * [iOS 5.59.0](https://github.com/RevenueCat/purchases-ios/releases/tag/5.59.0)
-  * [iOS 5.58.1](https://github.com/RevenueCat/purchases-ios/releases/tag/5.58.1)
-  * [iOS 5.58.0](https://github.com/RevenueCat/purchases-ios/releases/tag/5.58.0)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 17.41.1 (#853) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 9.22.1](https://github.com/RevenueCat/purchases-android/releases/tag/9.22.1)
+  * [iOS 5.59.2](https://github.com/RevenueCat/purchases-ios/releases/tag/5.59.2)
+  * [iOS 5.59.1](https://github.com/RevenueCat/purchases-ios/releases/tag/5.59.1)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 17.41.0 (#849) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 9.22.1](https://github.com/RevenueCat/purchases-android/releases/tag/9.22.1)
+  * [iOS 5.59.2](https://github.com/RevenueCat/purchases-ios/releases/tag/5.59.2)
+  * [iOS 5.59.1](https://github.com/RevenueCat/purchases-ios/releases/tag/5.59.1)
 
 ### 🔄 Other Changes
-* Bump fastlane-plugin-revenuecat_internal from `e6454e3` to `afc9219` (#845) via dependabot[bot] (@dependabot[bot])
-* Bump faraday from 1.10.4 to 1.10.5 (#842) via dependabot[bot] (@dependabot[bot])
+* Fix formatting of version 7.1.2 entry in VERSIONS.md (#854) via Cesar de la Vega (@vegaro)
+* Bump fastlane-plugin-revenuecat_internal from `afc9219` to `ea6276c` (#852) via dependabot[bot] (@dependabot[bot])

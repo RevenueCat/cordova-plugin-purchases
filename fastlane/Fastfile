@@ -138,6 +138,17 @@ lane :update_hybrid_common do |options|
   )
 end
 
+desc "Run maestro E2E tests"
+lane :run_maestro_e2e_tests do
+  Dir.chdir("e2e-tests/MaestroTestApp") do
+    sh("find www -type f -name '*.js' -exec sed -i '' 's/MAESTRO_TESTS_REVENUECAT_API_KEY/'\"$RC_MAESTRO_E2E_API_KEY\"'/g' {} +")
+    sh("cordova platform add ios")
+    sh("cordova build ios --emulator")
+    sh("xcrun simctl install booted platforms/ios/build/emulator/MaestroTestApp.app")
+  end
+  sh("maestro test --format junit --output test_output/report.xml e2e-tests/maestro/")
+end
+
 desc "Generate docs"
 lane :generate_docs do
   version_number = current_version_number

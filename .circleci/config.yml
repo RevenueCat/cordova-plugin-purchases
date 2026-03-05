@@ -280,6 +280,7 @@ jobs:
       - revenuecat/install-gem-unix-dependencies:
           cache-version: v1
       - revenuecat/setup-git-credentials
+      - revenuecat/trust-github-key
       - run:
           name: Build docs
           command: bundle exec fastlane generate_docs

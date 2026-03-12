@@ -256,7 +256,7 @@ export interface PurchasesEntitlementInfo {
   readonly expirationDate: string | null;
   /**
    * The store where this entitlement was unlocked from. Either: appStore, macAppStore, playStore, stripe,
-   * promotional, unknownStore, amazon, rcBilling, external, paddle, testStore
+   * promotional, unknownStore, amazon, rcBilling, external, paddle, testStore, galaxy
    */
   readonly store: string;
   /**

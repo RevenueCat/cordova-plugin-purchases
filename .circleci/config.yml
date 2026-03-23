@@ -353,6 +353,11 @@ workflows:
           <<: *release-tags
           requires:
             - make-release
+      - revenuecat/merge-release-pr:
+          repo_name: cordova-plugin-purchases
+          requires:
+            - docs-deploy
+          <<: *release-tags
 
   api-tester-check:
     when:

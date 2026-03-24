@@ -1,7 +1,6 @@
 {
   "extends": "../tsconfig.json",
   "compilerOptions": {
-    "baseUrl": ".",
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     // We don't actually need to output anything

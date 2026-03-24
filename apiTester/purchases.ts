@@ -23,7 +23,7 @@ import {
 import Purchases from '../www/plugin';
 import {IN_APP_MESSAGE_TYPE, PURCHASES_ARE_COMPLETED_BY_TYPE, PurchasesAreCompletedBy, STOREKIT_VERSION} from "../src/plugin/plugin";
 
-const errorCallback = (error: PurchasesError) => {
+const errorCallback = (error: string) => {
 };
 
 function checkPurchases(purchases: Purchases) {

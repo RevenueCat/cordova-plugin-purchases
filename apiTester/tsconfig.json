@@ -2,6 +2,7 @@
   "extends": "../tsconfig.json",
   "compilerOptions": {
     "target": "es2015",
+    "types": ["node"],
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     // We don't actually need to output anything

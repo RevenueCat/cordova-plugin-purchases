@@ -87,7 +87,6 @@ commands:
     description: "Install API Tester dependencies"
     steps:
        - install-nvm
-       - run: npm install typescript -g
        - save_cache:
           paths:
             - node_modules
@@ -268,7 +267,7 @@ jobs:
           command: npm install
       - run:
           name: Compile API Tester
-          command: tsc -p apiTester
+          command: npx tsc -p apiTester
 
   docs-deploy:
     docker:

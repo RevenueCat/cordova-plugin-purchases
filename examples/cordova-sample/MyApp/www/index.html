@@ -46,6 +46,15 @@
                 <div id="status-container">
                 <p id="status">Ready</p>
                 <div id="paywall"></div>
+                <div id="custom-variables-editor">
+                    <p style="color:#fff;margin:4px 0 2px;">Custom Variables</p>
+                    <div style="display:flex;gap:4px;margin-bottom:4px;">
+                        <input id="cv-key" type="text" placeholder="key" style="flex:1;font-size:14px;padding:4px;">
+                        <input id="cv-value" type="text" placeholder="value" style="flex:2;font-size:14px;padding:4px;">
+                        <button id="cv-add" type="button" style="font-size:14px;padding:4px 8px;">Add</button>
+                    </div>
+                    <div id="cv-list"></div>
+                </div>
                 <button id="show-paywall" type="button" class="tester-button">Show Paywall</button>
                 <button id="get-offerings" type="button" class="tester-button">Get Offerings</button>
                 <button id="get-products" type="button" class="tester-button">Get Products</button>

@@ -143,6 +143,45 @@ div#status-container {
     padding: 10px;
 }
 
+#custom-variables-editor {
+    background-color: #1a1a1a;
+    padding: 8px;
+    margin-bottom: 2px;
+}
+
+#custom-variables-editor input {
+    -webkit-user-select: text;
+    user-select: text;
+    border: 1px solid #555;
+    background: #2a2a2a;
+    color: #fff;
+    border-radius: 2px;
+}
+
+.cv-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 2px;
+    font-size: 13px;
+    color: #ccc;
+}
+
+.cv-row .cv-key {
+    font-weight: bold;
+    color: #fff;
+}
+
+.cv-remove {
+    background: #802020;
+    color: #fff;
+    border: none;
+    border-radius: 2px;
+    padding: 2px 6px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
 div.package {
     border: 1px solid #FFFFFF;
     margin: 2px 0px;

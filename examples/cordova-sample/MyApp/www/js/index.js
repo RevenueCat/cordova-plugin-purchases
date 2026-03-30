@@ -26,6 +26,7 @@ const app = {
       false
     );
     document.getElementById("show-paywall").addEventListener("click", this.showPaywall);
+    document.getElementById("cv-add").addEventListener("click", this.addCustomVariable);
     document.getElementById("get-offerings").addEventListener("click", this.getOfferings);
     document.getElementById("get-products").addEventListener("click", this.getProducts);
     document.getElementById("get-customer-info").addEventListener("click", this.getCustomerInfo);
@@ -101,7 +102,45 @@ const app = {
     initializePurchasesSDK();
   },
 
+  customVariables: {},
+
+  addCustomVariable: function() {
+    var key = document.getElementById("cv-key").value.trim();
+    var value = document.getElementById("cv-value").value.trim();
+    if (!key) return;
+    app.customVariables[key] = value;
+    document.getElementById("cv-key").value = "";
+    document.getElementById("cv-value").value = "";
+    app.renderCustomVariables();
+  },
+
+  removeCustomVariable: function(key) {
+    delete app.customVariables[key];
+    app.renderCustomVariables();
+  },
+
+  renderCustomVariables: function() {
+    var list = document.getElementById("cv-list");
+    list.innerHTML = "";
+    Object.entries(app.customVariables).forEach(function([key, value]) {
+      var row = document.createElement("div");
+      row.className = "cv-row";
+      var label = document.createElement("span");
+      label.innerHTML = '<span class="cv-key">' + key + '</span>: ' + value;
+      label.style.flex = "1";
+      var removeBtn = document.createElement("button");
+      removeBtn.className = "cv-remove";
+      removeBtn.textContent = "✕";
+      removeBtn.addEventListener("click", function() { app.removeCustomVariable(key); });
+      row.appendChild(label);
+      row.appendChild(removeBtn);
+      list.appendChild(row);
+    });
+  },
+
   showPaywall: function() {
+    var customVariables = Object.assign({}, app.customVariables);
+    console.log("showPaywall with customVariables: " + JSON.stringify(customVariables));
     Purchases.getOfferings(
       offerings => {
 

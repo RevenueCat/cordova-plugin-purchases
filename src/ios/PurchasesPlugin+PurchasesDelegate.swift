@@ -12,9 +12,10 @@ import RevenueCat
 extension CDVPurchasesPlugin: PurchasesDelegate {
 
     public func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
+        guard let callbackId = self.updatedCustomerInfoCallbackID else { return }
         let result = CDVPluginResult(status: .ok, messageAs: CommonFunctionality.encode(customerInfo: customerInfo))
         result.setKeepCallbackAs(true)
-        self.commandDelegate.send(result, callbackId: self.updatedCustomerInfoCallbackID)
+        self.commandDelegate.send(result, callbackId: callbackId)
     }
 
     public func purchases(_ purchases: Purchases,

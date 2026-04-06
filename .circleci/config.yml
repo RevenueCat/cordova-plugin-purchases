@@ -324,15 +324,11 @@ jobs:
     steps:
       - checkout
       - install-nvm
-      - install-ruby
-      - run:
-          name: Add rbenv shims to PATH
-          command: echo 'export PATH="$HOME/.rbenv/shims:$PATH"' >> $BASH_ENV
       - run:
           name: Install Cordova and CocoaPods
           command: |
             npm install -g cordova
-            gem install cocoapods --no-document
+            brew install cocoapods
       - run:
           name: Build plugin
           command: npm install && npm run build

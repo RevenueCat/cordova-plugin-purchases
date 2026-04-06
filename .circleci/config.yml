@@ -324,6 +324,7 @@ jobs:
     steps:
       - checkout
       - install-nvm
+      - install-ruby
       - run:
           name: Install Cordova and CocoaPods
           command: |

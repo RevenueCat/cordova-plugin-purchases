@@ -336,6 +336,7 @@ jobs:
             rsync -a --exclude node_modules --exclude .git --exclude tmp-repro \
               --exclude e2e-tests --exclude examples --exclude .circleci \
               . /tmp/cordova-plugin-purchases
+            node -e "const p=require('/tmp/cordova-plugin-purchases/package.json'); delete p.scripts; require('fs').writeFileSync('/tmp/cordova-plugin-purchases/package.json', JSON.stringify(p,null,2))"
       - run:
           name: "Test plugin installation: cordova-ios 7"
           command: |

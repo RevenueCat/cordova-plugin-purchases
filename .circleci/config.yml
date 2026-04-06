@@ -324,11 +324,15 @@ jobs:
     steps:
       - checkout
       - install-nvm
+      - install-ruby
+      - run:
+          name: Initialize rbenv for subsequent steps
+          command: echo 'eval "$(rbenv init -)"' >> $BASH_ENV
       - run:
           name: Install Cordova and CocoaPods
           command: |
             npm install -g cordova
-            sudo gem install cocoapods --no-document
+            gem install cocoapods --no-document
       - run:
           name: Build plugin
           command: npm install && npm run build

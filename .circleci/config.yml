@@ -345,6 +345,9 @@ jobs:
       - checkout
       - install-nvm
       - prepare-plugin-install-test
+      - restore_cache:
+          keys:
+            - v1-cocoapods-specs-{{ arch }}
       - run:
           name: "Test plugin installation: cordova-ios 7"
           command: |
@@ -354,6 +357,10 @@ jobs:
             cordova platform add ios@7
             cordova plugin add /tmp/plugin
             echo "cordova-ios 7: plugin installed successfully"
+      - save_cache:
+          key: v1-cocoapods-specs-{{ arch }}
+          paths:
+            - ~/.cocoapods
 
   plugin-installation-test-ios8:
     description: "Verify cordova plugin add works on cordova-ios 8"
@@ -362,6 +369,9 @@ jobs:
       - checkout
       - install-nvm
       - prepare-plugin-install-test
+      - restore_cache:
+          keys:
+            - v1-cocoapods-specs-{{ arch }}
       - run:
           name: "Test plugin installation: cordova-ios 8"
           command: |
@@ -371,6 +381,10 @@ jobs:
             cordova platform add ios@8
             cordova plugin add /tmp/plugin
             echo "cordova-ios 8: plugin installed successfully"
+      - save_cache:
+          key: v1-cocoapods-specs-{{ arch }}
+          paths:
+            - ~/.cocoapods
 
 workflows:
   version: 2

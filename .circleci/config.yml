@@ -324,12 +324,11 @@ jobs:
     steps:
       - checkout
       - install-nvm
-      - install-ruby
       - run:
           name: Install Cordova and CocoaPods
           command: |
             npm install -g cordova
-            gem install cocoapods --no-document
+            sudo gem install cocoapods --no-document
       - run:
           name: Build plugin
           command: npm install && npm run build

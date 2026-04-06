@@ -145,26 +145,6 @@ commands:
             sdk env install
             echo -e '\nexport JAVA_HOME="/home/circleci/.sdkman/candidates/java/current"' >> $BASH_ENV
 
-  prepare-plugin-install-test:
-    description: "Install Cordova/CocoaPods and pack the plugin for installation testing"
-    steps:
-      - run:
-          name: Install Cordova and CocoaPods
-          command: |
-            npm install -g cordova
-            brew install cocoapods
-      - run:
-          name: Build and pack plugin
-          command: |
-            npm install && npm run build
-            npm pack
-            mkdir -p /tmp/plugin && tar -xzf cordova-plugin-purchases-*.tgz -C /tmp/plugin --strip-components=1
-            # cordova plugin add <local-dir> triggers `npm install` which re-runs the
-            # `prepare` script (tsc). This fails because npm pack correctly excludes
-            # tsconfig.json. Real users install from the npm registry where `prepare`
-            # is never executed, so stripping scripts matches the actual user experience.
-            node -e "p=require('/tmp/plugin/package.json'); delete p.scripts; require('fs').writeFileSync('/tmp/plugin/package.json',JSON.stringify(p,null,2))"
-
   install-nvm:
     steps:
       - run:
@@ -338,13 +318,28 @@ jobs:
             open_pr:true \
             automatic_release:<< pipeline.parameters.automatic >>
 
-  plugin-installation-test-ios7:
-    description: "Verify cordova plugin add works on cordova-ios 7"
+  plugin-installation-test:
+    description: "Verify cordova plugin add works on both cordova-ios 7 and 8"
     <<: *base-mac-job
     steps:
       - checkout
       - install-nvm
-      - prepare-plugin-install-test
+      - run:
+          name: Install Cordova and CocoaPods
+          command: |
+            npm install -g cordova
+            brew install cocoapods
+      - run:
+          name: Build and pack plugin
+          command: |
+            npm install && npm run build
+            npm pack
+            mkdir -p /tmp/plugin && tar -xzf cordova-plugin-purchases-*.tgz -C /tmp/plugin --strip-components=1
+            # cordova plugin add <local-dir> triggers `npm install` which re-runs the
+            # `prepare` script (tsc). This fails because npm pack correctly excludes
+            # tsconfig.json. Real users install from the npm registry where `prepare`
+            # is never executed, so stripping scripts matches the actual user experience.
+            node -e "p=require('/tmp/plugin/package.json'); delete p.scripts; require('fs').writeFileSync('/tmp/plugin/package.json',JSON.stringify(p,null,2))"
       - run:
           name: "Test plugin installation: cordova-ios 7"
           command: |
@@ -354,14 +349,6 @@ jobs:
             cordova platform add ios@7
             cordova plugin add /tmp/plugin
             echo "cordova-ios 7: plugin installed successfully"
-
-  plugin-installation-test-ios8:
-    description: "Verify cordova plugin add works on cordova-ios 8"
-    <<: *base-mac-job
-    steps:
-      - checkout
-      - install-nvm
-      - prepare-plugin-install-test
       - run:
           name: "Test plugin installation: cordova-ios 8"
           command: |
@@ -380,8 +367,7 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - runtest
-      - plugin-installation-test-ios7
-      - plugin-installation-test-ios8
+      - plugin-installation-test
 
   deploy:
     when:

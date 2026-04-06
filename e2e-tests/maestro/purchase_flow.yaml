@@ -1,0 +1,14 @@
+appId: com.revenuecat.automatedsdktests
+---
+- launchApp
+- extendedWaitUntil:
+    visible: "Test Cases"
+    timeout: 15000
+- assertVisible: "Purchase product"
+- tapOn: "Purchase product"
+- extendedWaitUntil:
+    visible: "Entitlements: none"
+    timeout: 15000
+- extendedWaitUntil:
+    visible: "^Purchase$"
+    timeout: 30000

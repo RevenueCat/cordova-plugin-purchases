@@ -326,6 +326,7 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - runtest
+      - api-tester
 
   deploy:
     when:
@@ -357,13 +358,6 @@ workflows:
           requires:
             - docs-deploy
           <<: *release-tags
-
-  api-tester-check:
-    when:
-      not:
-        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
-    jobs:
-      - api-tester
 
   danger:
     jobs:

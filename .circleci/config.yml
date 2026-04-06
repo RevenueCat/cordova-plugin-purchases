@@ -326,8 +326,8 @@ jobs:
       - install-nvm
       - install-ruby
       - run:
-          name: Initialize rbenv for subsequent steps
-          command: echo 'eval "$(rbenv init -)"' >> $BASH_ENV
+          name: Add rbenv shims to PATH
+          command: echo 'export PATH="$HOME/.rbenv/shims:$PATH"' >> $BASH_ENV
       - run:
           name: Install Cordova and CocoaPods
           command: |

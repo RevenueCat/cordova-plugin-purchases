@@ -325,9 +325,9 @@ jobs:
       - checkout
       - install-nvm
       - run:
-          name: Install Cordova and CocoaPods
+          name: Install Cordova, TypeScript, and CocoaPods
           command: |
-            npm install -g cordova
+            npm install -g cordova typescript
             brew install cocoapods
       - restore_cache:
           keys:

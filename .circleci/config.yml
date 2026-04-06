@@ -338,6 +338,10 @@ jobs:
             npm install && npm run build
             npm pack
             mkdir -p /tmp/plugin && tar -xzf cordova-plugin-purchases-*.tgz -C /tmp/plugin --strip-components=1
+            # cordova plugin add <local-dir> triggers `npm install` which re-runs the
+            # `prepare` script (tsc). This fails because npm pack correctly excludes
+            # tsconfig.json. Real users install from the npm registry where `prepare`
+            # is never executed, so stripping scripts matches the actual user experience.
             node -e "p=require('/tmp/plugin/package.json'); delete p.scripts; require('fs').writeFileSync('/tmp/plugin/package.json',JSON.stringify(p,null,2))"
       - run:
           name: "Test plugin installation: cordova-ios 7"

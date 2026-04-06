@@ -330,32 +330,28 @@ jobs:
             npm install -g cordova
             brew install cocoapods
       - run:
-          name: Build plugin and prepare clean copy
+          name: Build and pack plugin
           command: |
             npm install && npm run build
-            rsync -a --exclude node_modules --exclude .git --exclude tmp-repro \
-              --exclude e2e-tests --exclude examples --exclude .circleci \
-              . /tmp/cordova-plugin-purchases
-            node -e "const p=require('/tmp/cordova-plugin-purchases/package.json'); delete p.scripts; require('fs').writeFileSync('/tmp/cordova-plugin-purchases/package.json', JSON.stringify(p,null,2))"
+            npm pack
+            mkdir -p /tmp/plugin && tar -xzf cordova-plugin-purchases-*.tgz -C /tmp/plugin --strip-components=1
       - run:
           name: "Test plugin installation: cordova-ios 7"
           command: |
             set -e
-            mkdir -p /tmp/test-ios7 && cd /tmp/test-ios7
-            cordova create App com.revenuecat.installtest InstallTest
-            cd App
+            cd /tmp && cordova create test-ios7 com.revenuecat.installtest InstallTest
+            cd test-ios7
             cordova platform add ios@7
-            cordova plugin add /tmp/cordova-plugin-purchases --nosave --force
+            cordova plugin add /tmp/plugin
             echo "cordova-ios 7: plugin installed successfully"
       - run:
           name: "Test plugin installation: cordova-ios 8"
           command: |
             set -e
-            mkdir -p /tmp/test-ios8 && cd /tmp/test-ios8
-            cordova create App com.revenuecat.installtest InstallTest
-            cd App
+            cd /tmp && cordova create test-ios8 com.revenuecat.installtest InstallTest
+            cd test-ios8
             cordova platform add ios@8
-            cordova plugin add /tmp/cordova-plugin-purchases --nosave --force
+            cordova plugin add /tmp/plugin
             echo "cordova-ios 8: plugin installed successfully"
 
 workflows:

@@ -325,9 +325,9 @@ jobs:
       - checkout
       - install-nvm
       - run:
-          name: Install Cordova, TypeScript, and CocoaPods
+          name: Install Cordova and CocoaPods
           command: |
-            npm install -g cordova typescript
+            npm install -g cordova
             brew install cocoapods
       - restore_cache:
           keys:
@@ -338,6 +338,7 @@ jobs:
             npm install && npm run build
             npm pack
             mkdir -p /tmp/plugin && tar -xzf cordova-plugin-purchases-*.tgz -C /tmp/plugin --strip-components=1
+            node -e "p=require('/tmp/plugin/package.json'); delete p.scripts; require('fs').writeFileSync('/tmp/plugin/package.json',JSON.stringify(p,null,2))"
       - run:
           name: "Test plugin installation: cordova-ios 7"
           command: |

@@ -318,6 +318,41 @@ jobs:
             open_pr:true \
             automatic_release:<< pipeline.parameters.automatic >>
 
+  plugin-installation-test:
+    description: "Verify cordova plugin add works on both cordova-ios 7 and 8"
+    <<: *base-mac-job
+    steps:
+      - checkout
+      - install-nvm
+      - run:
+          name: Install Cordova and CocoaPods
+          command: |
+            npm install -g cordova
+            gem install cocoapods --no-document
+      - run:
+          name: Build plugin
+          command: npm install && npm run build
+      - run:
+          name: "Test plugin installation: cordova-ios 7"
+          command: |
+            mkdir -p /tmp/test-ios7
+            cd /tmp/test-ios7
+            cordova create App com.revenuecat.installtest InstallTest
+            cd App
+            cordova platform add ios@7
+            cordova plugin add "$CIRCLE_WORKING_DIRECTORY" --link --nosave --force
+            echo "cordova-ios 7: plugin installed successfully"
+      - run:
+          name: "Test plugin installation: cordova-ios 8"
+          command: |
+            mkdir -p /tmp/test-ios8
+            cd /tmp/test-ios8
+            cordova create App com.revenuecat.installtest InstallTest
+            cd App
+            cordova platform add ios@8
+            cordova plugin add "$CIRCLE_WORKING_DIRECTORY" --link --nosave --force
+            echo "cordova-ios 8: plugin installed successfully"
+
 workflows:
   version: 2
   build-test:
@@ -326,6 +361,7 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - runtest
+      - plugin-installation-test
 
   deploy:
     when:

@@ -330,27 +330,31 @@ jobs:
             npm install -g cordova
             brew install cocoapods
       - run:
-          name: Build plugin
-          command: npm install && npm run build
+          name: Build plugin and prepare clean copy
+          command: |
+            npm install && npm run build
+            rsync -a --exclude node_modules --exclude .git --exclude tmp-repro \
+              --exclude e2e-tests --exclude examples --exclude .circleci \
+              . /tmp/cordova-plugin-purchases
       - run:
           name: "Test plugin installation: cordova-ios 7"
           command: |
-            mkdir -p /tmp/test-ios7
-            cd /tmp/test-ios7
+            set -e
+            mkdir -p /tmp/test-ios7 && cd /tmp/test-ios7
             cordova create App com.revenuecat.installtest InstallTest
             cd App
             cordova platform add ios@7
-            cordova plugin add "$CIRCLE_WORKING_DIRECTORY" --link --nosave --force
+            cordova plugin add /tmp/cordova-plugin-purchases --nosave --force
             echo "cordova-ios 7: plugin installed successfully"
       - run:
           name: "Test plugin installation: cordova-ios 8"
           command: |
-            mkdir -p /tmp/test-ios8
-            cd /tmp/test-ios8
+            set -e
+            mkdir -p /tmp/test-ios8 && cd /tmp/test-ios8
             cordova create App com.revenuecat.installtest InstallTest
             cd App
             cordova platform add ios@8
-            cordova plugin add "$CIRCLE_WORKING_DIRECTORY" --link --nosave --force
+            cordova plugin add /tmp/cordova-plugin-purchases --nosave --force
             echo "cordova-ios 8: plugin installed successfully"
 
 workflows:

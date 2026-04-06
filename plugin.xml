@@ -21,7 +21,7 @@
         <source-file src="src/android/PurchasesPlugin.java" target-dir="src/com/revenuecat/purchases"/>
     </platform>
     <platform name="ios">
-        <dependency id="cordova-plugin-add-swift-support" version="2.0.2"/>
+        <hook type="after_plugin_install" src="scripts/ios/add-swift-support.js" />
         <config-file target="config.xml" parent="/*">
             <feature name="PurchasesPlugin">
                 <param name="ios-package" value="CDVPurchasesPlugin"/>

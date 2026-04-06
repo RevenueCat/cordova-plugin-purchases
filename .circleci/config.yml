@@ -329,9 +329,6 @@ jobs:
           command: |
             npm install -g cordova
             brew install cocoapods
-      - restore_cache:
-          keys:
-            - v1-cocoapods-specs-{{ arch }}
       - run:
           name: Build and pack plugin
           command: |
@@ -361,10 +358,6 @@ jobs:
             cordova platform add ios@8
             cordova plugin add /tmp/plugin
             echo "cordova-ios 8: plugin installed successfully"
-      - save_cache:
-          key: v1-cocoapods-specs-{{ arch }}
-          paths:
-            - ~/.cocoapods
 
 workflows:
   version: 2

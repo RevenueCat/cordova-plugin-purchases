@@ -180,6 +180,53 @@ lane :generate_docs do
   end
 end
 
+desc "Test that cordova plugin add works on the given cordova-ios versions"
+lane :test_plugin_installation do |options|
+  versions = options[:ios_versions] || "7,8"
+  version_list = versions.split(",").map(&:strip)
+
+  root = get_root_folder
+
+  UI.message("Building and packing plugin...")
+  Dir.chdir(root) do
+    sh("npm", "install")
+    sh("npm", "run", "build")
+    sh("npm", "pack")
+
+    tarball = Dir.glob("cordova-plugin-purchases-*.tgz").first
+    UI.user_error!("npm pack did not produce a tarball") unless tarball
+
+    plugin_dir = "/tmp/plugin"
+    FileUtils.rm_rf(plugin_dir)
+    FileUtils.mkdir_p(plugin_dir)
+    sh("tar", "-xzf", tarball, "-C", plugin_dir, "--strip-components=1")
+
+    # cordova plugin add <local-dir> triggers `npm install` which re-runs the
+    # `prepare` script (tsc). This fails because npm pack correctly excludes
+    # tsconfig.json. Real users install from the npm registry where `prepare`
+    # is never executed, so stripping scripts matches the actual user experience.
+    package_json_path = File.join(plugin_dir, "package.json")
+    package_json = JSON.parse(File.read(package_json_path))
+    package_json.delete("scripts")
+    File.write(package_json_path, JSON.pretty_generate(package_json))
+  end
+
+  version_list.each do |ios_version|
+    test_dir = "/tmp/test-ios#{ios_version}"
+    FileUtils.rm_rf(test_dir)
+
+    UI.message("Testing plugin installation: cordova-ios #{ios_version}")
+    Dir.chdir("/tmp") do
+      sh("cordova", "create", "test-ios#{ios_version}", "com.revenuecat.installtest", "InstallTest")
+    end
+    Dir.chdir(test_dir) do
+      sh("cordova", "platform", "add", "ios@#{ios_version}")
+      sh("cordova", "plugin", "add", "/tmp/plugin")
+    end
+    UI.success("cordova-ios #{ios_version}: plugin installed successfully")
+  end
+end
+
 ###############################################################################
 # Helper functions 🤜🤛                                                      #
 ###############################################################################

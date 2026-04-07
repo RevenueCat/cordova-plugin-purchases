@@ -180,12 +180,10 @@ lane :generate_docs do
   end
 end
 
-desc "Test that cordova plugin add works on the given cordova-ios versions"
-lane :test_plugin_installation do |options|
-  versions = options[:ios_versions] || "7,8"
-  version_list = versions.split(",").map(&:strip)
-
+desc "Build and pack the plugin for installation testing"
+lane :build_and_pack_plugin do
   root = get_root_folder
+  plugin_dir = "/tmp/plugin"
 
   UI.message("Building and packing plugin...")
   Dir.chdir(root) do
@@ -196,7 +194,6 @@ lane :test_plugin_installation do |options|
     tarball = Dir.glob("cordova-plugin-purchases-*.tgz").first
     UI.user_error!("npm pack did not produce a tarball") unless tarball
 
-    plugin_dir = "/tmp/plugin"
     FileUtils.rm_rf(plugin_dir)
     FileUtils.mkdir_p(plugin_dir)
     sh("tar", "-xzf", tarball, "-C", plugin_dir, "--strip-components=1")
@@ -211,20 +208,26 @@ lane :test_plugin_installation do |options|
     File.write(package_json_path, JSON.pretty_generate(package_json))
   end
 
-  version_list.each do |ios_version|
-    test_dir = "/tmp/test-ios#{ios_version}"
-    FileUtils.rm_rf(test_dir)
+  UI.success("Plugin packed to #{plugin_dir}")
+end
 
-    UI.message("Testing plugin installation: cordova-ios #{ios_version}")
-    Dir.chdir("/tmp") do
-      sh("cordova", "create", "test-ios#{ios_version}", "com.revenuecat.installtest", "InstallTest")
-    end
-    Dir.chdir(test_dir) do
-      sh("cordova", "platform", "add", "ios@#{ios_version}")
-      sh("cordova", "plugin", "add", "/tmp/plugin")
-    end
-    UI.success("cordova-ios #{ios_version}: plugin installed successfully")
+desc "Test cordova plugin add for a specific cordova-ios version (requires build_and_pack_plugin first)"
+lane :test_plugin_installation do |options|
+  ios_version = options[:ios_version]
+  UI.user_error!("Missing ios_version parameter") unless ios_version
+
+  test_dir = "/tmp/test-ios#{ios_version}"
+  FileUtils.rm_rf(test_dir)
+
+  UI.message("Testing plugin installation: cordova-ios #{ios_version}")
+  Dir.chdir("/tmp") do
+    sh("cordova", "create", "test-ios#{ios_version}", "com.revenuecat.installtest", "InstallTest")
   end
+  Dir.chdir(test_dir) do
+    sh("cordova", "platform", "add", "ios@#{ios_version}")
+    sh("cordova", "plugin", "add", "/tmp/plugin")
+  end
+  UI.success("cordova-ios #{ios_version}: plugin installed successfully")
 end
 
 ###############################################################################

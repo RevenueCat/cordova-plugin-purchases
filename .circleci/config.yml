@@ -333,8 +333,14 @@ jobs:
             npm install -g cordova
             brew install cocoapods
       - run:
-          name: Test plugin installation
-          command: bundle exec fastlane test_plugin_installation
+          name: Build and pack plugin
+          command: bundle exec fastlane build_and_pack_plugin
+      - run:
+          name: "Test plugin installation: cordova-ios 7"
+          command: bundle exec fastlane test_plugin_installation ios_version:7
+      - run:
+          name: "Test plugin installation: cordova-ios 8"
+          command: bundle exec fastlane test_plugin_installation ios_version:8
 
 workflows:
   version: 2

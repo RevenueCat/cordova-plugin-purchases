@@ -323,29 +323,41 @@ jobs:
     <<: *base-mac-job
     steps:
       - checkout
-      - install-ruby
+      - install-nvm
       - run:
-          name: Persist rbenv to PATH
-          command: echo 'export PATH="$HOME/.rbenv/shims:$PATH"' >> $BASH_ENV
-      - revenuecat/install-gem-mac-dependencies:
-          cache-version: v1
-      - run:
-          name: Install Node, Cordova, and CocoaPods
+          name: Install Cordova and CocoaPods
           command: |
-            brew install node@18
-            echo 'export PATH="/opt/homebrew/opt/node@18/bin:$PATH"' >> $BASH_ENV
-            export PATH="/opt/homebrew/opt/node@18/bin:$PATH"
             npm install -g cordova
-            gem install cocoapods --no-document
+            brew install cocoapods
       - run:
           name: Build and pack plugin
-          command: bundle exec fastlane build_and_pack_plugin
+          command: |
+            npm install && npm run build
+            npm pack
+            mkdir -p /tmp/plugin && tar -xzf cordova-plugin-purchases-*.tgz -C /tmp/plugin --strip-components=1
+            # cordova plugin add <local-dir> triggers `npm install` which re-runs the
+            # `prepare` script (tsc). This fails because npm pack correctly excludes
+            # tsconfig.json. Real users install from the npm registry where `prepare`
+            # is never executed, so stripping scripts matches the actual user experience.
+            node -e "p=require('/tmp/plugin/package.json'); delete p.scripts; require('fs').writeFileSync('/tmp/plugin/package.json',JSON.stringify(p,null,2))"
       - run:
           name: "Test plugin installation: cordova-ios 7"
-          command: bundle exec fastlane test_plugin_installation ios_version:7
+          command: |
+            set -e
+            cd /tmp && cordova create test-ios7 com.revenuecat.installtest InstallTest
+            cd test-ios7
+            cordova platform add ios@7
+            cordova plugin add /tmp/plugin
+            echo "cordova-ios 7: plugin installed successfully"
       - run:
           name: "Test plugin installation: cordova-ios 8"
-          command: bundle exec fastlane test_plugin_installation ios_version:8
+          command: |
+            set -e
+            cd /tmp && cordova create test-ios8 com.revenuecat.installtest InstallTest
+            cd test-ios8
+            cordova platform add ios@8
+            cordova plugin add /tmp/plugin
+            echo "cordova-ios 8: plugin installed successfully"
 
 workflows:
   version: 2
@@ -355,8 +367,8 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - runtest
-      - plugin-installation-test
       - api-tester
+      - plugin-installation-test
 
   deploy:
     when:

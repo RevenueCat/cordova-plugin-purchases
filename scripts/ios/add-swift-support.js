@@ -9,6 +9,7 @@
  * for Swift compilation (bridging header, Swift version, etc.).
  */
 
+const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
 
@@ -21,7 +22,6 @@ module.exports = function (context) {
         const versionScript = path.join(platformPath, 'cordova', 'version');
         iosVersion = execSync('"' + versionScript + '"', { encoding: 'utf-8' }).trim();
     } catch (e) {
-        // iOS platform not installed; nothing to do.
         return;
     }
 
@@ -31,14 +31,20 @@ module.exports = function (context) {
         return;
     }
 
+    var pluginDir = path.join(projectRoot, 'plugins', 'cordova-plugin-add-swift-support');
+    if (fs.existsSync(pluginDir)) {
+        console.log('cordova-plugin-add-swift-support already installed, skipping');
+        return;
+    }
+
     console.log('cordova-ios ' + iosVersion + ' detected — installing cordova-plugin-add-swift-support for Swift support');
     try {
-        execSync('cordova plugin add cordova-plugin-add-swift-support@2.0.2 --nosave --force', {
+        execSync('cordova plugin add cordova-plugin-add-swift-support --nosave', {
             cwd: projectRoot,
             stdio: 'inherit'
         });
     } catch (e) {
         console.error('Warning: failed to install cordova-plugin-add-swift-support: ' + e.message);
-        console.error('You may need to install it manually: cordova plugin add cordova-plugin-add-swift-support@2.0.2');
+        console.error('You may need to install it manually: cordova plugin add cordova-plugin-add-swift-support');
     }
 };

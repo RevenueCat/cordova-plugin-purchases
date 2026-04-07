@@ -329,12 +329,13 @@ jobs:
           command: echo 'export PATH="$HOME/.rbenv/shims:$PATH"' >> $BASH_ENV
       - revenuecat/install-gem-mac-dependencies:
           cache-version: v1
-      - install-nvm
       - run:
-          name: Install Cordova and CocoaPods
+          name: Install Node, Cordova, and CocoaPods
           command: |
+            brew install node@18 cocoapods
+            echo 'export PATH="/opt/homebrew/opt/node@18/bin:$PATH"' >> $BASH_ENV
+            export PATH="/opt/homebrew/opt/node@18/bin:$PATH"
             npm install -g cordova
-            brew install cocoapods
       - run:
           name: Build and pack plugin
           command: bundle exec fastlane build_and_pack_plugin
@@ -354,6 +355,7 @@ workflows:
     jobs:
       - runtest
       - plugin-installation-test
+      - api-tester
 
   deploy:
     when:
@@ -385,13 +387,6 @@ workflows:
           requires:
             - docs-deploy
           <<: *release-tags
-
-  api-tester-check:
-    when:
-      not:
-        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
-    jobs:
-      - api-tester
 
   danger:
     jobs:

@@ -187,9 +187,11 @@ lane :build_and_pack_plugin do
 
   UI.message("Building and packing plugin...")
   Dir.chdir(root) do
-    sh("npm", "install")
-    sh("npm", "run", "build")
-    sh("npm", "pack")
+    Bundler.with_unbundled_env do
+      sh("npm", "install")
+      sh("npm", "run", "build")
+      sh("npm", "pack")
+    end
 
     tarball = Dir.glob("cordova-plugin-purchases-*.tgz").first
     UI.user_error!("npm pack did not produce a tarball") unless tarball
@@ -220,12 +222,16 @@ lane :test_plugin_installation do |options|
   FileUtils.rm_rf(test_dir)
 
   UI.message("Testing plugin installation: cordova-ios #{ios_version}")
-  Dir.chdir("/tmp") do
-    sh("cordova", "create", "test-ios#{ios_version}", "com.revenuecat.installtest", "InstallTest")
-  end
-  Dir.chdir(test_dir) do
-    sh("cordova", "platform", "add", "ios@#{ios_version}")
-    sh("cordova", "plugin", "add", "/tmp/plugin")
+  # Run cordova outside Bundler's environment so that spawned processes
+  # (like `pod`) aren't constrained to gems in the Gemfile.
+  Bundler.with_unbundled_env do
+    Dir.chdir("/tmp") do
+      sh("cordova", "create", "test-ios#{ios_version}", "com.revenuecat.installtest", "InstallTest")
+    end
+    Dir.chdir(test_dir) do
+      sh("cordova", "platform", "add", "ios@#{ios_version}")
+      sh("cordova", "plugin", "add", "/tmp/plugin")
+    end
   end
   UI.success("cordova-ios #{ios_version}: plugin installed successfully")
 end

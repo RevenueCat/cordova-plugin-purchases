@@ -332,10 +332,11 @@ jobs:
       - run:
           name: Install Node, Cordova, and CocoaPods
           command: |
-            brew install node@18 cocoapods
+            brew install node@18
             echo 'export PATH="/opt/homebrew/opt/node@18/bin:$PATH"' >> $BASH_ENV
             export PATH="/opt/homebrew/opt/node@18/bin:$PATH"
             npm install -g cordova
+            gem install cocoapods --no-document
       - run:
           name: Build and pack plugin
           command: bundle exec fastlane build_and_pack_plugin

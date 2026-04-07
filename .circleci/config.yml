@@ -323,10 +323,13 @@ jobs:
     <<: *base-mac-job
     steps:
       - checkout
-      - install-nvm
       - install-ruby
+      - run:
+          name: Persist rbenv to PATH
+          command: echo 'export PATH="$HOME/.rbenv/shims:$PATH"' >> $BASH_ENV
       - revenuecat/install-gem-mac-dependencies:
           cache-version: v1
+      - install-nvm
       - run:
           name: Install Cordova and CocoaPods
           command: |

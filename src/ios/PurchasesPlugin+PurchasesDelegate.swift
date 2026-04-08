@@ -12,9 +12,10 @@ import RevenueCat
 extension CDVPurchasesPlugin: PurchasesDelegate {
 
     public func purchases(_ purchases: Purchases, receivedUpdated customerInfo: CustomerInfo) {
+        guard let callbackId = self.updatedCustomerInfoCallbackID else { return }
         let result = CDVPluginResult(status: .ok, messageAs: CommonFunctionality.encode(customerInfo: customerInfo))
-        result?.setKeepCallbackAs(true)
-        self.commandDelegate.send(result, callbackId: self.updatedCustomerInfoCallbackID)
+        result.setKeepCallbackAs(true)
+        self.commandDelegate.send(result, callbackId: callbackId)
     }
 
     public func purchases(_ purchases: Purchases,
@@ -24,8 +25,9 @@ extension CDVPurchasesPlugin: PurchasesDelegate {
         self.defermentBlocks.append(makeDeferredPurchase)
         let position = self.defermentBlocks.count - 1
         let result = CDVPluginResult(status: .ok, messageAs: ["callbackID": NSNumber(value: position)])
-        result?.setKeepCallbackAs(true)
-        self.commandDelegate.send(result, callbackId: self.shouldPurchasePromoProductCallbackID)
+        result.setKeepCallbackAs(true)
+        guard let callbackId = self.shouldPurchasePromoProductCallbackID else { return }
+        self.commandDelegate.send(result, callbackId: callbackId)
     }
 
 }

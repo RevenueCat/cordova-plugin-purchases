@@ -388,6 +388,7 @@ workflows:
       - runtest
       - api-tester
       - plugin-installation-test
+      - android-integration-test
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 6)"
           cordova-ios-version: "6"

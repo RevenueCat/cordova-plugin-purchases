@@ -34,7 +34,7 @@ extension CDVPurchasesPlugin {
 
     func responseCompletion(forCommand command: CDVInvokedUrlCommand) -> HybridResponseBlock {
         let callback: HybridResponseBlock = { response, error in
-            let result: CDVPluginResult
+            let result: CDVPluginResult?
             if let error = error {
                 result = CDVPluginResult(status: .error, messageAs: error.info)
             } else {

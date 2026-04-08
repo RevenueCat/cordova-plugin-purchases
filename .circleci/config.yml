@@ -111,7 +111,6 @@ commands:
     description: "Install all ios global and local npm dependencies"
     steps:
       - run: npm install -g ios-deploy
-      - run: npm install --legacy-peer-deps
 
   npm-install-cordova-paramedic:
     description: "Install Cordova paramedic"
@@ -244,9 +243,17 @@ jobs:
       - macos/preboot-simulator:
           device: << parameters.simulator-device >>
           version: << parameters.simulator-os-version >>
+      - restore_cache:
+          keys:
+            - v1-ios-integration-deps-{{ arch }}-<< parameters.xcode-version >>-{{ checksum "package.json" }}
+            - v1-ios-integration-deps-{{ arch }}-<< parameters.xcode-version >>-
       - npm-dependencies
       - npm-install-cordova-paramedic
       - npm-ios-dependencies
+      - save_cache:
+          key: v1-ios-integration-deps-{{ arch }}-<< parameters.xcode-version >>-{{ checksum "package.json" }}
+          paths:
+            - node_modules
       - replace-api-key
       - run:
           name: "Integration tests (cordova-ios << parameters.cordova-ios-version >>)"

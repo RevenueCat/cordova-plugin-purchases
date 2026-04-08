@@ -24,7 +24,7 @@ import RevenueCat
     @objc(setupDelegateCallback:)
     func setupDelegateCallback(command: CDVInvokedUrlCommand) {
         self.updatedCustomerInfoCallbackID = command.callbackId
-        let pluginResult = CDVPluginResult(status: .noResult)
+        let pluginResult: CDVPluginResult = CDVPluginResult(status: .noResult)
         pluginResult.setKeepCallbackAs(true)
         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
     }
@@ -84,11 +84,11 @@ import RevenueCat
     @objc(setLogHandler:)
     func setLogHandler(command: CDVInvokedUrlCommand) {
         CommonFunctionality.setLogHander { logDetails in
-            let pluginResult = CDVPluginResult(status: .ok, messageAs: logDetails)
+            let pluginResult: CDVPluginResult = CDVPluginResult(status: .ok, messageAs: logDetails)
             pluginResult.setKeepCallbackAs(true)
             self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
         }
-        let pluginResult = CDVPluginResult(status: .noResult)
+        let pluginResult: CDVPluginResult = CDVPluginResult(status: .noResult)
         pluginResult.setKeepCallbackAs(true)
         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
     }

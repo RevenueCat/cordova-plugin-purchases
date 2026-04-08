@@ -156,7 +156,7 @@ lane :run_maestro_e2e_tests_ios do
       sh("cd platforms/ios && pod install --repo-update")
     end
     sh("rsync -a --exclude cordova.js --exclude cordova_plugins.js --exclude plugins www/ platforms/ios/www/")
-    sh("xcodebuild -workspace platforms/ios/App.xcworkspace -scheme App -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17' SWIFT_VERSION=5 build CONFIGURATION_BUILD_DIR=#{Dir.pwd}/build/emulator")
+    sh("xcodebuild -workspace platforms/ios/App.xcworkspace -scheme App -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17' build CONFIGURATION_BUILD_DIR=#{Dir.pwd}/build/emulator")
     sh("xcrun simctl install booted build/emulator/MaestroTestApp.app")
   end
   sh("mkdir -p test_output")

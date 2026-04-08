@@ -318,6 +318,47 @@ jobs:
             open_pr:true \
             automatic_release:<< pipeline.parameters.automatic >>
 
+  plugin-installation-test:
+    description: "Verify cordova plugin add works on both cordova-ios 7 and 8"
+    <<: *base-mac-job
+    steps:
+      - checkout
+      - install-nvm
+      - run:
+          name: Install Cordova and CocoaPods
+          command: |
+            npm install -g cordova
+            brew install cocoapods
+      - run:
+          name: Build and pack plugin
+          command: |
+            npm install && npm run build
+            npm pack
+            mkdir -p /tmp/plugin && tar -xzf cordova-plugin-purchases-*.tgz -C /tmp/plugin --strip-components=1
+            # cordova plugin add <local-dir> triggers `npm install` which re-runs the
+            # `prepare` script (tsc). This fails because npm pack correctly excludes
+            # tsconfig.json. Real users install from the npm registry where `prepare`
+            # is never executed, so stripping scripts matches the actual user experience.
+            node -e "p=require('/tmp/plugin/package.json'); delete p.scripts; require('fs').writeFileSync('/tmp/plugin/package.json',JSON.stringify(p,null,2))"
+      - run:
+          name: "Test plugin installation: cordova-ios 7"
+          command: |
+            set -e
+            cd /tmp && cordova create test-ios7 com.revenuecat.installtest InstallTest
+            cd test-ios7
+            cordova platform add ios@7
+            cordova plugin add /tmp/plugin
+            echo "cordova-ios 7: plugin installed successfully"
+      - run:
+          name: "Test plugin installation: cordova-ios 8"
+          command: |
+            set -e
+            cd /tmp && cordova create test-ios8 com.revenuecat.installtest InstallTest
+            cd test-ios8
+            cordova platform add ios@8
+            cordova plugin add /tmp/plugin
+            echo "cordova-ios 8: plugin installed successfully"
+
 workflows:
   version: 2
   build-test:
@@ -327,6 +368,7 @@ workflows:
     jobs:
       - runtest
       - api-tester
+      - plugin-installation-test
 
   deploy:
     when:

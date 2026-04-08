@@ -392,9 +392,8 @@ workflows:
           name: "ios-integration-test (cordova-ios 6)"
           cordova-ios-version: "6"
       # Xcode 16.4+ has an Apple simulator bug (FB17006003) where HTTP/3
-      # networking hangs, causing test timeouts. Xcode 26 is runtime-
-      # incompatible with cordova-ios 7. Xcode 16.2 / iOS 18.2 is the
-      # newest version that avoids both issues.
+      # networking hangs on iOS 18.4+ simulators, causing test timeouts.
+      # Xcode 16.2 / iOS 18.2 is the newest version that avoids this.
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 7)"
           cordova-ios-version: "7"

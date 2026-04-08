@@ -218,7 +218,7 @@ jobs:
       JVM_OPTS: -Xmx6g
       GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 
-  integration-test-cordova-ios:
+  ios-integration-test:
     description: "Run iOS integration tests for a specific cordova-ios version"
     parameters:
       cordova-ios-version:
@@ -388,18 +388,18 @@ workflows:
       - runtest
       - api-tester
       - plugin-installation-test
-      - integration-test-cordova-ios:
-          name: integration-test-cordova-ios-6
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 6)"
           cordova-ios-version: "6"
-      - integration-test-cordova-ios:
-          name: integration-test-cordova-ios-7
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 7)"
           cordova-ios-version: "7"
           xcode-version: "16.4.0"
           simulator-device: "iPhone 16"
           simulator-os-version: "18.4"
           paramedic-target: "iPhone-16"
-      - integration-test-cordova-ios:
-          name: integration-test-cordova-ios-8
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
           xcode-version: "26.3.0"
           simulator-device: "iPhone 17"
@@ -412,20 +412,20 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - android-integration-test: *release-branches
-      - integration-test-cordova-ios:
-          name: integration-test-cordova-ios-6-release
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 6) release"
           cordova-ios-version: "6"
           <<: *release-branches
-      - integration-test-cordova-ios:
-          name: integration-test-cordova-ios-7-release
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 7) release"
           cordova-ios-version: "7"
           xcode-version: "16.4.0"
           simulator-device: "iPhone 16"
           simulator-os-version: "18.4"
           paramedic-target: "iPhone-16"
           <<: *release-branches
-      - integration-test-cordova-ios:
-          name: integration-test-cordova-ios-8-release
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 8) release"
           cordova-ios-version: "8"
           xcode-version: "26.3.0"
           simulator-device: "iPhone 17"
@@ -435,9 +435,9 @@ workflows:
       - hold:
           type: approval
           requires:
-            - integration-test-cordova-ios-6-release
-            - integration-test-cordova-ios-7-release
-            - integration-test-cordova-ios-8-release
+            - "ios-integration-test (cordova-ios 6) release"
+            - "ios-integration-test (cordova-ios 7) release"
+            - "ios-integration-test (cordova-ios 8) release"
             # Temporarily commenting this out because paramedic is failing
             # - android-integration-test
           <<: *release-branches

@@ -299,7 +299,7 @@ import PurchasesHybridCommon
 
     private func beginRefundRequestCompletionFor(command: CDVInvokedUrlCommand) -> (ErrorContainer?) -> Void {
         return { error in
-            let result: CDVPluginResult?
+            let result: CDVPluginResult
             guard let error = error else {
                 result = CDVPluginResult(status: .ok, messageAs: 0)
                 self.commandDelegate.send(result, callbackId: command.callbackId)

@@ -188,23 +188,6 @@ commands:
           command: xcrun simctl create '<< parameters.sim-name >>' com.apple.CoreSimulator.SimDeviceType.<< parameters.sim-device-type >> com.apple.CoreSimulator.SimRuntime.<< parameters.sim-device-runtime >>
 
 jobs:
-  prepare-ios:
-    description: "Pre-clone CocoaPods specs repo and share via workspace"
-    <<: *base-mac-job
-    steps:
-      - run:
-          name: Install CocoaPods and clone specs repo
-          command: |
-            brew install cocoapods
-            mkdir -p ~/.cocoapods/repos
-            git clone https://github.com/CocoaPods/Specs.git ~/.cocoapods/repos/master
-            pod repo list
-            du -sh ~/.cocoapods
-      - persist_to_workspace:
-          root: ~/
-          paths:
-            - .cocoapods
-
   android-integration-test:
     description: "Run Android integration tests for Cordova"
     executor:
@@ -258,8 +241,6 @@ jobs:
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
       - macos/preboot-simulator:
           device: << parameters.simulator-device >>
           version: << parameters.simulator-os-version >>
@@ -361,8 +342,6 @@ jobs:
     <<: *base-mac-job
     steps:
       - checkout
-      - attach_workspace:
-          at: ~/
       - install-nvm
       - run:
           name: Install Cordova and CocoaPods
@@ -408,15 +387,10 @@ workflows:
     jobs:
       - runtest
       - api-tester
-      - prepare-ios
-      - plugin-installation-test:
-          requires:
-            - prepare-ios
+      - plugin-installation-test
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 6)"
           cordova-ios-version: "6"
-          requires:
-            - prepare-ios
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 7)"
           cordova-ios-version: "7"
@@ -424,8 +398,6 @@ workflows:
           simulator-device: "iPhone 16"
           simulator-os-version: "18.5"
           paramedic-target: "iPhone-16"
-          requires:
-            - prepare-ios
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
@@ -433,8 +405,6 @@ workflows:
           simulator-device: "iPhone 17"
           simulator-os-version: "26.2"
           paramedic-target: "iPhone-17"
-          requires:
-            - prepare-ios
 
   deploy:
     when:
@@ -442,13 +412,9 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - android-integration-test: *release-branches
-      - prepare-ios:
-          <<: *release-branches
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 6) release"
           cordova-ios-version: "6"
-          requires:
-            - prepare-ios
           <<: *release-branches
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 7) release"
@@ -457,8 +423,6 @@ workflows:
           simulator-device: "iPhone 16"
           simulator-os-version: "18.5"
           paramedic-target: "iPhone-16"
-          requires:
-            - prepare-ios
           <<: *release-branches
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8) release"
@@ -467,8 +431,6 @@ workflows:
           simulator-device: "iPhone 17"
           simulator-os-version: "26.2"
           paramedic-target: "iPhone-17"
-          requires:
-            - prepare-ios
           <<: *release-branches
       - hold:
           type: approval

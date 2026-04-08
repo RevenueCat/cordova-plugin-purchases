@@ -36,9 +36,6 @@
         <source-file src="src/ios/PurchasesPlugin+Users.swift" />
         <source-file src="src/ios/PurchasesPlugin+VirtualCurrencies.swift" />
         <podspec>
-            <config>
-                <source url="https://github.com/CocoaPods/Specs.git"/>
-            </config>
             <pods use-frameworks="true">
                 <pod name="PurchasesHybridCommon" spec="17.55.1"/>
             </pods>

@@ -391,20 +391,17 @@ workflows:
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 6)"
           cordova-ios-version: "6"
-      # Xcode 16.4+ has an Apple simulator bug (FB17006003) where HTTP/3
-      # networking hangs on iOS 18.4+ simulators, causing test timeouts.
-      # Xcode 16.2 / iOS 18.2 is the newest version that avoids this.
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 7)"
           cordova-ios-version: "7"
-          xcode-version: "16.2.0"
-          simulator-device: "iPhone 16"
-          simulator-os-version: "18.2"
-          paramedic-target: "iPhone-16"
+          xcode-version: "26.4.0"
+          simulator-device: "iPhone 17"
+          simulator-os-version: "26.2"
+          paramedic-target: "iPhone-17"
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
-          xcode-version: "26.3.0"
+          xcode-version: "26.4.0"
           simulator-device: "iPhone 17"
           simulator-os-version: "26.2"
           paramedic-target: "iPhone-17"
@@ -419,19 +416,18 @@ workflows:
           name: "ios-integration-test (cordova-ios 6) release"
           cordova-ios-version: "6"
           <<: *release-branches
-      # See comment in build-test workflow for why Xcode 16.2 is used here.
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 7) release"
           cordova-ios-version: "7"
-          xcode-version: "16.2.0"
-          simulator-device: "iPhone 16"
-          simulator-os-version: "18.2"
-          paramedic-target: "iPhone-16"
+          xcode-version: "26.4.0"
+          simulator-device: "iPhone 17"
+          simulator-os-version: "26.2"
+          paramedic-target: "iPhone-17"
           <<: *release-branches
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8) release"
           cordova-ios-version: "8"
-          xcode-version: "26.3.0"
+          xcode-version: "26.4.0"
           simulator-device: "iPhone 17"
           simulator-os-version: "26.2"
           paramedic-target: "iPhone-17"

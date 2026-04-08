@@ -396,7 +396,11 @@ jobs:
 
 workflows:
   version: 2
-  build-test:
+
+  # =============================================================
+  # run-all-tests: Runs on every push except release branches
+  # =============================================================
+  run-all-tests:
     when:
       and:
         - not:
@@ -442,64 +446,73 @@ workflows:
             - "ios-integration-test (cordova-ios 7)"
             - "ios-integration-test (cordova-ios 8)"
 
-  deploy:
+  # =============================================================
+  # release: Runs on release branches only
+  # =============================================================
+  release:
     when:
-      not:
-        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+      and:
+        - not:
+            equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+        - matches:
+            pattern: "^release/.*$"
+            value: << pipeline.git.branch >>
     jobs:
-      - android-integration-test: *release-branches
+      - android-integration-test
       - ios-integration-test:
-          name: "ios-integration-test (cordova-ios 6) release"
+          name: "ios-integration-test (cordova-ios 6)"
           cordova-ios-version: "6"
-          <<: *release-branches
-      # See comment in build-test workflow for cordova-ios 7 Xcode constraints.
       - ios-integration-test:
-          name: "ios-integration-test (cordova-ios 7) release"
+          name: "ios-integration-test (cordova-ios 7)"
           cordova-ios-version: "7"
           xcode-version: "16.2.0"
           simulator-device: "iPhone 16"
           simulator-os-version: "18.2"
           paramedic-target: "iPhone-16"
-          <<: *release-branches
       - ios-integration-test:
-          name: "ios-integration-test (cordova-ios 8) release"
+          name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
           xcode-version: "26.4.0"
           simulator-device: "iPhone 17"
           simulator-os-version: "26.4"
           paramedic-target: "iPhone-17"
-          <<: *release-branches
       - all-tests-succeeded:
           requires:
             - android-integration-test
-            - "ios-integration-test (cordova-ios 6) release"
-            - "ios-integration-test (cordova-ios 7) release"
-            - "ios-integration-test (cordova-ios 8) release"
-          <<: *release-branches
+            - "ios-integration-test (cordova-ios 6)"
+            - "ios-integration-test (cordova-ios 7)"
+            - "ios-integration-test (cordova-ios 8)"
       - hold:
           type: approval
           requires:
             - all-tests-succeeded
-          <<: *release-branches
       - revenuecat/tag-current-branch:
           ruby_version: "3.2"
           requires:
             - hold
-          <<: *release-branches
+
+  # =============================================================
+  # deploy: Runs on release tags only
+  # =============================================================
+  deploy:
+    when:
+      not:
+        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+    jobs:
       - make-release:
           <<: *release-tags
       - docs-deploy:
-          <<: *release-tags
           requires:
             - make-release
-      - revenuecat/merge-release-pr:
-          repo_name: cordova-plugin-purchases
-          requires:
-            - docs-deploy
           <<: *release-tags
       - all-tasks-passed:
           requires:
             - docs-deploy
+          <<: *release-tags
+      - revenuecat/merge-release-pr:
+          repo_name: cordova-plugin-purchases
+          requires:
+            - all-tasks-passed
           <<: *release-tags
 
   danger:

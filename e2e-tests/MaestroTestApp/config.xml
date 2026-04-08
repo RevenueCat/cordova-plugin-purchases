@@ -2,6 +2,7 @@
 <widget id="com.revenuecat.automatedsdktests" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>MaestroTestApp</name>
     <description>Maestro E2E test app for cordova-plugin-purchases</description>
+    <plugin name="cordova-plugin-launch-args" spec="file:../cordova-plugin-launch-args" />
     <platform name="ios">
         <preference name="deployment-target" value="16.0" />
     </platform>

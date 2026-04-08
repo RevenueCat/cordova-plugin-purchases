@@ -1,5 +1,9 @@
 var currentPackage = null;
 
+var TEST_FLOW_SCREEN_MAP = {
+    'purchase_through_paywall': function() { showPurchaseScreen(); }
+};
+
 document.addEventListener('deviceready', function() {
     try {
         Purchases.setLogLevel(Purchases.LOG_LEVEL.DEBUG);
@@ -16,7 +20,17 @@ document.addEventListener('deviceready', function() {
     } catch (e) {
         console.error('SDK init error: ' + e.message);
     }
-    showTestCases();
+
+    LaunchArgs.getTestFlow(function(testFlow) {
+        var navigateFn = testFlow ? TEST_FLOW_SCREEN_MAP[testFlow] : null;
+        if (navigateFn) {
+            navigateFn();
+        } else {
+            showTestCases();
+        }
+    }, function() {
+        showTestCases();
+    });
 }, false);
 
 setTimeout(function() {

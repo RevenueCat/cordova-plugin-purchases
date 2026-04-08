@@ -337,6 +337,22 @@ jobs:
             open_pr:true \
             automatic_release:<< pipeline.parameters.automatic >>
 
+  all-tests-succeeded:
+    description: "Gate job: succeeds only when all test jobs pass"
+    docker:
+      - image: cimg/base:stable
+    resource_class: small
+    steps:
+      - run: echo "All tests succeeded"
+
+  all-tasks-passed:
+    description: "Gate job: required status check for merging PRs"
+    docker:
+      - image: cimg/base:stable
+    resource_class: small
+    steps:
+      - run: echo "All tasks passed"
+
   plugin-installation-test:
     description: "Verify cordova plugin add works on both cordova-ios 7 and 8"
     <<: *base-mac-job
@@ -416,6 +432,15 @@ workflows:
           simulator-device: "iPhone 17"
           simulator-os-version: "26.4"
           paramedic-target: "iPhone-17"
+      - all-tasks-passed:
+          requires:
+            - runtest
+            - api-tester
+            - plugin-installation-test
+            - android-integration-test
+            - "ios-integration-test (cordova-ios 6)"
+            - "ios-integration-test (cordova-ios 7)"
+            - "ios-integration-test (cordova-ios 8)"
 
   deploy:
     when:
@@ -444,14 +469,17 @@ workflows:
           simulator-os-version: "26.4"
           paramedic-target: "iPhone-17"
           <<: *release-branches
-      - hold:
-          type: approval
+      - all-tests-succeeded:
           requires:
+            - android-integration-test
             - "ios-integration-test (cordova-ios 6) release"
             - "ios-integration-test (cordova-ios 7) release"
             - "ios-integration-test (cordova-ios 8) release"
-            # Temporarily commenting this out because paramedic is failing
-            # - android-integration-test
+          <<: *release-branches
+      - hold:
+          type: approval
+          requires:
+            - all-tests-succeeded
           <<: *release-branches
       - revenuecat/tag-current-branch:
           ruby_version: "3.2"
@@ -466,6 +494,10 @@ workflows:
             - make-release
       - revenuecat/merge-release-pr:
           repo_name: cordova-plugin-purchases
+          requires:
+            - docs-deploy
+          <<: *release-tags
+      - all-tasks-passed:
           requires:
             - docs-deploy
           <<: *release-tags

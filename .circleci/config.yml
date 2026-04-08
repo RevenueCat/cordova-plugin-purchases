@@ -394,13 +394,17 @@ workflows:
       - integration-test-cordova-ios:
           name: integration-test-cordova-ios-7
           cordova-ios-version: "7"
-      - integration-test-cordova-ios:
-          name: integration-test-cordova-ios-8
-          cordova-ios-version: "8"
           xcode-version: "16.4.0"
           simulator-device: "iPhone 16"
           simulator-os-version: "18.4"
           paramedic-target: "iPhone-16"
+      - integration-test-cordova-ios:
+          name: integration-test-cordova-ios-8
+          cordova-ios-version: "8"
+          xcode-version: "26.3.0"
+          simulator-device: "iPhone 17"
+          simulator-os-version: "26.2"
+          paramedic-target: "iPhone-17"
 
   deploy:
     when:
@@ -415,14 +419,18 @@ workflows:
       - integration-test-cordova-ios:
           name: integration-test-cordova-ios-7-release
           cordova-ios-version: "7"
-          <<: *release-branches
-      - integration-test-cordova-ios:
-          name: integration-test-cordova-ios-8-release
-          cordova-ios-version: "8"
           xcode-version: "16.4.0"
           simulator-device: "iPhone 16"
           simulator-os-version: "18.4"
           paramedic-target: "iPhone-16"
+          <<: *release-branches
+      - integration-test-cordova-ios:
+          name: integration-test-cordova-ios-8-release
+          cordova-ios-version: "8"
+          xcode-version: "26.3.0"
+          simulator-device: "iPhone 17"
+          simulator-os-version: "26.2"
+          paramedic-target: "iPhone-17"
           <<: *release-branches
       - hold:
           type: approval

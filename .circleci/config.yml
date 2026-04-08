@@ -193,14 +193,12 @@ jobs:
     <<: *base-mac-job
     steps:
       - run:
-          name: Install CocoaPods
-          command: brew install cocoapods
-      - run:
-          name: Clone CocoaPods specs repo
+          name: Install CocoaPods and clone specs repo
           command: |
-            pod setup || true
+            brew install cocoapods
+            mkdir -p ~/.cocoapods/repos
+            git clone https://github.com/CocoaPods/Specs.git ~/.cocoapods/repos/master
             pod repo list
-            ls -la ~/.cocoapods/repos/ || true
             du -sh ~/.cocoapods
       - persist_to_workspace:
           root: ~/

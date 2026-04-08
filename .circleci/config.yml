@@ -396,7 +396,7 @@ workflows:
           cordova-ios-version: "7"
           xcode-version: "16.4.0"
           simulator-device: "iPhone 16"
-          simulator-os-version: "18.4"
+          simulator-os-version: "18.5"
           paramedic-target: "iPhone-16"
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8)"
@@ -421,7 +421,7 @@ workflows:
           cordova-ios-version: "7"
           xcode-version: "16.4.0"
           simulator-device: "iPhone 16"
-          simulator-os-version: "18.4"
+          simulator-os-version: "18.5"
           paramedic-target: "iPhone-16"
           <<: *release-branches
       - ios-integration-test:

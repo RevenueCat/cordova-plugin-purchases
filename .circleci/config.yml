@@ -18,20 +18,6 @@ aliases:
       branches:
         ignore: /.*/
 
-  release-branches: &release-branches
-    filters:
-      tags:
-        ignore: /.*/
-      branches:
-        only: /^release\/.*/
-
-  only-main-branch: &only-main-branch
-    filters:
-      tags:
-        ignore: /.*/
-      branches:
-        only: main
-
 parameters:
   action:
     type: enum
@@ -458,10 +444,14 @@ workflows:
             pattern: "^release/.*$"
             value: << pipeline.git.branch >>
     jobs:
+      - runtest
+      - api-tester
+      - plugin-installation-test
       - android-integration-test
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 6)"
           cordova-ios-version: "6"
+      # See cordova-ios 7 Xcode comment in run-all-tests workflow.
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 7)"
           cordova-ios-version: "7"
@@ -478,6 +468,9 @@ workflows:
           paramedic-target: "iPhone-17"
       - all-tests-succeeded:
           requires:
+            - runtest
+            - api-tester
+            - plugin-installation-test
             - android-integration-test
             - "ios-integration-test (cordova-ios 6)"
             - "ios-integration-test (cordova-ios 7)"

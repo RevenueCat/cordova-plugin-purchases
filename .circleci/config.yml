@@ -394,10 +394,10 @@ workflows:
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 7)"
           cordova-ios-version: "7"
-          xcode-version: "16.4.0"
-          simulator-device: "iPhone 16"
-          simulator-os-version: "18.5"
-          paramedic-target: "iPhone-16"
+          xcode-version: "26.3.0"
+          simulator-device: "iPhone 17"
+          simulator-os-version: "26.2"
+          paramedic-target: "iPhone-17"
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
@@ -419,10 +419,10 @@ workflows:
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 7) release"
           cordova-ios-version: "7"
-          xcode-version: "16.4.0"
-          simulator-device: "iPhone 16"
-          simulator-os-version: "18.5"
-          paramedic-target: "iPhone-16"
+          xcode-version: "26.3.0"
+          simulator-device: "iPhone 17"
+          simulator-os-version: "26.2"
+          paramedic-target: "iPhone-17"
           <<: *release-branches
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8) release"

@@ -396,14 +396,14 @@ workflows:
           cordova-ios-version: "7"
           xcode-version: "26.4.0"
           simulator-device: "iPhone 17"
-          simulator-os-version: "26.2"
+          simulator-os-version: "26.4"
           paramedic-target: "iPhone-17"
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
           xcode-version: "26.4.0"
           simulator-device: "iPhone 17"
-          simulator-os-version: "26.2"
+          simulator-os-version: "26.4"
           paramedic-target: "iPhone-17"
 
   deploy:
@@ -421,7 +421,7 @@ workflows:
           cordova-ios-version: "7"
           xcode-version: "26.4.0"
           simulator-device: "iPhone 17"
-          simulator-os-version: "26.2"
+          simulator-os-version: "26.4"
           paramedic-target: "iPhone-17"
           <<: *release-branches
       - ios-integration-test:
@@ -429,7 +429,7 @@ workflows:
           cordova-ios-version: "8"
           xcode-version: "26.4.0"
           simulator-device: "iPhone 17"
-          simulator-os-version: "26.2"
+          simulator-os-version: "26.4"
           paramedic-target: "iPhone-17"
           <<: *release-branches
       - hold:

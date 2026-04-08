@@ -391,13 +391,18 @@ workflows:
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 6)"
           cordova-ios-version: "6"
+      # cordova-ios 7 cannot use Xcode 16.4+ due to an Apple simulator bug
+      # (FB17006003) where HTTP/3 networking hangs on iOS 18.4+ simulators.
+      # Xcode 26.x builds succeed, but cordova-paramedic crashes during the
+      # simulator deploy phase with cordova-ios 7 on iOS 26.x.
+      # Xcode 16.2 / iOS 18.2 is the newest combination that avoids both issues.
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 7)"
           cordova-ios-version: "7"
-          xcode-version: "26.4.0"
-          simulator-device: "iPhone 17"
-          simulator-os-version: "26.4"
-          paramedic-target: "iPhone-17"
+          xcode-version: "16.2.0"
+          simulator-device: "iPhone 16"
+          simulator-os-version: "18.2"
+          paramedic-target: "iPhone-16"
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
@@ -416,13 +421,14 @@ workflows:
           name: "ios-integration-test (cordova-ios 6) release"
           cordova-ios-version: "6"
           <<: *release-branches
+      # See comment in build-test workflow for cordova-ios 7 Xcode constraints.
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 7) release"
           cordova-ios-version: "7"
-          xcode-version: "26.4.0"
-          simulator-device: "iPhone 17"
-          simulator-os-version: "26.4"
-          paramedic-target: "iPhone-17"
+          xcode-version: "16.2.0"
+          simulator-device: "iPhone 16"
+          simulator-os-version: "18.2"
+          paramedic-target: "iPhone-16"
           <<: *release-branches
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8) release"

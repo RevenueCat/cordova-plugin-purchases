@@ -25,6 +25,11 @@ aliases:
       branches:
         only: /^release\/.*/
 
+  non-release-branches: &non-release-branches
+    filters:
+      branches:
+        ignore: /^release\/.*/
+
   only-main-branch: &only-main-branch
     filters:
       tags:
@@ -385,13 +390,14 @@ workflows:
       not:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
-      - runtest
-      - api-tester
-      - plugin-installation-test
-      - android-integration-test
+      - runtest: *non-release-branches
+      - api-tester: *non-release-branches
+      - plugin-installation-test: *non-release-branches
+      - android-integration-test: *non-release-branches
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 6)"
           cordova-ios-version: "6"
+          <<: *non-release-branches
       # cordova-ios 7 cannot use Xcode 16.4+ due to an Apple simulator bug
       # (FB17006003) where HTTP/3 networking hangs on iOS 18.4+ simulators.
       # Xcode 26.x builds succeed, but cordova-paramedic crashes during the
@@ -404,6 +410,7 @@ workflows:
           simulator-device: "iPhone 16"
           simulator-os-version: "18.2"
           paramedic-target: "iPhone-16"
+          <<: *non-release-branches
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
@@ -411,6 +418,7 @@ workflows:
           simulator-device: "iPhone 17"
           simulator-os-version: "26.4"
           paramedic-target: "iPhone-17"
+          <<: *non-release-branches
 
   deploy:
     when:

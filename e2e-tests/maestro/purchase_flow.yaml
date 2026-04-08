@@ -4,8 +4,8 @@ appId: com.revenuecat.automatedsdktests
 - extendedWaitUntil:
     visible: "Test Cases"
     timeout: 15000
-- assertVisible: "Purchase product"
-- tapOn: "Purchase product"
+- assertVisible: "Purchase through paywall"
+- tapOn: "Purchase through paywall"
 - extendedWaitUntil:
     visible: "Entitlements: none"
     timeout: 15000

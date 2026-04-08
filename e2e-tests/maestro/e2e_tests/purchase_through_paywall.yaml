@@ -1,23 +1,23 @@
-# This flow tests purchasing a product directly.
+# This flow tests the purchase through paywall flow.
 # Cordova does not have paywall presentation APIs, so instead of
 # presenting a native paywall we fetch offerings and purchase the
 # first available package directly.
 
 appId: com.revenuecat.automatedsdktests
-name: Purchase product
+name: Purchase through paywall
 
 ---
 - clearState
 - pressKey: home
 - launchApp
-- takeScreenshot: purchase_product - Initial state after launch
+- takeScreenshot: purchase_through_paywall - Initial state after launch
 - extendedWaitUntil:
     visible: "Test Cases"
     timeout: 30000
-- takeScreenshot: purchase_product - After Test Cases visible
+- takeScreenshot: purchase_through_paywall - After Test Cases visible
 - assertVisible: "Test Cases"
 - tapOn:
-    text: "Purchase product"
+    text: "Purchase through paywall"
 - extendedWaitUntil:
     visible: "Entitlements: none"
     timeout: 15000
@@ -25,7 +25,7 @@ name: Purchase product
 - extendedWaitUntil:
     visible: "^Purchase$"
     timeout: 30000
-- takeScreenshot: purchase_product - Purchase screen ready
+- takeScreenshot: purchase_through_paywall - Purchase screen ready
 - tapOn:
     text: "^Purchase$"
 - runFlow:
@@ -33,5 +33,5 @@ name: Purchase product
 - extendedWaitUntil:
     visible: "Entitlements: pro"
     timeout: 15000
-- takeScreenshot: purchase_product - Entitlements unlocked
+- takeScreenshot: purchase_through_paywall - Entitlements unlocked
 - assertVisible: "Entitlements: pro"

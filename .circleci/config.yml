@@ -523,9 +523,8 @@ workflows:
             branches:
               ignore:
                 - main
-                - /^release\/.*/
             tags:
-              ignore: /.*/ 
+              ignore: /.*/
 
   weekly-run-workflow:
     when:

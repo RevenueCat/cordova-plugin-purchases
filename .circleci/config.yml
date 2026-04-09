@@ -324,20 +324,12 @@ jobs:
             automatic_release:<< pipeline.parameters.automatic >>
 
   all-tests-succeeded:
-    description: "Gate job: succeeds only when all test jobs pass"
-    docker:
-      - image: cimg/base:stable
-    resource_class: small
-    steps:
-      - run: echo "All tests succeeded"
-
-  all-tasks-passed:
     description: "Gate job: required status check for merging PRs"
     docker:
       - image: cimg/base:stable
     resource_class: small
     steps:
-      - run: echo "All tasks passed"
+      - run: echo "All tests succeeded"
 
   plugin-installation-test:
     description: "Verify cordova plugin add works on both cordova-ios 7 and 8"
@@ -422,7 +414,7 @@ workflows:
           simulator-device: "iPhone 17"
           simulator-os-version: "26.4"
           paramedic-target: "iPhone-17"
-      - all-tasks-passed:
+      - all-tests-succeeded:
           requires:
             - runtest
             - api-tester
@@ -498,14 +490,10 @@ workflows:
           requires:
             - make-release
           <<: *release-tags
-      - all-tasks-passed:
-          requires:
-            - docs-deploy
-          <<: *release-tags
       - revenuecat/merge-release-pr:
           repo_name: cordova-plugin-purchases
           requires:
-            - all-tasks-passed
+            - docs-deploy
           <<: *release-tags
 
   danger:

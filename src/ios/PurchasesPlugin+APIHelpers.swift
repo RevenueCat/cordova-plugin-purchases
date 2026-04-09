@@ -12,7 +12,7 @@ import RevenueCat
 extension CDVPurchasesPlugin {
 
     func sendOKFor(command: CDVInvokedUrlCommand, messageAsArray: [Any]? = nil) {
-        let pluginResult = CDVPluginResult(status: .ok, messageAs: messageAsArray)
+        let pluginResult = CDVPluginResult(status: .ok, messageAs: messageAsArray ?? [])
         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
     }
 
@@ -38,7 +38,7 @@ extension CDVPurchasesPlugin {
             if let error = error {
                 result = CDVPluginResult(status: .error, messageAs: error.info)
             } else {
-                result = CDVPluginResult(status: .ok, messageAs: response)
+                result = CDVPluginResult(status: .ok, messageAs: response ?? [:])
             }
             self.commandDelegate.send(result, callbackId: command.callbackId)
         }

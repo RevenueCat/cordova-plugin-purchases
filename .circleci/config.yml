@@ -384,7 +384,7 @@ workflows:
   version: 2
 
   # =============================================================
-  # run-all-tests: Runs on every push except release branches
+  # run-all-tests: Runs on every push except release branches and bump
   # =============================================================
   run-all-tests:
     when:
@@ -395,6 +395,8 @@ workflows:
             matches:
               pattern: "^release/.*$"
               value: << pipeline.git.branch >>
+        - not:
+            equal: [ bump, << pipeline.parameters.action >> ]
     jobs:
       - runtest
       - api-tester
@@ -509,9 +511,21 @@ workflows:
           <<: *release-tags
 
   danger:
+    when:
+      and:
+        - not:
+            equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+        - equal: [ build, << pipeline.parameters.action >> ]
     jobs:
       - revenuecat/danger:
           ruby_version: "3.2"
+          filters:
+            branches:
+              ignore:
+                - main
+                - /^release\/.*/
+            tags:
+              ignore: /.*/ 
 
   weekly-run-workflow:
     when:

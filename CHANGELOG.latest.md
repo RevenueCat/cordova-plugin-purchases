@@ -1,10 +1,13 @@
 ## RevenueCat SDK
-### 📦 Dependency Updates
-* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 17.55.1 (#915) via RevenueCat Git Bot (@RCGitBot)
-  * [Android 9.29.0](https://github.com/RevenueCat/purchases-android/releases/tag/9.29.0)
-  * [iOS 5.67.1](https://github.com/RevenueCat/purchases-ios/releases/tag/5.67.1)
-* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 17.55.0 (#912) via RevenueCat Git Bot (@RCGitBot)
+### 🐞 Bugfixes
+* Fix CDVPluginResult compilation errors with cordova-ios 8 (#920) via Antonio Pallares (@ajpallares)
+* fix: replace cordova-plugin-add-swift-support dependency with conditional hook (#910) via Antonio Pallares (@ajpallares)
 
 ### 🔄 Other Changes
-* Bump fastlane-plugin-revenuecat_internal from `5d6e93f` to `6289be1` (#909) via dependabot[bot] (@dependabot[bot])
-* Bump fastlane-plugin-revenuecat_internal from `f11fe40` to `5d6e93f` (#908) via dependabot[bot] (@dependabot[bot])
+* Restructure CI into run-all-tests, release, and deploy workflows (#924) via Antonio Pallares (@ajpallares)
+* Run iOS integration tests on cordova-ios 6, 7, and 8 (#921) via Antonio Pallares (@ajpallares)
+* Remove explicit git-based CocoaPods source from plugin.xml (#923) via Antonio Pallares (@ajpallares)
+* Add plugin-installation-test CI job (#911) via Antonio Pallares (@ajpallares)
+* Bump addressable from 2.8.9 to 2.9.0 (#918) via dependabot[bot] (@dependabot[bot])
+* Bump fastlane-plugin-revenuecat_internal from `6289be1` to `ceecf91` (#917) via dependabot[bot] (@dependabot[bot])
+* Consolidate api-tester into build-test workflow (#913) via Antonio Pallares (@ajpallares)

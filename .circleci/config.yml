@@ -219,23 +219,42 @@ jobs:
       GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
 
   ios-integration-test:
-    description: "Run iOS integration tests for Cordova"
+    description: "Run iOS integration tests for a specific cordova-ios version"
+    parameters:
+      cordova-ios-version:
+        type: string
+      xcode-version:
+        type: string
+        default: '15.4'
+      simulator-device:
+        type: string
+        default: 'iPhone 15'
+      simulator-os-version:
+        type: string
+        default: '17.5'
+      paramedic-target:
+        type: string
+        default: 'iPhone-15'
     resource_class: m4pro.medium
     macos:
-      xcode: '15.4'
+      xcode: << parameters.xcode-version >>
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout
       - macos/preboot-simulator:
-          device: iPhone 15
-          version: '17.5'
+          device: << parameters.simulator-device >>
+          version: << parameters.simulator-os-version >>
       - npm-dependencies
       - npm-install-cordova-paramedic
       - npm-ios-dependencies
       - replace-api-key
       - run:
-          name: npm run test:iOS
-          command: npm run test:ios
+          name: "Integration tests (cordova-ios << parameters.cordova-ios-version >>)"
+          command: |
+            cordova-paramedic --verbose \
+              --platform "ios@<< parameters.cordova-ios-version >>" \
+              --plugin . \
+              --target "<< parameters.paramedic-target >>"
           no_output_timeout: 30m
 
   runtest:
@@ -369,6 +388,28 @@ workflows:
       - runtest
       - api-tester
       - plugin-installation-test
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 6)"
+          cordova-ios-version: "6"
+      # cordova-ios 7 cannot use Xcode 16.4+ due to an Apple simulator bug
+      # (FB17006003) where HTTP/3 networking hangs on iOS 18.4+ simulators.
+      # Xcode 26.x builds succeed, but cordova-paramedic crashes during the
+      # simulator deploy phase with cordova-ios 7 on iOS 26.x.
+      # Xcode 16.2 / iOS 18.2 is the newest combination that avoids both issues.
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 7)"
+          cordova-ios-version: "7"
+          xcode-version: "16.2.0"
+          simulator-device: "iPhone 16"
+          simulator-os-version: "18.2"
+          paramedic-target: "iPhone-16"
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 8)"
+          cordova-ios-version: "8"
+          xcode-version: "26.4.0"
+          simulator-device: "iPhone 17"
+          simulator-os-version: "26.4"
+          paramedic-target: "iPhone-17"
 
   deploy:
     when:
@@ -376,11 +417,33 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - android-integration-test: *release-branches
-      - ios-integration-test: *release-branches
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 6) release"
+          cordova-ios-version: "6"
+          <<: *release-branches
+      # See comment in build-test workflow for cordova-ios 7 Xcode constraints.
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 7) release"
+          cordova-ios-version: "7"
+          xcode-version: "16.2.0"
+          simulator-device: "iPhone 16"
+          simulator-os-version: "18.2"
+          paramedic-target: "iPhone-16"
+          <<: *release-branches
+      - ios-integration-test:
+          name: "ios-integration-test (cordova-ios 8) release"
+          cordova-ios-version: "8"
+          xcode-version: "26.4.0"
+          simulator-device: "iPhone 17"
+          simulator-os-version: "26.4"
+          paramedic-target: "iPhone-17"
+          <<: *release-branches
       - hold:
           type: approval
           requires:
-            - ios-integration-test
+            - "ios-integration-test (cordova-ios 6) release"
+            - "ios-integration-test (cordova-ios 7) release"
+            - "ios-integration-test (cordova-ios 8) release"
             # Temporarily commenting this out because paramedic is failing
             # - android-integration-test
           <<: *release-branches

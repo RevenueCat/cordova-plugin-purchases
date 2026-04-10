@@ -28,7 +28,7 @@ setTimeout(function() {
 function showTestCases() {
     document.getElementById('app').innerHTML =
         '<h1>Test Cases</h1>' +
-        '<button onclick="showPurchaseScreen()">Purchase product</button>';
+        '<button onclick="showPurchaseScreen()">Purchase through paywall</button>';
 }
 
 function showError(msg) {

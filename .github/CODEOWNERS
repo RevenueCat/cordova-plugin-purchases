@@ -1,4 +1,4 @@
 # CODEOWNERS for cordova-plugin-purchases
 
 # Default owners
-* @RevenueCat/coresdk
+* @RevenueCat/sdk

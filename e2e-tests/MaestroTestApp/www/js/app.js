@@ -1,4 +1,18 @@
-var currentPackage = null;
+// ---------------------------------------------------------------------------
+// Test case registry
+// To add a new test case:
+//   1. Create www/js/screens/your_test_case.js (see purchase_through_paywall.js)
+//   2. Add a <script> tag for it in index.html
+//   3. Add an entry to TEST_CASES below
+// ---------------------------------------------------------------------------
+
+var TEST_CASES = [
+    { title: 'Purchase through paywall', flowKey: 'purchase_through_paywall', show: showPurchaseThroughPaywall }
+];
+
+// ---------------------------------------------------------------------------
+// Initialization
+// ---------------------------------------------------------------------------
 
 document.addEventListener('deviceready', function() {
     try {
@@ -16,7 +30,17 @@ document.addEventListener('deviceready', function() {
     } catch (e) {
         console.error('SDK init error: ' + e.message);
     }
-    showTestCases();
+
+    LaunchArgs.getTestFlow(function(testFlow) {
+        var match = testFlow ? TEST_CASES.filter(function(tc) { return tc.flowKey === testFlow; })[0] : null;
+        if (match) {
+            match.show();
+        } else {
+            showTestCases();
+        }
+    }, function() {
+        showTestCases();
+    });
 }, false);
 
 setTimeout(function() {
@@ -25,11 +49,21 @@ setTimeout(function() {
     }
 }, 10000);
 
+// ---------------------------------------------------------------------------
+// Test Cases list screen
+// ---------------------------------------------------------------------------
+
 function showTestCases() {
-    document.getElementById('app').innerHTML =
-        '<h1>Test Cases</h1>' +
-        '<button onclick="showPurchaseScreen()">Purchase through paywall</button>';
+    var html = '<h1>Test Cases</h1>';
+    TEST_CASES.forEach(function(tc) {
+        html += '<button onclick="' + tc.show.name + '()">' + tc.title + '</button>';
+    });
+    document.getElementById('app').innerHTML = html;
 }
+
+// ---------------------------------------------------------------------------
+// Shared helpers
+// ---------------------------------------------------------------------------
 
 function showError(msg) {
     var el = document.getElementById('error-msg');
@@ -40,62 +74,4 @@ function showError(msg) {
         document.getElementById('app').appendChild(el);
     }
     el.textContent = msg;
-}
-
-function showPurchaseScreen() {
-    document.getElementById('app').innerHTML =
-        '<p id="entitlements-label">Loading...</p>' +
-        '<button id="purchase-btn" onclick="purchase()">Loading offerings...</button>' +
-        '<button onclick="showTestCases()" style="margin-top:16px">Back</button>';
-
-    if (typeof Purchases !== 'undefined') {
-        Purchases.getCustomerInfo(
-            function(info) {
-                var hasPro = info.entitlements.active && info.entitlements.active['pro'] !== undefined;
-                document.getElementById('entitlements-label').textContent =
-                    'Entitlements: ' + (hasPro ? 'pro' : 'none');
-            },
-            function() {
-                document.getElementById('entitlements-label').textContent = 'Entitlements: none';
-            }
-        );
-
-        Purchases.getOfferings(
-            function(offerings) {
-                if (offerings.current && offerings.current.availablePackages.length > 0) {
-                    currentPackage = offerings.current.availablePackages[0];
-                    var btn = document.getElementById('purchase-btn');
-                    if (btn) btn.textContent = 'Purchase';
-                } else {
-                    showError('No packages in current offering');
-                }
-            },
-            function(error) {
-                showError('Offerings error: ' + (error.message || String(error)));
-            }
-        );
-    } else {
-        document.getElementById('entitlements-label').textContent = 'Entitlements: none';
-        showError('SDK not loaded');
-    }
-}
-
-function purchase() {
-    if (!currentPackage) {
-        showError('No package available');
-        return;
-    }
-    Purchases.purchasePackage(
-        currentPackage,
-        function(productIdentifier, customerInfo) {
-            var hasPro = customerInfo.entitlements.active && customerInfo.entitlements.active['pro'] !== undefined;
-            document.getElementById('entitlements-label').textContent =
-                'Entitlements: ' + (hasPro ? 'pro' : 'none');
-        },
-        function(errorInfo) {
-            if (!errorInfo.userCancelled) {
-                showError('Purchase error: ' + (errorInfo.message || 'failed'));
-            }
-        }
-    );
 }

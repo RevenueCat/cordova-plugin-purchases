@@ -7,7 +7,7 @@
 // ---------------------------------------------------------------------------
 
 var TEST_CASES = [
-    { title: 'Purchase through paywall', show: showPurchaseThroughPaywall }
+    { title: 'Purchase through paywall', flowKey: 'purchase_through_paywall', show: showPurchaseThroughPaywall }
 ];
 
 // ---------------------------------------------------------------------------

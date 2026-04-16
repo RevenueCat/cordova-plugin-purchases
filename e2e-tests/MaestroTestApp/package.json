@@ -1,4 +1,6 @@
 {
+  "name": "maestro-test-app",
+  "version": "1.0.0",
   "devDependencies": {
     "cordova-android": "^13.0.0",
     "cordova-ios": "^8.0.0"

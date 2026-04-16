@@ -31,7 +31,16 @@ document.addEventListener('deviceready', function() {
         console.error('SDK init error: ' + e.message);
     }
 
-    showTestCases();
+    LaunchArgs.getTestFlow(function(testFlow) {
+        var match = testFlow ? TEST_CASES.filter(function(tc) { return tc.flowKey === testFlow; })[0] : null;
+        if (match) {
+            match.show();
+        } else {
+            showTestCases();
+        }
+    }, function() {
+        showTestCases();
+    });
 }, false);
 
 setTimeout(function() {

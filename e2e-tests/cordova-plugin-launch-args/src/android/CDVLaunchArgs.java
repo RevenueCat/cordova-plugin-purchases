@@ -9,7 +9,7 @@ public class CDVLaunchArgs extends CordovaPlugin {
     public boolean execute(String action, JSONArray args, CallbackContext callbackContext) {
         if ("getTestFlow".equals(action)) {
             String testFlow = cordova.getActivity().getIntent().getStringExtra("e2e_test_flow");
-            callbackContext.success(testFlow);
+            callbackContext.success(testFlow != null ? testFlow : "");
             return true;
         }
         return false;

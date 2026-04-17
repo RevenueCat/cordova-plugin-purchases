@@ -69,6 +69,15 @@ commands:
           paths:
             - ~/.rbenv/versions/3.2.0
 
+  install-cocoapods:
+    description: "Install CocoaPods"
+    steps:
+      - run:
+          name: Install CocoaPods
+          command: |
+            gem uninstall -aIx cocoapods >/dev/null 2>&1 || true
+            gem install cocoapods --no-document
+
   api-tester-dependencies:
     description: "Install API Tester dependencies"
     steps:
@@ -313,6 +322,7 @@ jobs:
       - install-ruby
       - revenuecat/install-gem-mac-dependencies:
           cache-version: v1
+      - install-cocoapods
       - npm-dependencies
       - revenuecat/install-maestro
       - run:
@@ -594,24 +604,6 @@ workflows:
     jobs:
       - revenuecat/automatic-bump:
           ruby_version: "3.2"
-
-  maestro-e2e-tests-ios:
-    when:
-      or:
-        - equal: ["maestro_e2e_tests", << pipeline.schedule.name >>]
-    jobs:
-      - run-maestro-e2e-tests-ios:
-          context:
-            - e2e-tests
-
-  maestro-e2e-tests-android:
-    when:
-      or:
-        - equal: ["maestro_e2e_tests", << pipeline.schedule.name >>]
-    jobs:
-      - run-maestro-e2e-tests-android:
-          context:
-            - e2e-tests
 
   update-hybrid-common-versions:
     when:

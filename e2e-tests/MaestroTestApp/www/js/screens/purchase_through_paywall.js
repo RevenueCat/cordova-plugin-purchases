@@ -5,15 +5,16 @@
 // fetches offerings and performs a direct purchase via Purchases.purchasePackage().
 // ---------------------------------------------------------------------------
 
-var _currentPackage = null;
-
 function showPurchaseThroughPaywall() {
-    _currentPackage = null;
+    var currentPackage = null;
 
     document.getElementById('app').innerHTML =
         '<p id="entitlements-label">Loading...</p>' +
-        '<button id="purchase-btn" onclick="_doPurchase()">Loading offerings...</button>' +
-        '<button onclick="showTestCases()" style="margin-top:16px">Back</button>';
+        '<button id="purchase-btn" disabled>Loading offerings...</button>' +
+        '<button id="back-btn" style="margin-top:16px">Back</button>';
+
+    document.getElementById('back-btn').onclick = showTestCases;
+    document.getElementById('purchase-btn').onclick = doPurchase;
 
     if (typeof Purchases === 'undefined') {
         document.getElementById('entitlements-label').textContent = 'Entitlements: none';
@@ -35,9 +36,12 @@ function showPurchaseThroughPaywall() {
     Purchases.getOfferings(
         function(offerings) {
             if (offerings.current && offerings.current.availablePackages.length > 0) {
-                _currentPackage = offerings.current.availablePackages[0];
+                currentPackage = offerings.current.availablePackages[0];
                 var btn = document.getElementById('purchase-btn');
-                if (btn) btn.textContent = 'Purchase';
+                if (btn) {
+                    btn.textContent = 'Purchase';
+                    btn.disabled = false;
+                }
             } else {
                 showError('No packages in current offering');
             }
@@ -46,24 +50,24 @@ function showPurchaseThroughPaywall() {
             showError('Offerings error: ' + (error.message || String(error)));
         }
     );
-}
 
-function _doPurchase() {
-    if (!_currentPackage) {
-        showError('No package available');
-        return;
-    }
-    Purchases.purchasePackage(
-        _currentPackage,
-        function(productIdentifier, customerInfo) {
-            var hasPro = customerInfo.entitlements.active && customerInfo.entitlements.active['pro'] !== undefined;
-            document.getElementById('entitlements-label').textContent =
-                'Entitlements: ' + (hasPro ? 'pro' : 'none');
-        },
-        function(errorInfo) {
-            if (!errorInfo.userCancelled) {
-                showError('Purchase error: ' + (errorInfo.message || 'failed'));
-            }
+    function doPurchase() {
+        if (!currentPackage) {
+            showError('No package available');
+            return;
         }
-    );
+        Purchases.purchasePackage(
+            currentPackage,
+            function(productIdentifier, customerInfo) {
+                var hasPro = customerInfo.entitlements.active && customerInfo.entitlements.active['pro'] !== undefined;
+                document.getElementById('entitlements-label').textContent =
+                    'Entitlements: ' + (hasPro ? 'pro' : 'none');
+            },
+            function(errorInfo) {
+                if (!errorInfo.userCancelled) {
+                    showError('Purchase error: ' + (errorInfo.message || 'failed'));
+                }
+            }
+        );
+    }
 }

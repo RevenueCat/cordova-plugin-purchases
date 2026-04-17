@@ -1,11 +1,10 @@
-// ---------------------------------------------------------------------------
-// Screen: Purchase through paywall
-//
 // cordova-plugin-purchases does not have native paywall APIs, so this screen
 // fetches offerings and performs a direct purchase via Purchases.purchasePackage().
-// ---------------------------------------------------------------------------
 
-function showPurchaseThroughPaywall() {
+import { showError } from '../helpers.js';
+
+export function showPurchaseThroughPaywall(opts) {
+    var onBack = (opts && opts.onBack) || function() {};
     var currentPackage = null;
 
     document.getElementById('app').innerHTML =
@@ -13,7 +12,7 @@ function showPurchaseThroughPaywall() {
         '<button id="purchase-btn" disabled>Loading offerings...</button>' +
         '<button id="back-btn" style="margin-top:16px">Back</button>';
 
-    document.getElementById('back-btn').onclick = showTestCases;
+    document.getElementById('back-btn').onclick = onBack;
     document.getElementById('purchase-btn').onclick = doPurchase;
 
     if (typeof Purchases === 'undefined') {

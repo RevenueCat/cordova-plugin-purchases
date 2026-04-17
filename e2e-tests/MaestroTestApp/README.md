@@ -11,31 +11,40 @@ A minimal Cordova app used by Maestro end-to-end tests to verify RevenueCat SDK 
 
 ## Setup
 
+The plugin under test is linked from the repo root (not installed from npm), so the
+steps below mirror what the Fastlane lane does on CI.
+
 ```bash
+# From repo root: build the plugin's TypeScript sources
+npm install && npm run build
+
+cd e2e-tests/MaestroTestApp
+
+# Replace the API-key placeholder with a real key (see "API Key" below)
+sed -i '' 's/MAESTRO_TESTS_REVENUECAT_API_KEY/<your-api-key>/g' www/js/app.js
+
 npm install
-npx cordova prepare
-```
 
-## Running Locally
-
-```bash
 # iOS
-npx cordova run ios --emulator
+cordova platform add ios
+cordova plugin add ../.. --link --nosave --force
+cordova run ios
 
 # Android
-npx cordova run android --emulator
+cordova platform add android
+cordova plugin add ../.. --link --nosave --force
+cordova run android
 ```
 
 ## API Key
 
 The app initialises RevenueCat with the placeholder `MAESTRO_TESTS_REVENUECAT_API_KEY`.
-In CI, the Fastlane lane replaces this placeholder with the real key from the
-`RC_E2E_TEST_API_KEY_PRODUCTION_TEST_STORE` environment variable (provided by the
-CircleCI `e2e-tests` context) before building.
+To run locally, replace it in `www/js/app.js` with a valid API key from the RevenueCat
+project that has the Test Store configured (do **not** commit the real key).
 
-To run locally, either:
-- Replace the placeholder in `www/js/app.js` with a valid API key (do **not** commit it), or
-- Export the env var and run the same `sed` command the Fastlane lane uses.
+On CI, the Fastlane lane replaces the placeholder with the value of the
+`RC_E2E_TEST_API_KEY_PRODUCTION_TEST_STORE` environment variable (provided by the
+`e2e-tests` CircleCI context).
 
 ## RevenueCat Project
 

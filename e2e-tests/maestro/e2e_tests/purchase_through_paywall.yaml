@@ -14,7 +14,7 @@ name: Purchase through paywall
         e2e_test_flow: purchase_through_paywall
 - extendedWaitUntil:
     visible: "Entitlements: none"
-    timeout: 30000
+    timeout: 15000
 - assertVisible: "Entitlements: none"
 - extendedWaitUntil:
     visible: "^Purchase$"

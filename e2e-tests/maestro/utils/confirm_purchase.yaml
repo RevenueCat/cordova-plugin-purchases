@@ -5,7 +5,7 @@ name: Confirm purchase - Test Store Purchase Alert
 
 ---
 - extendedWaitUntil:
-    visible: "Test.*Purchase"
+    visible: "Test Store Purchase"
     timeout: 15000
 - tapOn:
-    text: "(?i)test valid purchase"
+    text: "Test valid purchase"

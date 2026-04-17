@@ -145,7 +145,7 @@ lane :run_maestro_e2e_tests_ios do
   sh("cd '#{repo_root}' && npm install && npm run build")
   Dir.chdir("../e2e-tests/MaestroTestApp") do
     sh("sed -i '' 's/MAESTRO_TESTS_REVENUECAT_API_KEY/'\"$RC_E2E_TEST_API_KEY_PRODUCTION_TEST_STORE\"'/g' www/js/app.js")
-    sh("grep -q MAESTRO_TESTS_REVENUECAT_API_KEY www/js/app.js && echo 'ERROR: API key placeholder was not replaced' && exit 1 || true")
+    UI.user_error!("API key placeholder was not replaced in app.js") if File.read("www/js/app.js").include?("MAESTRO_TESTS_REVENUECAT_API_KEY")
     Bundler.with_unbundled_env do
       sh("gem install cocoapods --no-document")
     end
@@ -171,7 +171,7 @@ lane :build_maestro_app_android do
   sh("cd '#{repo_root}' && npm install && npm run build")
   Dir.chdir("../e2e-tests/MaestroTestApp") do
     sh("sed -i 's/MAESTRO_TESTS_REVENUECAT_API_KEY/'\"$RC_E2E_TEST_API_KEY_PRODUCTION_TEST_STORE\"'/g' www/js/app.js")
-    sh("grep -q MAESTRO_TESTS_REVENUECAT_API_KEY www/js/app.js && echo 'ERROR: API key placeholder was not replaced' && exit 1 || true")
+    UI.user_error!("API key placeholder was not replaced in app.js") if File.read("www/js/app.js").include?("MAESTRO_TESTS_REVENUECAT_API_KEY")
     sh("rm -rf platforms/android")
     sh("cordova platform add android")
     sh("cordova plugin add '#{repo_root}' --link --nosave --force")

@@ -146,9 +146,6 @@ lane :run_maestro_e2e_tests_ios do
   Dir.chdir("../e2e-tests/MaestroTestApp") do
     sh("sed -i '' 's/MAESTRO_TESTS_REVENUECAT_API_KEY/'\"$RC_E2E_TEST_API_KEY_PRODUCTION_TEST_STORE\"'/g' www/js/app.js")
     UI.user_error!("API key placeholder was not replaced in app.js") if File.read("www/js/app.js").include?("MAESTRO_TESTS_REVENUECAT_API_KEY")
-    Bundler.with_unbundled_env do
-      sh("gem install cocoapods --no-document")
-    end
     sh("cordova platform add ios")
     Bundler.with_unbundled_env do
       sh("cordova plugin add '#{repo_root}' --link --nosave --force")

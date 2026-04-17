@@ -43,22 +43,19 @@ document.addEventListener('deviceready', function() {
     });
 }, false);
 
-setTimeout(function() {
-    if (!document.getElementById('app').innerHTML.trim()) {
-        showTestCases();
-    }
-}, 10000);
-
 // ---------------------------------------------------------------------------
 // Test Cases list screen
 // ---------------------------------------------------------------------------
 
 function showTestCases() {
-    var html = '<h1>Test Cases</h1>';
+    var app = document.getElementById('app');
+    app.innerHTML = '<h1>Test Cases</h1>';
     TEST_CASES.forEach(function(tc) {
-        html += '<button onclick="' + tc.show.name + '()">' + tc.title + '</button>';
+        var btn = document.createElement('button');
+        btn.textContent = tc.title;
+        btn.onclick = tc.show;
+        app.appendChild(btn);
     });
-    document.getElementById('app').innerHTML = html;
 }
 
 // ---------------------------------------------------------------------------

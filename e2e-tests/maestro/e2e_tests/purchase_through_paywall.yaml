@@ -12,20 +12,9 @@ name: Purchase through paywall
 - launchApp:
     arguments:
         e2e_test_flow: purchase_through_paywall
-- extendedWaitUntil:
-    visible: "Entitlements: none"
-    timeout: 15000
 - assertVisible: "Entitlements: none"
-- extendedWaitUntil:
-    visible: "^Purchase$"
-    timeout: 30000
-- takeScreenshot: purchase_through_paywall - Purchase screen ready
 - tapOn:
     text: "^Purchase$"
 - runFlow:
     file: ../utils/confirm_purchase.yaml
-- extendedWaitUntil:
-    visible: "Entitlements: pro"
-    timeout: 15000
-- takeScreenshot: purchase_through_paywall - Entitlements unlocked
 - assertVisible: "Entitlements: pro"

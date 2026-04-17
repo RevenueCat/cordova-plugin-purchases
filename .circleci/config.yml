@@ -69,15 +69,6 @@ commands:
           paths:
             - ~/.rbenv/versions/3.2.0
 
-  install-cocoapods:
-    description: "Install CocoaPods"
-    steps:
-      - run:
-          name: Install CocoaPods
-          command: |
-            gem uninstall -aIx cocoapods >/dev/null 2>&1 || true
-            gem install cocoapods --no-document
-
   api-tester-dependencies:
     description: "Install API Tester dependencies"
     steps:
@@ -322,7 +313,6 @@ jobs:
       - install-ruby
       - revenuecat/install-gem-mac-dependencies:
           cache-version: v1
-      - install-cocoapods
       - npm-dependencies
       - revenuecat/install-maestro
       - run:

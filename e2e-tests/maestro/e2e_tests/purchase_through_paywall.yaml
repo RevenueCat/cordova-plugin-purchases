@@ -12,7 +12,12 @@ name: Purchase through paywall
 - launchApp:
     arguments:
         e2e_test_flow: purchase_through_paywall
-- assertVisible: "Entitlements: none"
+# Extended wait because the Android emulator is slow on cold start and
+# Cordova's `deviceready` event can take longer than Maestro's default
+# assertVisible timeout.
+- extendedWaitUntil:
+    visible: "Entitlements: none"
+    timeout: 30000
 - tapOn:
     text: "^Purchase$"
 - runFlow:

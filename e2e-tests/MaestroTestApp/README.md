@@ -57,3 +57,13 @@ The test uses a RevenueCat project configured with:
 `cordova-plugin-purchases` does not have native paywall APIs, so the test
 performs a direct purchase via `Purchases.purchasePackage()` instead of
 presenting a paywall.
+
+## Adding a new test case
+
+The app uses ES modules with a single registration point, mirroring the
+pattern used by `purchases-flutter`'s `lib/test_cases.dart`.
+
+1. Create `www/js/screens/your_test_case.js` that exports a `show*` function.
+2. Add an import and a single entry in `www/js/test_cases.js`.
+
+That's it — no `<script>` tag wiring, no script-order gotchas.

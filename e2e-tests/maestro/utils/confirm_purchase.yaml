@@ -4,8 +4,6 @@ appId: com.revenuecat.automatedsdktests
 name: Confirm purchase - Test Store Purchase Alert
 
 ---
-- extendedWaitUntil:
-    visible: "Test Store Purchase"
-    timeout: 15000
+- assertVisible: "Test Store Purchase"
 - tapOn:
     text: "Test valid purchase"

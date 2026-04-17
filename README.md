@@ -30,7 +30,7 @@
 Please follow the [Quickstart Guide](https://docs.revenuecat.com/docs/) for more information on how to use the SDK
 
 ### Requirements
-*cordova-plugin-purchases* requires Xcode 15+ and minimum targets iOS 13.0+. The minimum Android version compatible is 5.0 (API level 21).
+*cordova-plugin-purchases* requires Xcode 15+ and minimum targets iOS 13.0+. The minimum Android version compatible is 6.0 (API level 23).
 
 ## SDK Reference
 Our full SDK reference [can be found here](https://revenuecat.github.io/cordova-plugin-purchases-docs).

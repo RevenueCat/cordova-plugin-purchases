@@ -331,7 +331,7 @@ jobs:
 
   run-maestro-e2e-tests-android:
     machine:
-      image: android:2024.11.1
+      image: android:2025.10.1
     resource_class: xlarge
     steps:
       - checkout

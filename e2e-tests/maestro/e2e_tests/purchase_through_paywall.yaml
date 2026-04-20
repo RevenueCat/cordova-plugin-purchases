@@ -18,8 +18,7 @@ name: Purchase through paywall
 - extendedWaitUntil:
     visible: "Entitlements: none"
     timeout: 30000
-- tapOn:
-    text: "^Purchase$"
+- tapOn: "Purchase"
 - runFlow:
     file: ../utils/confirm_purchase.yaml
 - assertVisible: "Entitlements: pro"

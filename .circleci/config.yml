@@ -304,6 +304,66 @@ jobs:
           name: release
           command: bundle exec fastlane release
 
+  run-maestro-e2e-tests-ios:
+    <<: *base-mac-job
+    macos:
+      xcode: '26.3.0'
+    steps:
+      - checkout
+      - install-ruby
+      - revenuecat/install-gem-mac-dependencies:
+          cache-version: v1
+      - npm-dependencies
+      - revenuecat/install-maestro
+      - run:
+          name: Boot iOS Simulator
+          command: |
+            xcrun simctl boot "iPhone 17" || true
+            xcrun simctl bootstatus "iPhone 17" -b
+      - run:
+          name: Run Maestro E2E Tests (iOS)
+          command: bundle exec fastlane run_maestro_e2e_tests_ios
+          no_output_timeout: 15m
+      - store_test_results:
+          path: fastlane/test_output
+      - store_artifacts:
+          path: fastlane/test_output
+
+  run-maestro-e2e-tests-android:
+    machine:
+      image: android:2025.10.1
+    resource_class: xlarge
+    steps:
+      - checkout
+      - run:
+          name: Install Ruby and Bundler
+          command: |
+            rbenv install 3.2.0 --skip-existing
+            rbenv global 3.2.0
+            gem install bundler --no-document
+            bundle install
+      - npm-dependencies
+      - run:
+          name: Build Maestro app (Android)
+          command: bundle exec fastlane build_maestro_app_android
+          no_output_timeout: 15m
+      - android/create-avd:
+          avd-name: test-e2e
+          system-image: system-images;android-34;google_apis;x86_64
+          install: true
+      - android/start-emulator:
+          avd-name: test-e2e
+          post-emulator-launch-assemble-command: ""
+      - revenuecat/install-maestro
+      - run:
+          name: Run Maestro E2E Tests (Android)
+          command: bundle exec fastlane run_maestro_e2e_tests_android
+          no_output_timeout: 15m
+      - store_test_results:
+          path: fastlane/test_output
+      - store_artifacts:
+          path: fastlane/test_output
+
   update-hybrid-common-versions:
     description: "Creates a PR updating purchases-hybrid-common to latest release"
     <<: *base-mac-job
@@ -392,6 +452,12 @@ workflows:
       - runtest
       - api-tester
       - plugin-installation-test
+      - run-maestro-e2e-tests-ios:
+          context:
+            - e2e-tests
+      - run-maestro-e2e-tests-android:
+          context:
+            - e2e-tests
       - android-integration-test
       - ios-integration-test:
           name: "ios-integration-test (cordova-ios 6)"

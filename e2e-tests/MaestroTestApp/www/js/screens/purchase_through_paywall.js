@@ -57,14 +57,17 @@ export function showPurchaseThroughPaywall(opts) {
         }
         Purchases.purchasePackage(
             currentPackage,
-            function(productIdentifier, customerInfo) {
-                var hasPro = customerInfo.entitlements.active && customerInfo.entitlements.active['pro'] !== undefined;
+            function(result) {
+                var customerInfo = result && result.customerInfo;
+                var hasPro = customerInfo && customerInfo.entitlements &&
+                    customerInfo.entitlements.active &&
+                    customerInfo.entitlements.active['pro'] !== undefined;
                 document.getElementById('entitlements-label').textContent =
                     'Entitlements: ' + (hasPro ? 'pro' : 'none');
             },
             function(errorInfo) {
                 if (!errorInfo.userCancelled) {
-                    showError('Purchase error: ' + (errorInfo.message || 'failed'));
+                    showError('Purchase error: ' + ((errorInfo.error && errorInfo.error.message) || 'failed'));
                 }
             }
         );

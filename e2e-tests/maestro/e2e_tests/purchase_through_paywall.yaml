@@ -19,8 +19,7 @@ name: Purchase through paywall
 - tapOn:
     text: "Purchase through paywall"
 - assertVisible: "Entitlements: none"
-- tapOn:
-    text: "^Purchase$"
+- tapOn: "Purchase"
 - runFlow:
     file: ../utils/confirm_purchase.yaml
 - assertVisible: "Entitlements: pro"

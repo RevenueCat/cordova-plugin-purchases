@@ -64,6 +64,29 @@ The app uses ES modules with a single registration point, mirroring the
 pattern used by `purchases-flutter`'s `lib/test_cases.dart`.
 
 1. Create `www/js/screens/your_test_case.js` that exports a `show*` function.
-2. Add an import and a single entry in `www/js/test_cases.js`.
+2. Add an import and a single entry in `www/js/test_cases.js`, including a
+   `flowKey` (used by Maestro launch arguments — see below).
 
 That's it — no `<script>` tag wiring, no script-order gotchas.
+
+## Launch arguments
+
+Maestro flows skip the Test Cases list by passing an `e2e_test_flow` launch
+argument that matches a `flowKey` in `www/js/test_cases.js`. When no arg is
+passed (or it doesn't match), the Test Cases list is shown.
+
+The bridge between the native argument and JavaScript is a small sibling
+plugin at `../cordova-plugin-launch-args/` (iOS reads from `UserDefaults`,
+Android reads from `Intent` extras).
+
+To reproduce a Maestro run locally:
+
+```bash
+# iOS — app must already be installed on the booted simulator
+xcrun simctl launch booted com.revenuecat.automatedsdktests \
+    -e2e_test_flow purchase_through_paywall
+
+# Android — app must already be installed on the emulator
+adb shell am start -n com.revenuecat.automatedsdktests/.MainActivity \
+    --es e2e_test_flow purchase_through_paywall
+```

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+        id="cordova-plugin-launch-args" version="1.0.0">
+    <name>LaunchArgs</name>
+    <description>Reads launch arguments passed by Maestro</description>
+
+    <js-module src="www/LaunchArgs.js" name="LaunchArgs">
+        <clobbers target="LaunchArgs" />
+    </js-module>
+
+    <platform name="ios">
+        <config-file target="config.xml" parent="/*">
+            <feature name="LaunchArgs">
+                <param name="ios-package" value="CDVLaunchArgs" />
+            </feature>
+        </config-file>
+        <source-file src="src/ios/CDVLaunchArgs.swift" />
+    </platform>
+
+    <platform name="android">
+        <config-file target="res/xml/config.xml" parent="/*">
+            <feature name="LaunchArgs">
+                <param name="android-package" value="com.revenuecat.automatedsdktests.CDVLaunchArgs" />
+            </feature>
+        </config-file>
+        <source-file src="src/android/CDVLaunchArgs.java" target-dir="src/com/revenuecat/automatedsdktests" />
+    </platform>
+</plugin>

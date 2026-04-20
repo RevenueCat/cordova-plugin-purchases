@@ -1,0 +1,17 @@
+{
+  "name": "cordova-plugin-launch-args",
+  "version": "1.0.0",
+  "description": "Cordova plugin to read launch arguments for E2E tests",
+  "cordova": {
+    "id": "cordova-plugin-launch-args",
+    "platforms": [
+      "ios",
+      "android"
+    ]
+  },
+  "keywords": [
+    "ecosystem:cordova",
+    "cordova-ios",
+    "cordova-android"
+  ]
+}

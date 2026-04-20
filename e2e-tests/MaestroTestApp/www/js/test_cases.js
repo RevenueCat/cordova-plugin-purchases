@@ -7,5 +7,5 @@
 import { showPurchaseThroughPaywall } from './screens/purchase_through_paywall.js';
 
 export const TEST_CASES = [
-    { title: 'Purchase through paywall', show: showPurchaseThroughPaywall }
+    { title: 'Purchase through paywall', flowKey: 'purchase_through_paywall', show: showPurchaseThroughPaywall }
 ];

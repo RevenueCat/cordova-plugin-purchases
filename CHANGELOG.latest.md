@@ -1,10 +1,9 @@
 ## RevenueCat SDK
-### 📦 Dependency Updates
-* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 18.1.0 (#936) via RevenueCat Git Bot (@RCGitBot)
-  * [Android 10.2.0](https://github.com/RevenueCat/purchases-android/releases/tag/10.2.0)
-  * [iOS 5.68.0](https://github.com/RevenueCat/purchases-ios/releases/tag/5.68.0)
+### ✨ New Features
+* Add CircleCI job for maestro E2E tests (#859) via Antonio Pallares (@ajpallares)
+* Add maestro E2E test for purchase through paywall (#858) via Antonio Pallares (@ajpallares)
 
 ### 🔄 Other Changes
-* Bump fastlane-plugin-revenuecat_internal from `a1eed48` to `e348913` (#938) via dependabot[bot] (@dependabot[bot])
-* Bump fastlane from 2.232.2 to 2.233.0 (#939) via dependabot[bot] (@dependabot[bot])
-* Bump fastlane-plugin-revenuecat_internal from `20911d1` to `a1eed48` (#935) via dependabot[bot] (@dependabot[bot])
+* Bump fastlane-plugin-revenuecat_internal from `e348913` to `b822f01` (#941) via dependabot[bot] (@dependabot[bot])
+* Skip test cases list in maestro tests using launch arguments (#919) via Antonio Pallares (@ajpallares)
+* Add maestro E2E test app (#857) via Antonio Pallares (@ajpallares)

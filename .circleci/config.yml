@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   macos: circleci/macos@2.3.6
   android: circleci/android@2.5.0
-  revenuecat: revenuecat/sdks-common-config@3.16.0
+  revenuecat: revenuecat/sdks-common-config@3.20.0
 
 aliases:
   base-mac-job: &base-mac-job
@@ -117,14 +117,9 @@ commands:
       - run: sed -i .bck s/api_key/$API_KEY/ tests/tests.js
 
   install-sdkman:
-    description: Install SDKMAN
+    description: Install SDKMAN and set up Java environment
     steps:
-      - run:
-          name: Installing SDKMAN
-          command: |
-            curl -s "https://get.sdkman.io?rcupdate=false" | bash
-            echo -e '\nsource "/home/circleci/.sdkman/bin/sdkman-init.sh"' >> $BASH_ENV
-            source $BASH_ENV
+      - revenuecat/install-sdkman
       - run:
           name: Setup Java environment
           command: |

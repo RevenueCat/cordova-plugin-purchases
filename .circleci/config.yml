@@ -391,12 +391,9 @@ jobs:
     <<: *base-mac-job
     steps:
       - checkout
-      - install-nvm
       - run:
-          name: Install Cordova and CocoaPods
-          command: |
-            npm install -g cordova
-            brew install cocoapods
+          name: Install Cordova
+          command: npm install -g cordova
       - run:
           name: Build and pack plugin
           command: |

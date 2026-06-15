@@ -392,11 +392,18 @@ jobs:
     steps:
       - checkout
       - install-nvm
+      - install-ruby
+      - revenuecat/install-gem-mac-dependencies:
+          cache-version: v1
       - run:
-          name: Install Cordova and CocoaPods
+          name: Install Cordova and expose bundled CocoaPods
           command: |
             npm install -g cordova
-            NONINTERACTIVE=1 brew install cocoapods
+            # cordova invokes `pod` directly, so put a bundler binstub for the
+            # Gemfile-managed CocoaPods on PATH (the binstub resolves the repo's
+            # Gemfile by absolute path, so it also works from cordova's temp dirs).
+            bundle binstubs cocoapods
+            echo "export PATH=$PWD/bin:$PATH" >> "$BASH_ENV"
       - run:
           name: Build and pack plugin
           command: |

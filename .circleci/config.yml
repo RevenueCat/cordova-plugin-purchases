@@ -399,7 +399,7 @@ jobs:
             echo 'eval "$(rbenv init -)"' >> "$BASH_ENV"
             eval "$(rbenv init -)"
             npm install -g cordova
-            gem install cocoapods
+            gem install cocoapods --no-document
       - run:
           name: Build and pack plugin
           command: |

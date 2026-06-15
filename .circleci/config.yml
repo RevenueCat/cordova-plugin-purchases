@@ -391,9 +391,6 @@ jobs:
     <<: *base-mac-job
     steps:
       - checkout
-      # No install-nvm here: it appends `nvm use` to $BASH_ENV, whose stdout
-      # poisons rbenv's command substitutions and hides the preinstalled `pod`.
-      # The image's default node and CocoaPods are sufficient for this job.
       - run:
           name: Install Cordova
           command: npm install -g cordova

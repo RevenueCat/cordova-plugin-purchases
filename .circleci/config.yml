@@ -393,10 +393,9 @@ jobs:
       - checkout
       - install-nvm
       - run:
-          name: Install Cordova and CocoaPods
+          name: Install Cordova
           command: |
             npm install -g cordova
-            brew install cocoapods
       - run:
           name: Build and pack plugin
           command: |

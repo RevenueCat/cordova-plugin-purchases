@@ -396,6 +396,8 @@ jobs:
       - run:
           name: Install Cordova and CocoaPods
           command: |
+            echo 'eval "$(rbenv init -)"' >> "$BASH_ENV"
+            eval "$(rbenv init -)"
             npm install -g cordova
             gem install cocoapods
       - run:

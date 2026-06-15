@@ -391,25 +391,12 @@ jobs:
     <<: *base-mac-job
     steps:
       - checkout
-      - install-nvm
-      - install-ruby
+      # No install-nvm here: it appends `nvm use` to $BASH_ENV, whose stdout
+      # poisons rbenv's command substitutions and hides the preinstalled `pod`.
+      # The image's default node and CocoaPods are sufficient for this job.
       - run:
-          # install-nvm corrupts the login-shell rbenv init, so `bundle`/`pod`
-          # fall back to system Ruby 2.6.0. Prepend the rbenv 3.2.0 shims to PATH
-          # (a plain export, not `rbenv init`, which would recurse via rehash).
-          name: Put rbenv Ruby on PATH for bundler and pod
-          command: echo 'export PATH="$HOME/.rbenv/shims:$PATH"' >> "$BASH_ENV"
-      - revenuecat/install-gem-mac-dependencies:
-          cache-version: v1
-      - run:
-          name: Install Cordova and expose bundled CocoaPods
-          command: |
-            npm install -g cordova
-            # cordova invokes `pod` directly, so put a bundler binstub for the
-            # Gemfile-managed CocoaPods on PATH (the binstub resolves the repo's
-            # Gemfile by absolute path, so it also works from cordova's temp dirs).
-            bundle binstubs cocoapods
-            echo "export PATH=$PWD/bin:$PATH" >> "$BASH_ENV"
+          name: Install Cordova
+          command: npm install -g cordova
       - run:
           name: Build and pack plugin
           command: |

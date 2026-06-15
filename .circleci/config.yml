@@ -396,10 +396,11 @@ jobs:
       - run:
           name: Install Cordova and CocoaPods
           command: |
-            echo 'eval "$(rbenv init -)"' >> "$BASH_ENV"
-            eval "$(rbenv init -)"
+            echo 'export PATH="$HOME/.rbenv/shims:$PATH"' >> "$BASH_ENV"
+            export PATH="$HOME/.rbenv/shims:$PATH"
             npm install -g cordova
             gem install cocoapods --no-document
+            rbenv rehash
       - run:
           name: Build and pack plugin
           command: |

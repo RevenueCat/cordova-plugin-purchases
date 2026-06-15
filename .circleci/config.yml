@@ -393,6 +393,12 @@ jobs:
       - checkout
       - install-nvm
       - install-ruby
+      - run:
+          # install-nvm corrupts the login-shell rbenv init, so `bundle`/`pod`
+          # fall back to system Ruby 2.6.0. Prepend the rbenv 3.2.0 shims to PATH
+          # (a plain export, not `rbenv init`, which would recurse via rehash).
+          name: Put rbenv Ruby on PATH for bundler and pod
+          command: echo 'export PATH="$HOME/.rbenv/shims:$PATH"' >> "$BASH_ENV"
       - revenuecat/install-gem-mac-dependencies:
           cache-version: v1
       - run:

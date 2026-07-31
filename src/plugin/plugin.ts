@@ -2043,6 +2043,22 @@ class Purchases {
   }
 
   /**
+   * Subscriber attribute associated with the OneSignal User ID for the user
+   * Required for the RevenueCat OneSignal integration with versions v11.0 and above.
+   *
+   * @param onesignalUserID Empty String or null will delete the subscriber attribute.
+   */
+  public static setOnesignalUserID(onesignalUserID: string | null): void {
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setOnesignalUserID",
+      [onesignalUserID]
+    )
+  }
+
+  /**
    * Subscriber attribute associated with the Airship Channel Id for the user
    * Required for the RevenueCat Airship integration
    *

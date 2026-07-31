@@ -14,6 +14,7 @@ function checkAttributes(purchases: Purchases) {
   Purchases.setFBAnonymousID(stringOrNull);
   Purchases.setMparticleID(stringOrNull);
   Purchases.setOnesignalID(stringOrNull);
+  Purchases.setOnesignalUserID(stringOrNull);
   Purchases.setAirshipChannelID(stringOrNull);
   Purchases.setCleverTapID(stringOrNull);
   Purchases.setMixpanelDistinctID(stringOrNull);

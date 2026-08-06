@@ -445,6 +445,12 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
         callbackContext.success();
     }
 
+    @PluginAction(thread = ExecutionThread.WORKER, actionName = "setOnesignalUserID")
+    private void setOnesignalUserID(String onesignalUserID, CallbackContext callbackContext) {
+        SubscriberAttributesKt.setOnesignalUserID(onesignalUserID);
+        callbackContext.success();
+    }
+
     @PluginAction(thread = ExecutionThread.WORKER, actionName = "setAirshipChannelID")
     private void setAirshipChannelID(String airshipChannelID, CallbackContext callbackContext) {
         SubscriberAttributesKt.setAirshipChannelID(airshipChannelID);

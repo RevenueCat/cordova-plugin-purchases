@@ -105,6 +105,13 @@ import PurchasesHybridCommon
                                     setFunction: CommonFunctionality.setOnesignalID)
     }
 
+    @objc(setOnesignalUserID:)
+    func setOnesignalUserID(command: CDVInvokedUrlCommand) {
+        self.setSubscriberAttribute(command: command,
+                                    name: "onesignalUserID",
+                                    setFunction: CommonFunctionality.setOnesignalUserID)
+    }
+
     @objc(setAirshipChannelID:)
     func setAirshipChannelID(command: CDVInvokedUrlCommand) {
         self.setSubscriberAttribute(command: command,

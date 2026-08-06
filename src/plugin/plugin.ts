@@ -2028,9 +2028,10 @@ class Purchases {
 
   /**
    * Subscriber attribute associated with the OneSignal Player Id for the user
-   * Required for the RevenueCat OneSignal integration
+   * Required for the RevenueCat OneSignal integration with OneSignal SDK v4.0 and below
+   * (OneSignal API v9). For OneSignal SDK v5.0 and above, use {@link setOnesignalUserID} instead.
    *
-   * @param onesignalID Empty String or null will delete the subscriber attribute.
+   * @param onesignalID OneSignal Player ID to use in OneSignal integration. Empty String or null will delete the subscriber attribute.
    */
   public static setOnesignalID(onesignalID: string | null): void {
     window.cordova.exec(
@@ -2039,6 +2040,23 @@ class Purchases {
       PLUGIN_NAME,
       "setOnesignalID",
       [onesignalID]
+    )
+  }
+
+  /**
+   * Subscriber attribute associated with the OneSignal User ID for the user
+   * Required for the RevenueCat OneSignal integration with OneSignal SDK v5.0
+   * and above (OneSignal API v11+).
+   *
+   * @param onesignalUserID OneSignal User ID to use in OneSignal integration. Empty String or null will delete the subscriber attribute.
+   */
+  public static setOnesignalUserID(onesignalUserID: string | null): void {
+    window.cordova.exec(
+      null,
+      null,
+      PLUGIN_NAME,
+      "setOnesignalUserID",
+      [onesignalUserID]
     )
   }
 

@@ -12,8 +12,8 @@ let package = Package(
         .library(name: "cordova-plugin-purchases", targets: ["PurchasesPlugin"])
     ],
     dependencies: [
-        // cordova-ios rewrites this to a local path pointing at the app's own CordovaLib
-        // when it installs the plugin, so the branch is only used outside of a Cordova project.
+        // cordova-ios rewrites this to the app's own CordovaLib when it installs the plugin.
+        // It only stays pointed here if the plugin is added with `--link`, which won't build.
         .package(url: "https://github.com/apache/cordova-ios.git", branch: "master"),
         .package(url: "https://github.com/RevenueCat/purchases-hybrid-common.git", exact: "18.32.1")
     ],

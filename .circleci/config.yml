@@ -413,7 +413,10 @@ jobs:
             cd test-ios7
             cordova platform add ios@7
             cordova plugin add /tmp/plugin
-            echo "cordova-ios 7: plugin installed successfully"
+            # cordova-ios 7 has no SwiftPM support, so PHC has to come from the pod.
+            grep -q "PurchasesHybridCommon" platforms/ios/Podfile
+            test ! -d platforms/ios/packages/cordova-plugin-purchases
+            echo "cordova-ios 7: plugin installed via CocoaPods"
       - run:
           name: "Test plugin installation: cordova-ios 8"
           command: |
@@ -422,7 +425,16 @@ jobs:
             cd test-ios8
             cordova platform add ios@8
             cordova plugin add /tmp/plugin
-            echo "cordova-ios 8: plugin installed successfully"
+            PACKAGE_SWIFT=platforms/ios/packages/cordova-plugin-purchases/Package.swift
+            # PHC is resolved through SwiftPM here, so `nospm` has to keep the pod out.
+            if grep -q "PurchasesHybridCommon" platforms/ios/Podfile; then
+              echo "PurchasesHybridCommon should not be in the Podfile on cordova-ios 8"
+              exit 1
+            fi
+            grep -q "purchases-hybrid-common" "$PACKAGE_SWIFT"
+            # cordova-ios repoints the plugin at the app's own CordovaLib on install.
+            grep -q 'package(name: "cordova-ios", path:' "$PACKAGE_SWIFT"
+            echo "cordova-ios 8: plugin installed via SwiftPM"
 
 workflows:
   version: 2

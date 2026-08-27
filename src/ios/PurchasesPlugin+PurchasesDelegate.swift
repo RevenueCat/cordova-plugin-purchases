@@ -8,6 +8,9 @@
 import Foundation
 import PurchasesHybridCommon
 import RevenueCat
+#if canImport(Cordova)
+import Cordova
+#endif
 
 extension CDVPurchasesPlugin: PurchasesDelegate {
 

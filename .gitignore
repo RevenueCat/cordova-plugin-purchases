@@ -21,3 +21,8 @@ vendor/
 
 # TypeScript
 www/
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved

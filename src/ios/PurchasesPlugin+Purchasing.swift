@@ -7,6 +7,9 @@
 
 import Foundation
 import PurchasesHybridCommon
+#if canImport(Cordova)
+import Cordova
+#endif
 
 @objc public extension CDVPurchasesPlugin {
 

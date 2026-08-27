@@ -9,6 +9,9 @@ files_to_update_phc_version = {
   'plugin.xml' => [
     'name="PurchasesHybridCommon" spec="{x}"',
     'com.revenuecat.purchases:purchases-hybrid-common:{x}'
+  ],
+  'Package.swift' => [
+    'purchases-hybrid-common.git", exact: "{x}"'
   ]
 }
 files_to_update_on_latest_stable_releases = {
@@ -154,7 +157,10 @@ lane :run_maestro_e2e_tests_ios do
     end
     sh("cordova platform add ios")
     Bundler.with_unbundled_env do
-      sh("cordova plugin add '#{repo_root}' --link --nosave --force")
+      # Not using `--link` so that cordova-ios copies the plugin into the platform folder and
+      # rewrites its CordovaLib dependency to the app's own copy, as a real install does.
+      # With `--link` the plugin's Package.swift keeps pointing at apache/cordova-ios on GitHub.
+      sh("cordova plugin add '#{repo_root}' --nosave --force")
     end
     Bundler.with_unbundled_env do
       sh("cd platforms/ios && pod install --repo-update")
@@ -243,6 +249,11 @@ def get_phc_version
   android_phc_version = file_contents.split("<framework src=\"com.revenuecat.purchases:purchases-hybrid-common:")[1].split('"')[0]
 
   UI.error("PHC version does not match between iOS and android in plugin.xml. Please check those values") if ios_phc_version != android_phc_version
+
+  # On cordova-ios 8+ iOS resolves PHC through Swift Package Manager instead of the pod above
+  spm_phc_version = File.read('../Package.swift').split('purchases-hybrid-common.git", exact: "')[1].split('"')[0]
+
+  UI.error("PHC version does not match between plugin.xml and Package.swift. Please check those values") if ios_phc_version != spm_phc_version
 
   ios_phc_version
 end

@@ -9,6 +9,12 @@
 import Foundation
 import PurchasesHybridCommon
 import RevenueCat
+// The Cordova module only exists when the plugin is built as a Swift package (cordova-ios 8+).
+// Older cordova-ios versions compile these files into the app target, where the CDV types are
+// already visible through the bridging header.
+#if canImport(Cordova)
+import Cordova
+#endif
 
 @objc(CDVPurchasesPlugin) public class CDVPurchasesPlugin : CDVPlugin {
 

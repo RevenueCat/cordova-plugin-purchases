@@ -20,7 +20,7 @@
         <framework src="androidx.annotation:annotation:[1.4.0]"/>
         <source-file src="src/android/PurchasesPlugin.java" target-dir="src/com/revenuecat/purchases"/>
     </platform>
-    <platform name="ios">
+    <platform name="ios" package="swift">
         <hook type="after_plugin_install" src="scripts/ios/add-swift-support.js" />
         <config-file target="config.xml" parent="/*">
             <feature name="PurchasesPlugin">
@@ -37,7 +37,7 @@
         <source-file src="src/ios/PurchasesPlugin+VirtualCurrencies.swift" />
         <podspec>
             <pods use-frameworks="true">
-                <pod name="PurchasesHybridCommon" spec="18.32.1"/>
+                <pod name="PurchasesHybridCommon" spec="18.32.1" nospm="true"/>
             </pods>
         </podspec>
     </platform>

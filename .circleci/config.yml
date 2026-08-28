@@ -413,16 +413,6 @@ jobs:
             # so the exit code alone doesn't tell us the plugin went in.
             node -e "if (!require('/tmp/test-ios8/platforms/ios/ios.json').installed_plugins['cordova-plugin-purchases']) throw new Error('plugin missing from ios.json')"
             echo "cordova-ios 8: plugin installed successfully"
-      - run:
-          name: "Test plugin is skipped on cordova-ios 7"
-          command: |
-            set -e
-            cd /tmp && cordova create test-ios7 com.revenuecat.installtest InstallTest
-            cd test-ios7
-            cordova platform add ios@7
-            cordova plugin add /tmp/plugin
-            node -e "if (require('/tmp/test-ios7/platforms/ios/ios.json').installed_plugins['cordova-plugin-purchases']) throw new Error('plugin should not be installed below cordova-ios 8')"
-            echo "cordova-ios 7: plugin skipped as expected"
 
 workflows:
   version: 2

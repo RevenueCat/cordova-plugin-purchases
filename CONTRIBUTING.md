@@ -30,6 +30,8 @@ If you have a clearly defined bug (with a [Minimal, Complete, and Reproducible e
 
 Be sure to adhere to the prevailing style of the project.
 
+To try local changes in a Cordova app on cordova-ios 8, add the plugin without `--link`. A linked plugin keeps its `Package.swift` pointing at `apache/cordova-ios` rather than the app's own CordovaLib, so it won't build.
+
 #### 4. Write tests for your fix/new functionality.
 
 #### 5. Create a pull request to revenuecat/main and request review

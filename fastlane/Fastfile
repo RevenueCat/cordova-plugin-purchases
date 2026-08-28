@@ -7,7 +7,6 @@ files_with_version_number = {
 }
 files_to_update_phc_version = {
   'plugin.xml' => [
-    'name="PurchasesHybridCommon" spec="{x}"',
     'com.revenuecat.purchases:purchases-hybrid-common:{x}'
   ],
   'Package.swift' => [
@@ -149,23 +148,9 @@ lane :run_maestro_e2e_tests_ios do
   Dir.chdir("../e2e-tests/MaestroTestApp") do
     sh("sed -i '' 's/MAESTRO_TESTS_REVENUECAT_API_KEY/'\"$RC_E2E_TEST_API_KEY_PRODUCTION_TEST_STORE\"'/g' www/js/app.js")
     UI.user_error!("API key placeholder was not replaced in app.js") if File.read("www/js/app.js").include?("MAESTRO_TESTS_REVENUECAT_API_KEY")
-    # CocoaPods is installed here (not in a separate CircleCI step) because the
-    # `install-ruby` cache can restore a state where the rbenv `pod` shim exists
-    # but the gem does not. Installing inside Bundler.with_unbundled_env right
-    # before the pod-consuming commands sidesteps that interaction.
-    Bundler.with_unbundled_env do
-      sh("gem install cocoapods --no-document")
-    end
     sh("cordova platform add ios")
-    Bundler.with_unbundled_env do
-      sh("cordova plugin add '#{plugin_dir}' --nosave --force")
-    end
-    Bundler.with_unbundled_env do
-      sh("cd platforms/ios && pod install")
-      # `cordova prepare ios` re-invokes `pod` under the hood, so it must also
-      # run with Bundler unbundled to pick up the globally-installed cocoapods.
-      sh("cordova prepare ios")
-    end
+    sh("cordova plugin add '#{plugin_dir}' --nosave --force")
+    sh("cordova prepare ios")
     sh("xcodebuild -workspace platforms/ios/App.xcworkspace -scheme App -configuration Debug -sdk iphonesimulator -destination 'platform=iOS Simulator,name=iPhone 17' build CONFIGURATION_BUILD_DIR=#{Dir.pwd}/build/emulator")
     sh("xcrun simctl install booted build/emulator/MaestroTestApp.app")
   end
@@ -260,19 +245,12 @@ def pack_plugin(repo_root)
 end
 
 def get_phc_version
-  file_contents = File.read('../plugin.xml')
-  # This will parse the PHC version for iOS and android from within the plugin.xml file
-  # iOS appears in the form: <pod name="PurchasesHybridCommon" spec="4.2.0"/>
-  ios_phc_version = file_contents.split("<pod name=\"PurchasesHybridCommon\" spec=")[1].split('"')[1]
-  # Android appears in the form: <framework src="com.revenuecat.purchases:purchases-hybrid-common:4.2.0" />
-  android_phc_version = file_contents.split("<framework src=\"com.revenuecat.purchases:purchases-hybrid-common:")[1].split('"')[0]
+  # Android appears in plugin.xml as: <framework src="com.revenuecat.purchases:purchases-hybrid-common:4.2.0" />
+  android_phc_version = File.read('../plugin.xml').split("<framework src=\"com.revenuecat.purchases:purchases-hybrid-common:")[1].split('"')[0]
+  # iOS resolves PHC through Swift Package Manager, so its version lives in Package.swift
+  ios_phc_version = File.read('../Package.swift').split('purchases-hybrid-common.git", exact: "')[1].split('"')[0]
 
-  UI.error("PHC version does not match between iOS and android in plugin.xml. Please check those values") if ios_phc_version != android_phc_version
-
-  # On cordova-ios 8+ iOS resolves PHC through Swift Package Manager instead of the pod above
-  spm_phc_version = File.read('../Package.swift').split('purchases-hybrid-common.git", exact: "')[1].split('"')[0]
-
-  UI.error("PHC version does not match between plugin.xml and Package.swift. Please check those values") if ios_phc_version != spm_phc_version
+  UI.error("PHC version does not match between iOS and android. Please check those values") if ios_phc_version != android_phc_version
 
   ios_phc_version
 end

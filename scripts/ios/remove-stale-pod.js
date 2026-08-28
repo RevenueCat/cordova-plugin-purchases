@@ -1,12 +1,11 @@
 /*
- * Removes a leftover PurchasesHybridCommon pod after the plugin is installed as a Swift package.
+ * Removes a leftover PurchasesHybridCommon pod when upgrading from a CocoaPods-based version.
  *
- * On cordova-ios 8+ the plugin and PurchasesHybridCommon are resolved through Swift Package
- * Manager, so no pod is declared. Apps coming from a CocoaPods-based version of this plugin keep
- * the old `pod 'PurchasesHybridCommon'` line in their Podfile: cordova's iOS uninstall path throws
- * before it gets to remove it (it reads `<podspec><config>`, which older versions of this plugin
- * did not declare). Left in place, PurchasesHybridCommon would be built twice, once by CocoaPods
- * and once by SwiftPM.
+ * PurchasesHybridCommon is resolved through Swift Package Manager, so the plugin declares no pod.
+ * Apps coming from an 8.x install keep the old `pod 'PurchasesHybridCommon'` line in their Podfile:
+ * cordova's iOS uninstall path throws before it gets to remove it (it reads `<podspec><config>`,
+ * which those versions did not declare). Left in place, PurchasesHybridCommon would be built twice,
+ * once by CocoaPods and once by SwiftPM.
  *
  * cordova re-runs `pod install` on every prepare, so removing the entry here is enough for it to
  * disappear from the generated Pods project on the next build.
@@ -16,17 +15,10 @@ const fs = require('fs');
 const path = require('path');
 
 const POD_NAME = 'PurchasesHybridCommon';
-const PLUGIN_ID = 'cordova-plugin-purchases';
 
 module.exports = function (context) {
     try {
         const platformPath = path.join(context.opts.projectRoot, 'platforms', 'ios');
-
-        // Only SwiftPM installs create this directory. On cordova-ios < 8 the pod is the only
-        // source of PurchasesHybridCommon and has to be left alone.
-        if (!fs.existsSync(path.join(platformPath, 'packages', PLUGIN_ID))) {
-            return;
-        }
 
         if (!removePodFromPodfile(path.join(platformPath, 'Podfile'))) {
             return;

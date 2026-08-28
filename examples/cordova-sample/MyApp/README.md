@@ -55,5 +55,4 @@ The build step will transpile the typescript files into js, however. So you can 
 
 #### Troubleshooting iOS
 
-If the setup doesn't work, it might because the pod spec repo is out of date.
-cd into the iOS platform folder `platforms/ios` where `Podfile` lives, and run `pod install --repo-update`
+If the setup doesn't work, the Swift package cache may be stale. Open `platforms/ios/App.xcworkspace` and use File > Packages > Reset Package Caches, or run `cordova platform rm ios && cordova platform add ios` to start from scratch.

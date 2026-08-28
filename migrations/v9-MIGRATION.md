@@ -1,4 +1,10 @@
-This release drops support for cordova-ios 6 and 7. The plugin now requires cordova-ios 8 or newer.
+This release drops support for cordova-ios 6 and 7, and resolves the plugin and `PurchasesHybridCommon` through Swift Package Manager instead of CocoaPods. The plugin now requires cordova-ios 8 or newer.
+
+### Swift Package Manager replaces CocoaPods
+
+The plugin no longer declares any pod, so nothing needs to be done on your side: `cordova plugin add` resolves everything through SwiftPM. New projects end up without a Podfile at all.
+
+The old `pod 'PurchasesHybridCommon'` entry is removed from your Podfile when you install this version, so the library isn't built twice. If your project has no other plugin contributing pods, its Podfile is left behind but inert; `cordova platform rm ios && cordova platform add ios@8` clears it if you want CocoaPods out of the project entirely.
 
 ### Upgrading your project
 

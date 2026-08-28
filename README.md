@@ -30,10 +30,10 @@
 Please follow the [Quickstart Guide](https://docs.revenuecat.com/docs/) for more information on how to use the SDK
 
 ### Requirements
-*cordova-plugin-purchases* requires Xcode 15+ and minimum targets iOS 13.0+. The minimum Android version compatible is 6.0 (API level 23).
+*cordova-plugin-purchases* requires cordova-ios 8+, Xcode 15+ and minimum targets iOS 13.0+. The minimum Android version compatible is 6.0 (API level 23).
 
 ### iOS dependencies
-On cordova-ios 8 and above, the plugin and its native dependencies are installed through Swift Package Manager, so CocoaPods is not needed. Earlier cordova-ios versions keep installing them as pods.
+The plugin and its native dependencies are installed through Swift Package Manager. CocoaPods is not required.
 
 ## SDK Reference
 Our full SDK reference [can be found here](https://revenuecat.github.io/cordova-plugin-purchases-docs).

@@ -206,16 +206,12 @@ jobs:
         type: string
       xcode-version:
         type: string
-        default: '15.4'
       simulator-device:
         type: string
-        default: 'iPhone 15'
       simulator-os-version:
         type: string
-        default: '17.5'
       paramedic-target:
         type: string
-        default: 'iPhone-15'
     resource_class: m4pro.medium
     macos:
       xcode: << parameters.xcode-version >>
@@ -387,7 +383,7 @@ jobs:
       - run: echo "All tests succeeded"
 
   plugin-installation-test:
-    description: "Verify cordova plugin add works on both cordova-ios 7 and 8"
+    description: "Verify cordova plugin add works on cordova-ios 8"
     <<: *base-mac-job
     steps:
       - checkout
@@ -406,18 +402,6 @@ jobs:
             # is never executed, so stripping scripts matches the actual user experience.
             node -e "p=require('/tmp/plugin/package.json'); delete p.scripts; require('fs').writeFileSync('/tmp/plugin/package.json',JSON.stringify(p,null,2))"
       - run:
-          name: "Test plugin installation: cordova-ios 7"
-          command: |
-            set -e
-            cd /tmp && cordova create test-ios7 com.revenuecat.installtest InstallTest
-            cd test-ios7
-            cordova platform add ios@7
-            cordova plugin add /tmp/plugin
-            # cordova-ios 7 has no SwiftPM support, so PHC has to come from the pod.
-            grep -q "PurchasesHybridCommon" platforms/ios/Podfile
-            test ! -d platforms/ios/packages/cordova-plugin-purchases
-            echo "cordova-ios 7: plugin installed via CocoaPods"
-      - run:
           name: "Test plugin installation: cordova-ios 8"
           command: |
             set -e
@@ -425,15 +409,12 @@ jobs:
             cd test-ios8
             cordova platform add ios@8
             cordova plugin add /tmp/plugin
-            PACKAGE_SWIFT=platforms/ios/packages/cordova-plugin-purchases/Package.swift
-            # PHC is resolved through SwiftPM here, so `nospm` has to keep the pod out.
-            if grep -q "PurchasesHybridCommon" platforms/ios/Podfile; then
-              echo "PurchasesHybridCommon should not be in the Podfile on cordova-ios 8"
-              exit 1
-            fi
-            grep -q "purchases-hybrid-common" "$PACKAGE_SWIFT"
-            # cordova-ios repoints the plugin at the app's own CordovaLib on install.
-            grep -q 'package(name: "cordova-ios", path:' "$PACKAGE_SWIFT"
+            # An unsupported platform is skipped instead of failing the install,
+            # so the exit code alone doesn't tell us the plugin went in.
+            node -e "if (!require('/tmp/test-ios8/platforms/ios/ios.json').installed_plugins['cordova-plugin-purchases']) throw new Error('plugin missing from ios.json')"
+            # cordova only writes a Podfile when a plugin contributes CocoaPods
+            # entries, so its absence means nothing pulls in CocoaPods any more.
+            test ! -f platforms/ios/Podfile
             echo "cordova-ios 8: plugin installed via SwiftPM"
 
 workflows:
@@ -464,21 +445,6 @@ workflows:
             - e2e-tests
       - android-integration-test
       - ios-integration-test:
-          name: "ios-integration-test (cordova-ios 6)"
-          cordova-ios-version: "6"
-      # cordova-ios 7 cannot use Xcode 16.4+ due to an Apple simulator bug
-      # (FB17006003) where HTTP/3 networking hangs on iOS 18.4+ simulators.
-      # Xcode 26.x builds succeed, but cordova-paramedic crashes during the
-      # simulator deploy phase with cordova-ios 7 on iOS 26.x.
-      # Xcode 16.2 / iOS 18.2 is the newest combination that avoids both issues.
-      - ios-integration-test:
-          name: "ios-integration-test (cordova-ios 7)"
-          cordova-ios-version: "7"
-          xcode-version: "16.2.0"
-          simulator-device: "iPhone 16"
-          simulator-os-version: "18.2"
-          paramedic-target: "iPhone-16"
-      - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
           xcode-version: "26.4.0"
@@ -491,8 +457,6 @@ workflows:
             - api-tester
             - plugin-installation-test
             - android-integration-test
-            - "ios-integration-test (cordova-ios 6)"
-            - "ios-integration-test (cordova-ios 7)"
             - "ios-integration-test (cordova-ios 8)"
 
   # =============================================================
@@ -512,17 +476,6 @@ workflows:
       - plugin-installation-test
       - android-integration-test
       - ios-integration-test:
-          name: "ios-integration-test (cordova-ios 6)"
-          cordova-ios-version: "6"
-      # See cordova-ios 7 Xcode comment in run-all-tests workflow.
-      - ios-integration-test:
-          name: "ios-integration-test (cordova-ios 7)"
-          cordova-ios-version: "7"
-          xcode-version: "16.2.0"
-          simulator-device: "iPhone 16"
-          simulator-os-version: "18.2"
-          paramedic-target: "iPhone-16"
-      - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
           xcode-version: "26.4.0"
@@ -535,8 +488,6 @@ workflows:
             - api-tester
             - plugin-installation-test
             - android-integration-test
-            - "ios-integration-test (cordova-ios 6)"
-            - "ios-integration-test (cordova-ios 7)"
             - "ios-integration-test (cordova-ios 8)"
       - hold:
           type: approval

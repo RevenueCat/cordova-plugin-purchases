@@ -48,9 +48,11 @@ You can just make the edits straight from Xcode or AppCode, then build and you'r
 
 #### In the plugin's javascript code:
 
-Unfortunately, the only way to reflect the changes at the time of this writing seems to be to remove the plugin and re-add it. 
+Unfortunately, the only way to reflect the changes at the time of this writing seems to be to reinstall the plugin, by running `sh bin/setup.sh <your_api_key> ios` again.
 
-The build step will transpile the typescript files into js, however. So you can make the updates from Xcode, but you'll have to remove and add the plugin manually after any changes. 
+The build step will transpile the typescript files into js, however. So you can make the updates from Xcode, but you'll have to reinstall the plugin after any changes.
+
+Reinstalling has to go through `setup.sh`: it packs the plugin into a tarball outside the repo first, and `cordova plugin add ../../../` on its own would have cordova copy the repo into itself.
 
 
 #### Troubleshooting iOS

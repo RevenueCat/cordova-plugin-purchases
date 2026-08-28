@@ -22,6 +22,7 @@
     </platform>
     <platform name="ios" package="swift">
         <hook type="after_plugin_install" src="scripts/ios/add-swift-support.js" />
+        <hook type="after_plugin_install" src="scripts/ios/remove-stale-pod.js" />
         <config-file target="config.xml" parent="/*">
             <feature name="PurchasesPlugin">
                 <param name="ios-package" value="CDVPurchasesPlugin"/>

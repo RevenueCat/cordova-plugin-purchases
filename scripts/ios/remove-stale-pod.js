@@ -28,22 +28,11 @@ module.exports = function (context) {
             return;
         }
 
-        const podsJsonPath = path.join(platformPath, 'pods.json');
-        const podsJson = readJson(podsJsonPath);
-        const library = podsJson && podsJson.libraries && podsJson.libraries[POD_NAME];
-
-        if (library && library.count > 1) {
-            return;
-        }
-
         if (!removePodFromPodfile(path.join(platformPath, 'Podfile'))) {
             return;
         }
 
-        if (library) {
-            delete podsJson.libraries[POD_NAME];
-            fs.writeFileSync(podsJsonPath, JSON.stringify(podsJson, null, 4));
-        }
+        removePodFromPodsJson(path.join(platformPath, 'pods.json'));
 
         console.log(
             'Removed the ' + POD_NAME + ' pod left over by a previous install. It is now resolved through Swift Package Manager.'
@@ -75,9 +64,17 @@ function removePodFromPodfile(podfilePath) {
     return true;
 }
 
-function readJson(filePath) {
-    if (!fs.existsSync(filePath)) {
-        return null;
+// Keeps cordova's bookkeeping in sync so it stops counting a pod that is no longer in the Podfile.
+function removePodFromPodsJson(podsJsonPath) {
+    if (!fs.existsSync(podsJsonPath)) {
+        return;
     }
-    return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+
+    const podsJson = JSON.parse(fs.readFileSync(podsJsonPath, 'utf8'));
+    if (!podsJson.libraries || !podsJson.libraries[POD_NAME]) {
+        return;
+    }
+
+    delete podsJson.libraries[POD_NAME];
+    fs.writeFileSync(podsJsonPath, JSON.stringify(podsJson, null, 4));
 }

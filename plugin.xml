@@ -7,6 +7,9 @@
     <description>Purchases Cordova Plugin</description>
     <license>MIT</license>
     <keywords>cordova,purchases,revenuecat,iap,inapp,in-app,storekit,purchase</keywords>
+    <engines>
+        <engine name="cordova-ios" version=">=8.0.0" />
+    </engines>
     <js-module src="www/plugin.js" name="plugin">
         <clobbers target="Purchases" />
     </js-module>
@@ -21,7 +24,6 @@
         <source-file src="src/android/PurchasesPlugin.java" target-dir="src/com/revenuecat/purchases"/>
     </platform>
     <platform name="ios">
-        <hook type="after_plugin_install" src="scripts/ios/add-swift-support.js" />
         <config-file target="config.xml" parent="/*">
             <feature name="PurchasesPlugin">
                 <param name="ios-package" value="CDVPurchasesPlugin"/>

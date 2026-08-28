@@ -409,12 +409,9 @@ jobs:
             cd test-ios8
             cordova platform add ios@8
             cordova plugin add /tmp/plugin
-            node -e "
-              const installed = require('/tmp/test-ios8/platforms/ios/ios.json').installed_plugins;
-              if (!installed['cordova-plugin-purchases']) {
-                throw new Error('the plugin should be installed on cordova-ios 8');
-              }
-            "
+            # An unsupported platform is skipped instead of failing the install,
+            # so the exit code alone doesn't tell us the plugin went in.
+            node -e "if (!require('/tmp/test-ios8/platforms/ios/ios.json').installed_plugins['cordova-plugin-purchases']) throw new Error('plugin missing from ios.json')"
             echo "cordova-ios 8: plugin installed successfully"
       - run:
           name: "Test plugin is skipped on cordova-ios 7"
@@ -423,16 +420,8 @@ jobs:
             cd /tmp && cordova create test-ios7 com.revenuecat.installtest InstallTest
             cd test-ios7
             cordova platform add ios@7
-            # The <engine> constraint makes cordova skip the plugin rather than
-            # install it against an unsupported platform, so `plugin add` still
-            # succeeds and only ios.json shows it was left out.
             cordova plugin add /tmp/plugin
-            node -e "
-              const installed = require('/tmp/test-ios7/platforms/ios/ios.json').installed_plugins;
-              if (installed['cordova-plugin-purchases']) {
-                throw new Error('the plugin should not be installed on cordova-ios 7');
-              }
-            "
+            node -e "if (require('/tmp/test-ios7/platforms/ios/ios.json').installed_plugins['cordova-plugin-purchases']) throw new Error('plugin should not be installed below cordova-ios 8')"
             echo "cordova-ios 7: plugin skipped as expected"
 
 workflows:

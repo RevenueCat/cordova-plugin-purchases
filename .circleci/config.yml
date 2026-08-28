@@ -206,16 +206,12 @@ jobs:
         type: string
       xcode-version:
         type: string
-        default: '15.4'
       simulator-device:
         type: string
-        default: 'iPhone 15'
       simulator-os-version:
         type: string
-        default: '17.5'
       paramedic-target:
         type: string
-        default: 'iPhone-15'
     resource_class: m4pro.medium
     macos:
       xcode: << parameters.xcode-version >>
@@ -387,7 +383,7 @@ jobs:
       - run: echo "All tests succeeded"
 
   plugin-installation-test:
-    description: "Verify cordova plugin add works on both cordova-ios 7 and 8"
+    description: "Verify cordova plugin add works on cordova-ios 8"
     <<: *base-mac-job
     steps:
       - checkout
@@ -406,15 +402,6 @@ jobs:
             # is never executed, so stripping scripts matches the actual user experience.
             node -e "p=require('/tmp/plugin/package.json'); delete p.scripts; require('fs').writeFileSync('/tmp/plugin/package.json',JSON.stringify(p,null,2))"
       - run:
-          name: "Test plugin installation: cordova-ios 7"
-          command: |
-            set -e
-            cd /tmp && cordova create test-ios7 com.revenuecat.installtest InstallTest
-            cd test-ios7
-            cordova platform add ios@7
-            cordova plugin add /tmp/plugin
-            echo "cordova-ios 7: plugin installed successfully"
-      - run:
           name: "Test plugin installation: cordova-ios 8"
           command: |
             set -e
@@ -422,7 +409,31 @@ jobs:
             cd test-ios8
             cordova platform add ios@8
             cordova plugin add /tmp/plugin
+            node -e "
+              const installed = require('/tmp/test-ios8/platforms/ios/ios.json').installed_plugins;
+              if (!installed['cordova-plugin-purchases']) {
+                throw new Error('the plugin should be installed on cordova-ios 8');
+              }
+            "
             echo "cordova-ios 8: plugin installed successfully"
+      - run:
+          name: "Test plugin is skipped on cordova-ios 7"
+          command: |
+            set -e
+            cd /tmp && cordova create test-ios7 com.revenuecat.installtest InstallTest
+            cd test-ios7
+            cordova platform add ios@7
+            # The <engine> constraint makes cordova skip the plugin rather than
+            # install it against an unsupported platform, so `plugin add` still
+            # succeeds and only ios.json shows it was left out.
+            cordova plugin add /tmp/plugin
+            node -e "
+              const installed = require('/tmp/test-ios7/platforms/ios/ios.json').installed_plugins;
+              if (installed['cordova-plugin-purchases']) {
+                throw new Error('the plugin should not be installed on cordova-ios 7');
+              }
+            "
+            echo "cordova-ios 7: plugin skipped as expected"
 
 workflows:
   version: 2
@@ -452,21 +463,6 @@ workflows:
             - e2e-tests
       - android-integration-test
       - ios-integration-test:
-          name: "ios-integration-test (cordova-ios 6)"
-          cordova-ios-version: "6"
-      # cordova-ios 7 cannot use Xcode 16.4+ due to an Apple simulator bug
-      # (FB17006003) where HTTP/3 networking hangs on iOS 18.4+ simulators.
-      # Xcode 26.x builds succeed, but cordova-paramedic crashes during the
-      # simulator deploy phase with cordova-ios 7 on iOS 26.x.
-      # Xcode 16.2 / iOS 18.2 is the newest combination that avoids both issues.
-      - ios-integration-test:
-          name: "ios-integration-test (cordova-ios 7)"
-          cordova-ios-version: "7"
-          xcode-version: "16.2.0"
-          simulator-device: "iPhone 16"
-          simulator-os-version: "18.2"
-          paramedic-target: "iPhone-16"
-      - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
           xcode-version: "26.4.0"
@@ -479,8 +475,6 @@ workflows:
             - api-tester
             - plugin-installation-test
             - android-integration-test
-            - "ios-integration-test (cordova-ios 6)"
-            - "ios-integration-test (cordova-ios 7)"
             - "ios-integration-test (cordova-ios 8)"
 
   # =============================================================
@@ -500,17 +494,6 @@ workflows:
       - plugin-installation-test
       - android-integration-test
       - ios-integration-test:
-          name: "ios-integration-test (cordova-ios 6)"
-          cordova-ios-version: "6"
-      # See cordova-ios 7 Xcode comment in run-all-tests workflow.
-      - ios-integration-test:
-          name: "ios-integration-test (cordova-ios 7)"
-          cordova-ios-version: "7"
-          xcode-version: "16.2.0"
-          simulator-device: "iPhone 16"
-          simulator-os-version: "18.2"
-          paramedic-target: "iPhone-16"
-      - ios-integration-test:
           name: "ios-integration-test (cordova-ios 8)"
           cordova-ios-version: "8"
           xcode-version: "26.4.0"
@@ -523,8 +506,6 @@ workflows:
             - api-tester
             - plugin-installation-test
             - android-integration-test
-            - "ios-integration-test (cordova-ios 6)"
-            - "ios-integration-test (cordova-ios 7)"
             - "ios-integration-test (cordova-ios 8)"
       - hold:
           type: approval

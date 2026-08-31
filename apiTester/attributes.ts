@@ -15,7 +15,7 @@ function checkAttributes(purchases: Purchases) {
   Purchases.setMparticleID(stringOrNull);
   Purchases.setOnesignalID(stringOrNull);
   Purchases.setOnesignalUserID(stringOrNull);
-Purchases.setSingularDeviceID(stringOrNull);
+  Purchases.setSingularDeviceID(stringOrNull);
   Purchases.setAirshipChannelID(stringOrNull);
   Purchases.setCleverTapID(stringOrNull);
   Purchases.setMixpanelDistinctID(stringOrNull);

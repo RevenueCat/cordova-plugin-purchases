@@ -18,6 +18,8 @@
         </config-file>
         <framework src="com.revenuecat.purchases:purchases-hybrid-common:18.33.1" />
         <framework src="androidx.annotation:annotation:[1.4.0]"/>
+        <framework src="src/android/build-extras-purchases.gradle" custom="true" type="gradleReference" />
+        <asset src="src/android/proguard-cordova-plugin-purchases.txt" target="proguard-cordova-plugin-purchases.txt" />
         <source-file src="src/android/PurchasesPlugin.java" target-dir="src/com/revenuecat/purchases"/>
     </platform>
     <platform name="ios">

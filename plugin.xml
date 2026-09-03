@@ -16,7 +16,7 @@
                 <param name="android-package" value="com.revenuecat.purchases.PurchasesPlugin" />
             </feature>
         </config-file>
-        <framework src="com.revenuecat.purchases:purchases-hybrid-common:18.34.0" />
+        <framework src="com.revenuecat.purchases:purchases-hybrid-common:18.35.0" />
         <framework src="androidx.annotation:annotation:[1.4.0]"/>
         <framework src="src/android/build-extras-purchases.gradle" custom="true" type="gradleReference" />
         <asset src="src/android/proguard-cordova-plugin-purchases.txt" target="proguard-cordova-plugin-purchases.txt" />
@@ -39,7 +39,7 @@
         <source-file src="src/ios/PurchasesPlugin+VirtualCurrencies.swift" />
         <podspec>
             <pods use-frameworks="true">
-                <pod name="PurchasesHybridCommon" spec="18.34.0"/>
+                <pod name="PurchasesHybridCommon" spec="18.35.0"/>
             </pods>
         </podspec>
     </platform>

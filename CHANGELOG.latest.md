@@ -1,14 +1,13 @@
 ## RevenueCat SDK
-### ✨ New Features
-* feat(singular): add setSingularDeviceID (#1041) via Guillem Corominas (@guillemcorominas)
 ### 📦 Dependency Updates
-* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 18.33.1 (#1043) via RevenueCat Git Bot (@RCGitBot)
-  * [Android 10.19.1](https://github.com/RevenueCat/purchases-android/releases/tag/10.19.1)
-  * [Android 10.19.0](https://github.com/RevenueCat/purchases-android/releases/tag/10.19.0)
-  * [iOS 5.87.1](https://github.com/RevenueCat/purchases-ios/releases/tag/5.87.1)
-  * [iOS 5.87.0](https://github.com/RevenueCat/purchases-ios/releases/tag/5.87.0)
-  * [iOS 5.86.0](https://github.com/RevenueCat/purchases-ios/releases/tag/5.86.0)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 18.36.1 (#1054) via RevenueCat Git Bot (@RCGitBot)
+  * [Android 10.20.0](https://github.com/RevenueCat/purchases-android/releases/tag/10.20.0)
+  * [iOS 5.88.0](https://github.com/RevenueCat/purchases-ios/releases/tag/5.88.0)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 18.36.0 (#1053) via RevenueCat Git Bot (@RCGitBot)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 18.35.0 (#1050) via RevenueCat Git Bot (@RCGitBot)
+* [AUTOMATIC BUMP] Updates purchases-hybrid-common to 18.34.0 (#1049) via RevenueCat Git Bot (@RCGitBot)
 
 ### 🔄 Other Changes
-* Ship consumer ProGuard rules for PurchasesPlugin (Android) (#1047) via Toni Rico (@tonidero)
-* Bump fastlane-plugin-revenuecat_internal from `7dd9ab9` to `6db1da0` (#1046) via dependabot[bot] (@dependabot[bot])
+* Bump fastlane from 2.238.0 to 2.239.0 (#1055) via dependabot[bot] (@dependabot[bot])
+* ci: bump external PR notifications workflow to v8 (#1052) via Álvaro Brey (@AlvaroBrey)
+* ci: notify external PRs feed on PRs from outside the org (#1051) via Álvaro Brey (@AlvaroBrey)

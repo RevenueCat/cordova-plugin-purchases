@@ -1,0 +1,13 @@
+// Adds the plugin's ProGuard/R8 keep rules to the app's minification config.
+// The rules file is copied into the app's www assets by the <asset> entry in
+// plugin.xml, mirroring the mechanism used by cordova-annotated-plugin-android.
+android {
+    buildTypes {
+        debug {
+            proguardFiles 'src/main/assets/www/proguard-cordova-plugin-purchases.txt'
+        }
+        release {
+            proguardFiles 'src/main/assets/www/proguard-cordova-plugin-purchases.txt'
+        }
+    }
+}

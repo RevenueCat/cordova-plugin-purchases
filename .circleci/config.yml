@@ -486,14 +486,13 @@ workflows:
             - plugin-installation-test
             - android-integration-test
             - "ios-integration-test (cordova-ios 8)"
-      - hold:
+      - wait-for-pr-approval:
           type: approval
-          requires:
-            - all-tests-succeeded
       - revenuecat/tag-current-branch:
           ruby_version: "3.2"
           requires:
-            - hold
+            - wait-for-pr-approval
+            - all-tests-succeeded
 
   # =============================================================
   # deploy: Runs on release tags only

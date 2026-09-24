@@ -142,6 +142,7 @@ function checkPurchasesConfiguration() {
   const useAmazon: boolean = false;
   const shouldShowInAppMessagesAutomatically: boolean = true;
   const storeKitVersion: STOREKIT_VERSION = STOREKIT_VERSION.STOREKIT_2;
+  const useExternalPurchaseCustomLinks: boolean = false;
 
   Purchases.configureWith({
     apiKey,
@@ -168,6 +169,15 @@ function checkPurchasesConfiguration() {
     userDefaultsSuiteName,
     useAmazon,
     shouldShowInAppMessagesAutomatically
+  });
+  Purchases.configureWith({
+    apiKey,
+    appUserID,
+    purchasesAreCompletedBy,
+    userDefaultsSuiteName,
+    useAmazon,
+    shouldShowInAppMessagesAutomatically,
+    useExternalPurchaseCustomLinks
   });
 
   const configuration: PurchasesConfiguration = {

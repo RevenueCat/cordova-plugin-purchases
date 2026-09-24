@@ -821,6 +821,19 @@ export interface PurchasesConfiguration {
    * check: https://rev.cat/storekit-message and https://rev.cat/googleplayinappmessaging
    */
   shouldShowInAppMessagesAutomatically?: boolean;
+  /**
+   * iOS-only, will be ignored for Android.
+   *
+   * Whether a web purchase button that opens its link in the external browser takes part in Apple's
+   * external purchase custom link programme: the customer is shown Apple's disclosure notice, and the
+   * purchase is reported to Apple.
+   *
+   * Disabled by default. Enabling it requires the app to be enrolled in the programme and to carry
+   * Apple's external purchase link entitlement, otherwise no purchase can be made outside the App Store.
+   *
+   * @experimental This API is experimental and may be changed or removed in a future release.
+   */
+  useExternalPurchaseCustomLinks?: boolean;
 }
 
 /**
@@ -1190,7 +1203,8 @@ class Purchases {
                                 userDefaultsSuiteName,
                                 storeKitVersion,
                                 useAmazon = false,
-                                shouldShowInAppMessagesAutomatically = true
+                                shouldShowInAppMessagesAutomatically = true,
+                                useExternalPurchaseCustomLinks = false
                               }: PurchasesConfiguration): void {
     let purchasesCompletedByToUse: PURCHASES_ARE_COMPLETED_BY_TYPE | undefined = purchasesAreCompletedBy === PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT ? PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT : undefined;
     let storeKitVersionToUse = storeKitVersion;
@@ -1222,7 +1236,7 @@ class Purchases {
       PLUGIN_NAME,
       "configure",
       [apiKey, appUserID, purchasesCompletedByToUse, userDefaultsSuiteName, storeKitVersionToUse,
-        useAmazon, shouldShowInAppMessagesAutomatically]
+        useAmazon, shouldShowInAppMessagesAutomatically, useExternalPurchaseCustomLinks]
     );
 
     window.cordova.exec(

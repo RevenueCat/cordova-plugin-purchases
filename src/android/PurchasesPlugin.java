@@ -52,6 +52,7 @@ public class PurchasesPlugin extends AnnotatedCordovaPlugin {
     private void configure(String apiKey, @Nullable String appUserID, @Nullable String purchasesAreCompletedBy,
                            @Nullable String userDefaultsSuiteName, @Nullable String storeKitVersion,
                            boolean useAmazon, boolean shouldShowInAppMessagesAutomatically,
+                           boolean useExternalPurchaseCustomLinks,
                            CallbackContext callbackContext) {
         PlatformInfo platformInfo = new PlatformInfo(PLATFORM_NAME, PLUGIN_VERSION);
         Store store = Store.PLAY_STORE;

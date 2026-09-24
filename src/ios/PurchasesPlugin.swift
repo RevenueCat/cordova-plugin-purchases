@@ -40,6 +40,7 @@ import RevenueCat
         let userDefaultsSuiteName = command.arguments[3] as? String
         let storeKitVersion = command.arguments[4] as? String ?? "DEFAULT"
         let shouldShowInAppMessagesAutomatically = command.arguments[6] as? Bool ?? true
+        let useExternalPurchaseCustomLinks = command.arguments[7] as? Bool ?? false
 
         self.purchases = Purchases.configure(apiKey: apiKey,
                                              appUserID: appUserID,
@@ -49,7 +50,9 @@ import RevenueCat
                                              platformFlavorVersion: self.platformFlavorVersion,
                                              storeKitVersion: storeKitVersion,
                                              dangerousSettings: nil,
-                                             shouldShowInAppMessagesAutomatically: shouldShowInAppMessagesAutomatically)
+                                             shouldShowInAppMessagesAutomatically: shouldShowInAppMessagesAutomatically,
+                                             verificationMode: nil,
+                                             useExternalPurchaseCustomLinks: useExternalPurchaseCustomLinks)
         self.purchases.delegate = self
         self.sendOKFor(command: command)
     }

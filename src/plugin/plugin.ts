@@ -222,6 +222,11 @@ export enum IN_APP_MESSAGE_TYPE {
 }
 
 /**
+ * The type of period an entitlement is in.
+ */
+export type PeriodType = "NORMAL" | "INTRO" | "TRIAL" | "PREPAID";
+
+/**
  * The EntitlementInfo object gives you access to all of the information about the status of a user entitlement.
  */
 export interface PurchasesEntitlementInfo {
@@ -240,7 +245,7 @@ export interface PurchasesEntitlementInfo {
   /**
    * The last period type this entitlement was in. Either: NORMAL, INTRO, TRIAL, PREPAID.
    */
-  readonly periodType: string;
+  readonly periodType: PeriodType;
   /**
    * The latest purchase or renewal date for the entitlement.
    */
@@ -250,7 +255,7 @@ export interface PurchasesEntitlementInfo {
    */
   readonly originalPurchaseDate: string;
   /**
-   * The expiration date for the entitlement, can be `null` for lifetime access. If the `periodType` is `trial`,
+   * The expiration date for the entitlement, can be `null` for lifetime access. If the `periodType` is `TRIAL`,
    * this is the trial expiration date.
    */
   readonly expirationDate: string | null;

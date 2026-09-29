@@ -143,6 +143,7 @@ function checkPurchasesConfiguration() {
   const shouldShowInAppMessagesAutomatically: boolean = true;
   const storeKitVersion: STOREKIT_VERSION = STOREKIT_VERSION.STOREKIT_2;
   const useExternalPurchaseCustomLinks: boolean = false;
+  const enableExternalPurchasesInSimulator: boolean = true;
 
   Purchases.configureWith({
     apiKey,
@@ -177,7 +178,8 @@ function checkPurchasesConfiguration() {
     userDefaultsSuiteName,
     useAmazon,
     shouldShowInAppMessagesAutomatically,
-    useExternalPurchaseCustomLinks
+    useExternalPurchaseCustomLinks,
+    enableExternalPurchasesInSimulator
   });
 
   const configuration: PurchasesConfiguration = {

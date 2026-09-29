@@ -834,6 +834,19 @@ export interface PurchasesConfiguration {
    * @experimental This API is experimental and may be changed or removed in a future release.
    */
   useExternalPurchaseCustomLinks?: boolean;
+
+  /**
+   * iOS-only, will be ignored for Android.
+   *
+   * Whether the simulator offers external purchases in any storefront. When disabled, the simulator
+   * behaves as a device does for a customer who is not eligible.
+   *
+   * Enabled by default. Has no effect on a physical device, nor while `useExternalPurchaseCustomLinks`
+   * is disabled.
+   *
+   * @experimental This API is experimental and may be changed or removed in a future release.
+   */
+  enableExternalPurchasesInSimulator?: boolean;
 }
 
 /**
@@ -1204,7 +1217,8 @@ class Purchases {
                                 storeKitVersion,
                                 useAmazon = false,
                                 shouldShowInAppMessagesAutomatically = true,
-                                useExternalPurchaseCustomLinks = false
+                                useExternalPurchaseCustomLinks = false,
+                                enableExternalPurchasesInSimulator = true
                               }: PurchasesConfiguration): void {
     let purchasesCompletedByToUse: PURCHASES_ARE_COMPLETED_BY_TYPE | undefined = purchasesAreCompletedBy === PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT ? PURCHASES_ARE_COMPLETED_BY_TYPE.REVENUECAT : undefined;
     let storeKitVersionToUse = storeKitVersion;
@@ -1236,7 +1250,8 @@ class Purchases {
       PLUGIN_NAME,
       "configure",
       [apiKey, appUserID, purchasesCompletedByToUse, userDefaultsSuiteName, storeKitVersionToUse,
-        useAmazon, shouldShowInAppMessagesAutomatically, useExternalPurchaseCustomLinks]
+        useAmazon, shouldShowInAppMessagesAutomatically, useExternalPurchaseCustomLinks,
+        enableExternalPurchasesInSimulator]
     );
 
     window.cordova.exec(

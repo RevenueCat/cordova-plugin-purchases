@@ -16,7 +16,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", undefined, undefined, undefined, false, true, false]
+      ["api_key", "app_user_id", undefined, undefined, undefined, false, true, false, true]
     );
   });
 
@@ -28,7 +28,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", undefined, undefined, undefined, false, true, false]
+      ["api_key", "app_user_id", undefined, undefined, undefined, false, true, false, true]
     );
   });
 
@@ -40,7 +40,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", "REVENUECAT", undefined, undefined, false, true, false]
+      ["api_key", "app_user_id", "REVENUECAT", undefined, undefined, false, true, false, true]
     );
   });
 
@@ -53,7 +53,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", "MY_APP", undefined, "STOREKIT_2", false, true, false]
+      ["api_key", "app_user_id", "MY_APP", undefined, "STOREKIT_2", false, true, false, true]
     );
   });
 
@@ -66,7 +66,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", "MY_APP", undefined, "STOREKIT_2", false, true, false]
+      ["api_key", "app_user_id", "MY_APP", undefined, "STOREKIT_2", false, true, false, true]
     );
   });
 
@@ -80,7 +80,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", undefined, expected, undefined, false, true, false]
+      ["api_key", "app_user_id", undefined, expected, undefined, false, true, false, true]
     );
   });
 
@@ -92,7 +92,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", undefined, undefined, undefined, true, true, false]
+      ["api_key", "app_user_id", undefined, undefined, undefined, true, true, false, true]
     );
   });
 
@@ -104,7 +104,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", undefined, undefined, "STOREKIT_2", false, true, false]
+      ["api_key", "app_user_id", undefined, undefined, "STOREKIT_2", false, true, false, true]
     );
   });
 
@@ -116,7 +116,7 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", undefined, undefined, undefined, true, false, false]
+      ["api_key", "app_user_id", undefined, undefined, undefined, true, false, false, true]
     );
   });
 
@@ -128,7 +128,19 @@ describe("Purchases", () => {
       null,
       "PurchasesPlugin",
       "configure",
-      ["api_key", "app_user_id", undefined, undefined, undefined, false, true, true]
+      ["api_key", "app_user_id", undefined, undefined, undefined, false, true, true, true]
+    );
+  });
+
+  it("configureWith fires PurchasesPlugin with the correct arguments when disabling external purchases in the simulator", () => {
+    Purchases.configureWith({apiKey: "api_key", appUserID: "app_user_id", useExternalPurchaseCustomLinks: true, enableExternalPurchasesInSimulator: false});
+
+    expect(execFn).toHaveBeenCalledWith(
+      null,
+      null,
+      "PurchasesPlugin",
+      "configure",
+      ["api_key", "app_user_id", undefined, undefined, undefined, false, true, true, false]
     );
   });
 

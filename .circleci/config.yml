@@ -221,7 +221,7 @@ jobs:
     steps:
       - checkout
       - revenuecat/install-mise-tools:
-          tools: node@22.14.0,ruby@3.3.0
+          tools: node,ruby
       - revenuecat/install-gem-mac-dependencies:
           cache-version: sdk-update-v1
       - run:
@@ -249,7 +249,7 @@ jobs:
       - attach_workspace:
           at: .
       - revenuecat/install-mise-tools:
-          tools: java,ruby@3.3.0
+          tools: java,ruby
       - revenuecat/install-gem-mac-dependencies:
           cache-version: sdk-update-v1
       - revenuecat/install-maestro
@@ -278,7 +278,7 @@ jobs:
     steps:
       - checkout
       - revenuecat/install-mise-tools:
-          tools: java,node@22.14.0,ruby@3.3.0,gradle@8.13
+          tools: java,node,ruby,gradle
       - revenuecat/install-gem-unix-dependencies:
           cache-version: sdk-update-v1
       - run:
@@ -307,7 +307,7 @@ jobs:
       - attach_workspace:
           at: .
       - revenuecat/install-mise-tools:
-          tools: java,ruby@3.3.0
+          tools: java,ruby
       - revenuecat/install-gem-unix-dependencies:
           cache-version: sdk-update-v1
       - android/create-avd:

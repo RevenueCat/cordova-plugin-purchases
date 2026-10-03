@@ -128,4 +128,3 @@ async function initialize() {
 }
 
 document.addEventListener('deviceready', () => void initialize(), { once: true });
-render();

@@ -27,7 +27,7 @@ import RevenueCat
         let pluginResult: CDVPluginResult = CDVPluginResult(status: .noResult)
         pluginResult.setKeepCallbackAs(true)
         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
-        self.purchases.delegate = self
+        self.purchases?.delegate = self
     }
 
     @objc(configure:)

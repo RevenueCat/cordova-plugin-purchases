@@ -721,8 +721,10 @@ workflows:
   # =============================================================
   deploy:
     when:
-      not:
-        equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+      and:
+        - not:
+            equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+        - equal: [ build, << pipeline.parameters.action >> ]
     jobs:
       - build-sdk-update-test-apps-ios:
           <<: *release-tags

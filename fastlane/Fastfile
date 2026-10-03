@@ -200,9 +200,17 @@ lane :build_sdk_update_test_apps do |options|
   template = "#{root}/e2e-tests/SDKUpdateTester"
   api_key = ENV['WORKFLOWS_TEST_STORE_API_KEY']
   UI.user_error!('WORKFLOWS_TEST_STORE_API_KEY must contain a Test Store key') unless api_key&.start_with?('test_')
-  release_version = options[:release_version] || get_latest_release_before_version(
-    repo_name: 'cordova-plugin-purchases', version: Gem::Version.new(current_version_number).bump.to_s
-  )
+  release_version = options[:release_version]
+  unless release_version
+    published_versions = JSON.parse(sh('npm', 'view', 'cordova-plugin-purchases', 'versions', '--json', log: false))
+    cutoff = Gem::Version.new(current_version_number).bump.to_s
+    loop do
+      release_version = get_latest_release_before_version(repo_name: 'cordova-plugin-purchases', version: cutoff)
+      break if published_versions.include?(release_version)
+      UI.message("Skipping SDK tag #{release_version}: its npm artifact is not published")
+      cutoff = release_version
+    end
+  end
   FileUtils.rm_rf(output)
   FileUtils.mkdir_p(output)
   archive = nil

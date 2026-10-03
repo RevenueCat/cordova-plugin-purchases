@@ -8,6 +8,8 @@ app built against the local checkout over the released build.
 
 ## Builds
 
+Run `mise install` and `bundle install` in the repository root first.
+
 ```sh
 bundle exec fastlane build_sdk_update_test_apps platform:ios
 bundle exec fastlane build_sdk_update_test_apps platform:android
@@ -19,7 +21,8 @@ the `maestro` context, following purchases-android. The offering must be `no_pay
 offering and product before purchasing. Keys are written only into ignored build output.
 
 The shared release-discovery action selects the latest stable release at or below the checkout's
-version. Each platform builds separate `release` and `local` apps under `build/sdk_update_tests`.
+version, skipping tags whose npm artifact is not published yet. This also works before publishing
+a new release tag. Each platform builds separate `release` and `local` apps under `build/sdk_update_tests`.
 The release uses the npm registry artifact; the local build installs a tarball packed from this
 SDK checkout. Lockfile, copied JavaScript/native sources, native wrapper version, and actual
 CocoaPods/Gradle dependency checks reject an incorrect selection.

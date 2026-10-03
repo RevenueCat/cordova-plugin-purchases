@@ -3,5 +3,8 @@ var exec = require('cordova/exec');
 module.exports = {
     getTestFlow: function(success, error) {
         exec(success, error, 'LaunchArgs', 'getTestFlow', []);
+    },
+    getArgument: function(name, success, error) {
+        exec(success, error, 'LaunchArgs', 'getArgument', [name]);
     }
 };

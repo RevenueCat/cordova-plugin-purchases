@@ -189,6 +189,194 @@ lane :run_maestro_e2e_tests_android do
   run_maestro_e2e_tests(flow_dir: "../e2e-tests/maestro/", output_dir: "test_output")
 end
 
+desc "Build released and local Cordova SDK update test apps"
+lane :build_sdk_update_test_apps do |options|
+  require 'json'
+  require 'fileutils'
+  require 'digest'
+  platform = sdk_update_test_platform(options)
+  root = get_root_folder
+  output = sdk_update_test_apps_dir(platform, options)
+  template = "#{root}/e2e-tests/SDKUpdateTester"
+  api_key = ENV['WORKFLOWS_TEST_STORE_API_KEY']
+  UI.user_error!('WORKFLOWS_TEST_STORE_API_KEY must contain a Test Store key') unless api_key&.start_with?('test_')
+  release_version = options[:release_version] || get_latest_release_before_version(
+    repo_name: 'cordova-plugin-purchases', version: Gem::Version.new(current_version_number).bump.to_s
+  )
+  FileUtils.rm_rf(output)
+  FileUtils.mkdir_p(output)
+  archive = nil
+  Dir.chdir(root) do
+    sh('npm', 'install', '--legacy-peer-deps', '--no-audit', '--no-fund')
+    sh('npm', 'run', 'build')
+    sh('npm', 'pack', '--pack-destination', output, log: false)
+    archives = Dir.glob("#{output}/*.tgz")
+    UI.user_error!('Expected one packed SDK artifact') unless archives.length == 1
+    archive = archives.first
+  end
+  signing = "#{output}/debug.keystore"
+  if platform == 'android'
+    sh('keytool', '-genkeypair', '-keystore', signing, '-storepass', 'android', '-keypass', 'android',
+      '-alias', 'androiddebugkey', '-keyalg', 'RSA', '-keysize', '2048', '-validity', '10000',
+      '-dname', 'CN=Android Debug,O=Android,C=US', '-storetype', 'JKS')
+  else
+    sdk_update_test_build(['bundle', 'exec', 'pod', 'repo', 'update'], "#{output}/pods-repo.log", api_key)
+  end
+  %w[release local].each_with_index do |variant, index|
+    dir = "#{output}/#{variant}"
+    project = "#{dir}/project"
+    FileUtils.mkdir_p("#{project}/www")
+    %w[package.json package-lock.json config.xml tsconfig.json index.html src].each do |name|
+      FileUtils.cp_r("#{template}/#{name}", project)
+    end
+    config_path = "#{project}/config.xml"
+    File.write(config_path, File.read(config_path).sub('android-versionCode="1"', "android-versionCode=\"#{index + 1}\""))
+    version = variant == 'release' ? release_version : current_version_number
+    dependency = variant == 'release' ? "cordova-plugin-purchases@#{release_version}" : archive
+    Dir.chdir(project) do
+      sh('npm', 'install', dependency, '--save-exact', '--package-lock-only', '--no-audit', '--no-fund')
+      sh('npm', 'ci', '--no-audit', '--no-fund')
+      sh('npm', 'run', 'build')
+    end
+    commands = [
+      ['npx', 'cordova', 'platform', 'add', "#{platform}@#{platform == 'ios' ? '8.0.0' : '14.0.1'}", '--nosave'],
+      ['npx', 'cordova', 'plugin', 'add', "cordova-plugin-purchases@#{version}", '--searchpath', 'node_modules', '--nosave'],
+      ['npx', 'cordova', 'plugin', 'add', "#{root}/e2e-tests/cordova-plugin-launch-args", '--nosave']
+    ]
+    commands.each_with_index do |args, command_index|
+      sdk_update_test_build(args, "#{dir}/plugin-#{command_index}.log", api_key, directory: project)
+    end
+    metadata = sdk_update_test_dependency(project, platform, variant, version, root, archive)
+    File.write("#{project}/www/build-config.js", "window.sdkUpdateConfig = #{JSON.generate(apiKey: api_key, sdkVersion: "#{version} #{metadata[:source]}")};\n")
+    File.write("#{dir}/version.txt", metadata[:version])
+    File.write("#{dir}/source.txt", metadata[:source])
+    File.write("#{dir}/resolved-sdk.json", JSON.pretty_generate(metadata))
+    FileUtils.cp("#{project}/package-lock.json", "#{dir}/package-lock.json")
+    sdk_update_test_build(['npx', 'cordova', 'prepare', platform], "#{dir}/prepare.log", api_key, directory: project)
+    sdk_update_test_copied_sources(project, platform, metadata)
+    if platform == 'ios'
+      native = "#{project}/platforms/ios"
+      sdk_update_test_build(['bundle', 'exec', 'pod', 'install', '--repo-update'], "#{dir}/pods.log", api_key, directory: native)
+      lock = File.read("#{native}/Podfile.lock")
+      UI.user_error!('iOS resolved an unexpected hybrid-common version') unless
+        lock.match?(/^  - PurchasesHybridCommon \(#{Regexp.escape(metadata[:hybrid_common])}\):/)
+      FileUtils.cp("#{native}/Podfile.lock", "#{dir}/Podfile.lock")
+      args = ['xcodebuild', '-workspace', "#{native}/App.xcworkspace", '-scheme', 'App',
+        '-configuration', 'Debug', '-sdk', 'iphonesimulator', '-destination', 'generic/platform=iOS Simulator',
+        '-derivedDataPath', "#{dir}/derived_data", 'ARCHS=arm64', 'CODE_SIGNING_ALLOWED=NO']
+      sdk_update_test_build(args, "#{dir}/build.log", api_key)
+      FileUtils.cp_r("#{dir}/derived_data/Build/Products/Debug-iphonesimulator/SDKUpdateTester.app", "#{dir}/SDKUpdateTester.app")
+    else
+      native = "#{project}/platforms/android"
+      FileUtils.cp("#{template}/verify-dependencies.gradle", "#{native}/app/build-extras.gradle")
+      build_config = { android: { debug: { keystore: signing, storePassword: 'android', alias: 'androiddebugkey', password: 'android', keystoreType: 'jks' } } }
+      File.write("#{project}/build.json", JSON.generate(build_config))
+      sdk_update_test_build(['npx', 'cordova', 'build', 'android', '--debug', '--buildConfig=build.json'], "#{dir}/build.log", api_key, directory: project)
+      sdk_update_test_build(['./gradlew', ':app:verifySdkUpdateDependencies'], "#{dir}/dependencies.log", api_key, directory: native)
+      FileUtils.cp("#{native}/app/build/outputs/apk/debug/app-debug.apk", "#{dir}/SDKUpdateTester.apk")
+    end
+    UI.success("Built #{platform} #{variant}: #{version} #{metadata[:source]} (hybrid-common #{metadata[:hybrid_common]})")
+  end
+end
+
+desc "Run a Cordova SDK update Maestro test case"
+lane :run_sdk_update_test do |options|
+  platform = sdk_update_test_platform(options)
+  test_case = options[:test_case]
+  UI.user_error!('test_case must be anonymous_user or logged_in_user') unless %w[anonymous_user logged_in_user].include?(test_case)
+  apps = sdk_update_test_apps_dir(platform, options)
+  flows = "#{get_root_folder}/e2e-tests/maestro/sdk_update_tests/#{test_case}"
+  steps = %w[release local].each_with_index.map do |variant, index|
+    dir = "#{apps}/#{variant}"
+    UI.user_error!("#{dir}/version.txt not found. Build both apps first.") unless File.file?("#{dir}/version.txt")
+    {
+      app_path: "#{dir}/SDKUpdateTester.#{platform == 'ios' ? 'app' : 'apk'}",
+      sdk_version: "#{File.read("#{dir}/version.txt").strip} #{File.read("#{dir}/source.txt").strip}",
+      flow: "#{flows}/#{index.zero? ? 'before' : 'after'}_update.yaml"
+    }
+  end
+  run_sdk_update_maestro_test(
+    platform: platform, app_id: 'com.revenuecat.SDKUpdateTester', steps: steps,
+    output_dir: "#{get_root_folder}/fastlane/test_output/sdk_update_tests/#{platform}/#{test_case}",
+    max_attempts: Integer(options.fetch(:max_attempts, 3))
+  )
+end
+
+def sdk_update_test_platform(options)
+  platform = options[:platform].to_s
+  UI.user_error!('platform must be ios or android') unless %w[ios android].include?(platform)
+  platform
+end
+
+def sdk_update_test_apps_dir(platform, options)
+  File.expand_path(options[:output_dir] || "build/sdk_update_tests/#{platform}", get_root_folder)
+end
+
+def sdk_update_test_dependency(project, platform, variant, expected_version, root, archive)
+  sdk = File.realpath("#{project}/node_modules/cordova-plugin-purchases")
+  manifest = JSON.parse(File.read("#{sdk}/package.json"))
+  lock = JSON.parse(File.read("#{project}/package-lock.json")).fetch('packages').fetch('node_modules/cordova-plugin-purchases')
+  UI.user_error!('Installed SDK version differs from the selected version') unless manifest['version'] == expected_version
+  if variant == 'release'
+    registry = 'https://registry.npmjs.org/cordova-plugin-purchases/-/'
+    UI.user_error!('Released app must resolve the published npm artifact') unless
+      !lock['link'] && lock['version'] == expected_version && lock['resolved']&.start_with?(registry) && lock['integrity']
+  else
+    resolved = lock['resolved'].to_s.delete_prefix('file:')
+    UI.user_error!('Local app must resolve the packed SDK checkout') unless
+      !lock['link'] && File.expand_path(resolved, project) == archive && lock['integrity']
+    %w[www/plugin.js src/android/PurchasesPlugin.java src/ios/PurchasesPlugin.swift plugin.xml].each do |name|
+      UI.user_error!("Local package differs from the checkout: #{name}") unless
+        Digest::SHA256.file("#{sdk}/#{name}").hexdigest == Digest::SHA256.file("#{root}/#{name}").hexdigest
+    end
+  end
+  swift = File.read("#{sdk}/src/ios/PurchasesPlugin.swift")
+  java = File.read("#{sdk}/src/android/PurchasesPlugin.java")
+  UI.user_error!('Native Cordova wrapper versions differ from the selected SDK') unless
+    swift.include?("return \"#{expected_version}\"") && java.include?("PLUGIN_VERSION = \"#{expected_version}\"")
+  xml = File.read("#{sdk}/plugin.xml")
+  phc = if platform == 'ios'
+    xml.match(/name="PurchasesHybridCommon" spec="([^"]+)"/)[1]
+  else
+    xml.match(/com.revenuecat.purchases:purchases-hybrid-common:([^'"<]+)/)[1]
+  end
+  {
+    version: expected_version, source: variant == 'release' ? 'Registry' : 'Local', path: sdk,
+    hybrid_common: phc, registry_url: lock['resolved'], registry_integrity: lock['integrity'],
+    javascript_sha256: Digest::SHA256.file("#{sdk}/www/plugin.js").hexdigest,
+    swift_sha256: Digest::SHA256.hexdigest(swift), java_sha256: Digest::SHA256.hexdigest(java)
+  }
+end
+
+def sdk_update_test_copied_sources(project, platform, metadata)
+  native = "#{project}/platforms/#{platform}"
+  source = platform == 'ios' ? 'PurchasesPlugin.swift' : 'PurchasesPlugin.java'
+  compiled = Dir.glob("#{native}/**/#{source}")
+  expected = metadata.fetch(platform == 'ios' ? :swift_sha256 : :java_sha256)
+  UI.user_error!('App is not compiling the selected Cordova SDK sources') unless
+    compiled.length == 1 && Digest::SHA256.file(compiled.first).hexdigest == expected
+  scripts = Dir.glob("#{native}/**/www/plugins/cordova-plugin-purchases/www/plugin.js")
+  javascript = File.read("#{metadata[:path]}/www/plugin.js")
+  module_source = "cordova.define(\"cordova-plugin-purchases.plugin\", function(require, exports, module) {\n#{javascript}\n});\n"
+  UI.user_error!('App is not loading the selected Cordova SDK JavaScript') unless
+    scripts.length == 1 && File.read(scripts.first) == module_source
+end
+
+def sdk_update_test_build(args, log, api_key, directory: get_root_folder)
+  require 'open3'
+  status = nil
+  File.open(log, 'w') do |file|
+    Open3.popen2e({ 'BUNDLE_GEMFILE' => "#{get_root_folder}/Gemfile" }, *args, chdir: directory) do |input, output, process|
+      input.close
+      IO.copy_stream(output, file)
+      status = process.value
+    end
+  end
+  return if status.success?
+  UI.error(File.readlines(log).last(150).join.gsub(api_key, '[redacted]'))
+  UI.user_error!("SDK update app build failed; see #{log}")
+end
+
 desc "Generate docs"
 lane :generate_docs do
   version_number = current_version_number

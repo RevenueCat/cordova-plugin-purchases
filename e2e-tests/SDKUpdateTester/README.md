@@ -68,3 +68,8 @@ An online customer-info refresh can recover entitlements from the server and hid
 entitlement cache. These screenshot checks cover identity and entitlement continuity after an
 update; they do not prove offline cache preservation. Stronger offline/cache assertions should be
 coordinated across the SDKs and their shared flows.
+
+The Xcode 27 [CI run](https://app.circleci.com/pipelines/github/RevenueCat/cordova-plugin-purchases/4490)
+passed all four cases. The logged-in iOS case showed an anonymous ID after the update on its first
+attempt and passed on the second. Both iOS cases passed locally on their first attempt. The cause
+of the CI identity failure is unresolved; diagnostics retain the failed attempt.

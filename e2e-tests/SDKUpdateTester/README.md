@@ -10,6 +10,8 @@ app built against the local checkout over the released build.
 
 Run `mise install` and `bundle install` in the repository root first.
 
+Use Xcode 27.0, matching the SDK update CI jobs. Cordova iOS 8 supplies the scene lifecycle.
+
 ```sh
 bundle exec fastlane build_sdk_update_test_apps platform:ios
 bundle exec fastlane build_sdk_update_test_apps platform:android

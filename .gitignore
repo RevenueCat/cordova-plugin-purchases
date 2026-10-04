@@ -9,11 +9,14 @@ examples/cordova-sample/MyApp/node_modules
 examples/cordova-sample/MyApp/platforms
 examples/cordova-sample/MyApp/plugins
 package-lock.json
+!e2e-tests/SDKUpdateTester/package-lock.json
 *.bck
 
 # fastlane
 fastlane/report.xml
 fastlane/.env
+fastlane/test_output/
+build/
 
 # CircleCI folders
 vendor/

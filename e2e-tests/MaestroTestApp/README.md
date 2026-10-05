@@ -2,9 +2,6 @@
 
 A minimal Cordova app used by Maestro end-to-end tests to verify RevenueCat SDK integration.
 
-The customer-info relaunch test caches customer info, stops the app, and verifies that
-the initial customer-info notification reaches JavaScript after relaunching.
-
 ## Prerequisites
 
 - Node.js & npm

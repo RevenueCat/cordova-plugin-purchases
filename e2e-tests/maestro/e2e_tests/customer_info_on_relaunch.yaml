@@ -1,0 +1,27 @@
+# Created by Antonio Pallares.
+#
+# The customer-info relaunch test caches customer info, stops the app, and verifies that
+# the initial customer-info notification reaches JavaScript after relaunching.
+
+appId: com.revenuecat.automatedsdktests
+name: Customer info on relaunch
+
+---
+- clearState
+- launchApp:
+    arguments:
+      e2e_test_flow: customer_info_on_relaunch
+- extendedWaitUntil:
+    visible: "Cache customer info"
+    timeout: 30000
+- tapOn: "Cache customer info"
+- extendedWaitUntil:
+    visible: "Customer info cached"
+    timeout: 30000
+- stopApp
+- launchApp:
+    arguments:
+      e2e_test_flow: customer_info_on_relaunch
+- extendedWaitUntil:
+    visible: "Customer info callback received"
+    timeout: 30000

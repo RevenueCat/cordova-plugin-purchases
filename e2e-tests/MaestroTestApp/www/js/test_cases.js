@@ -5,7 +5,9 @@
 // Mirrors the pattern used by purchases-flutter (lib/test_cases.dart).
 
 import { showPurchaseThroughPaywall } from './screens/purchase_through_paywall.js';
+import { showCustomerInfoOnRelaunch } from './screens/customer_info_on_relaunch.js';
 
 export const TEST_CASES = [
-    { title: 'Purchase through paywall', flowKey: 'purchase_through_paywall', show: showPurchaseThroughPaywall }
+    { title: 'Purchase through paywall', flowKey: 'purchase_through_paywall', show: showPurchaseThroughPaywall },
+    { title: 'Customer info on relaunch', flowKey: 'customer_info_on_relaunch', show: showCustomerInfoOnRelaunch }
 ];

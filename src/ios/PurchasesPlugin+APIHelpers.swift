@@ -8,6 +8,7 @@
 import Foundation
 import PurchasesHybridCommon
 import RevenueCat
+import Cordova
 
 extension CDVPurchasesPlugin {
 

@@ -412,7 +412,10 @@ jobs:
             # An unsupported platform is skipped instead of failing the install,
             # so the exit code alone doesn't tell us the plugin went in.
             node -e "if (!require('/tmp/test-ios8/platforms/ios/ios.json').installed_plugins['cordova-plugin-purchases']) throw new Error('plugin missing from ios.json')"
-            echo "cordova-ios 8: plugin installed successfully"
+            # cordova only writes a Podfile when a plugin contributes CocoaPods
+            # entries, so its absence means nothing pulls in CocoaPods any more.
+            test ! -f platforms/ios/Podfile
+            echo "cordova-ios 8: plugin installed via SwiftPM"
 
 workflows:
   version: 2

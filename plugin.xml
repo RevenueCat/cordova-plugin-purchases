@@ -25,7 +25,8 @@
         <asset src="src/android/proguard-cordova-plugin-purchases.txt" target="proguard-cordova-plugin-purchases.txt" />
         <source-file src="src/android/PurchasesPlugin.java" target-dir="src/com/revenuecat/purchases"/>
     </platform>
-    <platform name="ios">
+    <platform name="ios" package="swift">
+        <hook type="after_plugin_install" src="scripts/ios/remove-stale-pod.js" />
         <config-file target="config.xml" parent="/*">
             <feature name="PurchasesPlugin">
                 <param name="ios-package" value="CDVPurchasesPlugin"/>
@@ -39,11 +40,6 @@
         <source-file src="src/ios/PurchasesPlugin+Purchasing.swift" />
         <source-file src="src/ios/PurchasesPlugin+Users.swift" />
         <source-file src="src/ios/PurchasesPlugin+VirtualCurrencies.swift" />
-        <podspec>
-            <pods use-frameworks="true">
-                <pod name="PurchasesHybridCommon" spec="19.4.1"/>
-            </pods>
-        </podspec>
     </platform>
     <params name="ANDROIDXENABLED" value="true" />
 </plugin>

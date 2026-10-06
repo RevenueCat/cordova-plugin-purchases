@@ -1,0 +1,11 @@
+# Consumer R8/ProGuard rules for cordova-plugin-purchases.
+#
+# Cordova instantiates PurchasesPlugin via Class.forName using the class name
+# declared in res/xml/config.xml, and AnnotatedCordovaPlugin dispatches plugin
+# actions by reflecting over @PluginAction-annotated methods at runtime.
+# Neither is visible to R8/ProGuard, so keep the class name, its no-arg
+# constructor, and the annotated action methods.
+-keep class com.revenuecat.purchases.PurchasesPlugin {
+    <init>();
+    @com.appfeel.cordova.annotated.android.plugin.PluginAction <methods>;
+}

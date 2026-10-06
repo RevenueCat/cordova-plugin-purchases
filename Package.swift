@@ -15,7 +15,7 @@ let package = Package(
         // cordova-ios rewrites this to the app's own CordovaLib when it installs the plugin.
         // It only stays pointed here if the plugin is added with `--link`, which won't build.
         .package(url: "https://github.com/apache/cordova-ios.git", branch: "master"),
-        .package(url: "https://github.com/RevenueCat/purchases-hybrid-common.git", exact: "18.32.1")
+        .package(url: "https://github.com/RevenueCat/purchases-hybrid-common.git", exact: "19.4.1")
     ],
     targets: [
         .target(

@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   macos: circleci/macos@2.3.6
   android: circleci/android@2.5.0
-  revenuecat: revenuecat/sdks-common-config@4.6.1
+  revenuecat: revenuecat/sdks-common-config@4.6.2
 
 aliases:
   base-mac-job: &base-mac-job
@@ -489,14 +489,13 @@ workflows:
             - plugin-installation-test
             - android-integration-test
             - "ios-integration-test (cordova-ios 8)"
-      - hold:
+      - wait-for-pr-approval:
           type: approval
-          requires:
-            - all-tests-succeeded
       - revenuecat/tag-current-branch:
           ruby_version: "3.2"
           requires:
-            - hold
+            - wait-for-pr-approval
+            - all-tests-succeeded
 
   # =============================================================
   # deploy: Runs on release tags only

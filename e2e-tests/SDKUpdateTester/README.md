@@ -53,7 +53,7 @@ creates a unique login ID per attempt, and writes per-case JUnit and diagnostics
 
 These flows adapt the native SDK flows' selectors to visible text, following the existing
 Cordova E2E tests: iOS WebViews do not expose HTML element IDs to Maestro. Both platforms use the
-same YAML files, copied byte for byte from Capacitor, screenshot assertions, and top-aligned labels. The test-only native plugin
+same YAML files, screenshot assertions, and top-aligned labels. The test-only native plugin
 only reads the login launch argument; all SDK calls and UI state live in TypeScript. After the
 update, the app neither logs in nor purchases again.
 

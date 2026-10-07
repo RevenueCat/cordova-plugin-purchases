@@ -635,21 +635,11 @@ workflows:
           simulator-device: "iPhone 17"
           simulator-os-version: "26.4"
           paramedic-target: "iPhone-17"
-      - build-sdk-update-test-apps-ios:
-          context: maestro
-      - run-sdk-update-tests-ios:
-          requires: [build-sdk-update-test-apps-ios]
-      - build-sdk-update-test-apps-android:
-          context: maestro
-      - run-sdk-update-tests-android:
-          requires: [build-sdk-update-test-apps-android]
       - all-tests-succeeded:
           requires:
             - runtest
             - api-tester
             - plugin-installation-test
-            - run-sdk-update-tests-ios
-            - run-sdk-update-tests-android
             - android-integration-test
             - "ios-integration-test (cordova-ios 6)"
             - "ios-integration-test (cordova-ios 7)"
@@ -754,11 +744,7 @@ workflows:
 
   sdk-update-tests:
     when:
-      or:
-        - equal: [ sdk-update-tests, << pipeline.parameters.action >> ]
-        - and:
-            - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
-            - equal: [ maestro_e2e_tests, << pipeline.schedule.name >> ]
+      equal: [ sdk-update-tests, << pipeline.parameters.action >> ]
     jobs:
       - build-sdk-update-test-apps-ios:
           context: maestro

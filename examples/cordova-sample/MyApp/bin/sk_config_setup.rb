@@ -6,6 +6,9 @@
 
 require 'xcodeproj'
 
+# cordova-ios 8 names the generated project "App" no matter what the app is called in config.xml.
+XCODE_PROJECT_NAME = 'App'.freeze
+
 def save_project_if_needed(project, modified = false)
     return unless modified
 
@@ -62,7 +65,7 @@ end
 
 def update_scheme_with_store_kit_file_if_needed(workspace_path, storekit_file_path_for_xcproject)
     shared_data_dir = Xcodeproj::XCScheme.shared_data_dir(workspace_path)
-    scheme_filename = "HelloCordova.xcscheme"
+    scheme_filename = "#{XCODE_PROJECT_NAME}.xcscheme"
     scheme_path = File.join(shared_data_dir, scheme_filename)
 
     sk_node_label = 'StoreKitConfigurationFileReference'
@@ -87,10 +90,10 @@ def update_scheme_with_store_kit_file_if_needed(workspace_path, storekit_file_pa
 end
 
 # Script start
-workspace_path = 'platforms/ios/HelloCordova.xcworkspace'
+workspace_path = "platforms/ios/#{XCODE_PROJECT_NAME}.xcworkspace"
 puts("Workspace: #{workspace_path}\n")
 
-project_path = 'platforms/ios/HelloCordova.xcodeproj'
+project_path = "platforms/ios/#{XCODE_PROJECT_NAME}.xcodeproj"
 project = Xcodeproj::Project.open(project_path)
 puts("Project: #{project.path}\n")
 

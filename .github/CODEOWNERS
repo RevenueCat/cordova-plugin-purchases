@@ -1,4 +1,14 @@
 # CODEOWNERS for cordova-plugin-purchases
+#
+# The last matching pattern takes precedence, so rules go from broadest to most specific.
+# Code owner review is not required to merge: these rules only decide who gets a review request.
 
-# Default owners
+# Fallback for anything not matched below (build config, plugin.xml, samples, e2e tests, CI, release files)
 * @RevenueCat/sdk
+
+# Core SDK
+/src/ @RevenueCat/coresdk
+/tests/ @RevenueCat/coresdk
+
+# Public API surface: changes here should stay visible to the whole SDK team
+/apiTester/ @RevenueCat/sdk

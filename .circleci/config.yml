@@ -190,7 +190,7 @@ jobs:
       - npm-install-cordova-paramedic
       - replace-api-key-linux
       - run: sdk install gradle 8.7
-      - run: sdkmanager "platforms;android-35"
+      - run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
       - run: rm -rf ~/.gradle/caches/
       - run: npm run test:android
     environment:

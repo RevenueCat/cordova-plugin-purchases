@@ -32,22 +32,7 @@ Previous versions installed [cordova-plugin-add-swift-support](https://github.co
 
 ## Android
 
-The plugin now requires cordova-android 12 or newer. On older platform versions cordova skips it for Android, the same way as described for iOS above. If you cannot upgrade, stay on the 8.x line of this plugin.
-
-### cordova-android 12
-
-cordova-android 12 builds with Android Gradle Plugin 7.4.2, which cannot dex the AndroidX libraries the Android SDK depends on. Override its build versions in `config.xml`:
-
-```xml
-<platform name="android">
-    <preference name="android-compileSdkVersion" value="35" />
-    <preference name="AndroidGradlePluginVersion" value="8.7.3" />
-    <preference name="GradleVersion" value="8.13" />
-    <preference name="android-buildToolsVersion" value="35.0.0" />
-</platform>
-```
-
-cordova-android 13 and 14 need none of these except the compile SDK, described below.
+The plugin now requires cordova-android 13 or newer. On older platform versions cordova skips it for Android, the same way as described for iOS above. If you cannot upgrade, stay on the 8.x line of this plugin.
 
 ### compileSdk 35 or higher
 
@@ -61,7 +46,7 @@ The Android SDK requires apps to compile against API 35 or later. cordova-androi
 
 ### Kotlin 2.1.0 or newer, if your app compiles Kotlin
 
-The plugin itself is written in Java and is not affected. If you enabled `GradlePluginKotlinEnabled` to compile your own Kotlin code, its default version is 1.7.21 in cordova-android 12 and 1.9.24 in 13 and 14, which cannot read the Android SDK. Set a newer one:
+The plugin itself is written in Java and is not affected. If you enabled `GradlePluginKotlinEnabled` to compile your own Kotlin code, its default version in cordova-android 13 and 14 is 1.9.24, which cannot read the Android SDK. Set a newer one:
 
 ```xml
 <preference name="GradlePluginKotlinVersion" value="2.1.0" />

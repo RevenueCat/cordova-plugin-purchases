@@ -8,6 +8,7 @@
     <license>MIT</license>
     <keywords>cordova,purchases,revenuecat,iap,inapp,in-app,storekit,purchase</keywords>
     <engines>
+        <engine name="cordova-android" version=">=13.0.0" />
         <engine name="cordova-ios" version=">=8.0.0" />
     </engines>
     <js-module src="www/plugin.js" name="plugin">

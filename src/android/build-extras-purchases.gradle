@@ -11,3 +11,11 @@ android {
         }
     }
 }
+
+// TODO: remove with the purchases-hybrid-common 20.0.0-SNAPSHOT pin, before merging.
+repositories {
+    maven {
+        url 'https://central.sonatype.com/repository/maven-snapshots/'
+        content { includeGroup 'com.revenuecat.purchases' }
+    }
+}

@@ -32,6 +32,8 @@ Previous versions installed [cordova-plugin-add-swift-support](https://github.co
 
 ## Android
 
+The plugin now requires cordova-android 13 or newer. On older platform versions cordova skips it for Android, the same way as described for iOS above. If you cannot upgrade, stay on the 8.x line of this plugin.
+
 ### compileSdk 35 or higher
 
 The Android SDK requires apps to compile against API 35 or later. cordova-android 14 does this by default. On cordova-android 13, the build fails in `checkDebugAarMetadata` with `Dependency 'androidx.core:core:1.15.0' requires libraries and applications that depend on it to compile against version 35 or later`. Upgrade cordova-android, or set the compile SDK in `config.xml`:

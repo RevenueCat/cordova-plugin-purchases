@@ -299,7 +299,7 @@ jobs:
   run-maestro-e2e-tests-ios:
     <<: *base-mac-job
     macos:
-      xcode: '26.3.0'
+      xcode: '26.6'
     steps:
       - checkout
       - install-ruby

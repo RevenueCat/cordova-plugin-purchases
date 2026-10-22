@@ -3,6 +3,9 @@
     <name>MaestroTestApp</name>
     <description>Maestro E2E test app for cordova-plugin-purchases</description>
     <plugin name="cordova-plugin-launch-args" spec="file:../cordova-plugin-launch-args" />
+    <platform name="android">
+        <preference name="android-compileSdkVersion" value="35" />
+    </platform>
     <platform name="ios">
         <preference name="deployment-target" value="16.0" />
     </platform>

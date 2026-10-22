@@ -7,6 +7,10 @@
     <description>Purchases Cordova Plugin</description>
     <license>MIT</license>
     <keywords>cordova,purchases,revenuecat,iap,inapp,in-app,storekit,purchase</keywords>
+    <engines>
+        <engine name="cordova-android" version=">=13.0.0" />
+        <engine name="cordova-ios" version=">=8.0.0" />
+    </engines>
     <js-module src="www/plugin.js" name="plugin">
         <clobbers target="Purchases" />
     </js-module>
@@ -16,14 +20,13 @@
                 <param name="android-package" value="com.revenuecat.purchases.PurchasesPlugin" />
             </feature>
         </config-file>
-        <framework src="com.revenuecat.purchases:purchases-hybrid-common:19.14.1" />
+        <framework src="com.revenuecat.purchases:purchases-hybrid-common:20.0.0-SNAPSHOT" />
         <framework src="androidx.annotation:annotation:[1.4.0]"/>
         <framework src="src/android/build-extras-purchases.gradle" custom="true" type="gradleReference" />
         <asset src="src/android/proguard-cordova-plugin-purchases.txt" target="proguard-cordova-plugin-purchases.txt" />
         <source-file src="src/android/PurchasesPlugin.java" target-dir="src/com/revenuecat/purchases"/>
     </platform>
     <platform name="ios">
-        <hook type="after_plugin_install" src="scripts/ios/add-swift-support.js" />
         <config-file target="config.xml" parent="/*">
             <feature name="PurchasesPlugin">
                 <param name="ios-package" value="CDVPurchasesPlugin"/>

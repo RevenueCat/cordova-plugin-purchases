@@ -35,6 +35,7 @@ commands:
   npm-dependencies:
     description: "Install all global and local npm dependencies"
     steps:
+      - install-node
       - run: npm install -g cordova@11
       - run: npm install --legacy-peer-deps
       - run: npm install -g yarn
@@ -69,7 +70,7 @@ commands:
   api-tester-dependencies:
     description: "Install API Tester dependencies"
     steps:
-       - install-nvm
+       - install-node
        - save_cache:
           paths:
             - node_modules
@@ -78,7 +79,7 @@ commands:
   yarn-dependencies:
     description: "Install yarn dependencies"
     steps:
-       - install-nvm
+       - install-node
        - npm-dependencies
        - restore_cache:
           keys:
@@ -123,18 +124,10 @@ commands:
             sdk env install
             echo -e '\nexport JAVA_HOME="/home/circleci/.sdkman/candidates/java/current"' >> $BASH_ENV
 
-  install-nvm:
+  install-node:
     steps:
-      - run:
-          name: Install node 18.20.7
-          command: |
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
-            echo 'export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"' >> $BASH_ENV
-            echo '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"' >> $BASH_ENV
-      - run: nvm install 18.20.7
-      - run: nvm use 18.20.7
-      - run: echo 'nvm use 18.20.7' >> $BASH_ENV
-      - run: node -v
+      - revenuecat/install-mise-tools:
+          tools: node
 
   copy-npm-rc:
     steps:
@@ -185,7 +178,7 @@ jobs:
           no-window: true
           wait-for-emulator: false
           post-emulator-launch-assemble-command: ""
-      - install-nvm
+      - install-node
       - npm-dependencies
       - npm-install-cordova-paramedic
       - replace-api-key-linux

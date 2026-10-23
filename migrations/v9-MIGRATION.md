@@ -30,6 +30,10 @@ If you cannot move to cordova-ios 8 yet, stay on the 8.x line of this plugin. It
 
 Previous versions installed [cordova-plugin-add-swift-support](https://github.com/akofman/cordova-plugin-add-swift-support) on your behalf to configure the Xcode project for Swift. cordova-ios 8 supports Swift natively, so the plugin is no longer needed and is no longer added. Nothing is required on your side unless your own code depended on it, in which case you can keep installing it yourself.
 
+### Package purchases report the offerings error
+
+When offerings fail to load while purchasing a package on iOS, `purchasePackage` now fails with the offerings error, for example code 10 (`NetworkError`), instead of code 5 (`ProductNotAvailableForPurchaseError`) with the message "Couldn't find package". Android already behaved this way. A package missing from loaded offerings still reports code 5.
+
 ## Android
 
 The plugin now requires cordova-android 13 or newer. On older platform versions cordova skips it for Android, the same way as described for iOS above. If you cannot upgrade, stay on the 8.x line of this plugin.

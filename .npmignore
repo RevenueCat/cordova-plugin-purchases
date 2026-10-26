@@ -28,3 +28,8 @@ Gemfile.lock
 
 .prettierrc
 .sdkmanrc
+
+# Swift Package Manager
+.build/
+.swiftpm/
+Package.resolved

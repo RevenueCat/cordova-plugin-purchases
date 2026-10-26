@@ -9,6 +9,7 @@
 import Foundation
 import PurchasesHybridCommon
 import RevenueCat
+import Cordova
 
 @objc(CDVPurchasesPlugin) public class CDVPurchasesPlugin : CDVPlugin {
 

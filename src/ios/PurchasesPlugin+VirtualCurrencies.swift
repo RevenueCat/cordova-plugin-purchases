@@ -7,6 +7,7 @@
 
 import Foundation
 import PurchasesHybridCommon
+import Cordova
 
 @objc public extension CDVPurchasesPlugin {
 

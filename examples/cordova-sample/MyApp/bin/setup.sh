@@ -3,6 +3,7 @@
 START_TIME=`date +%s`
 command -v bundle >/dev/null 2>&1 || { echo >&2 "bundler is not installed. run gem install bundler."; exit 1; }
 OG_DIR=$PWD
+REPO_ROOT=$OG_DIR/../../..
 
 echo "Running bundle install."
 bundle install
@@ -31,11 +32,35 @@ post_android_setup() {
   echo "distributionUrl=https\://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip">gradle-wrapper.properties
 }
 
+# cordova builds the plugin from its own copy, so point that copy's Swift sources back at the
+# repo to keep edits made in Xcode.
+link_ios_sources() {
+  PACKAGE_SOURCES=platforms/ios/packages/cordova-plugin-purchases/src/ios
+  rm -rf "$PACKAGE_SOURCES"
+  ln -s "$(cd $REPO_ROOT && pwd)/src/ios" "$PACKAGE_SOURCES"
+}
+
 post_ios_setup() {
   cd $OG_DIR
+  link_ios_sources
   SK_CONFIG_SCRIPT_PATH=bin/sk_config_setup.rb
   echo "Running ${SK_CONFIG_SCRIPT_PATH}"
   bundle exec ruby $SK_CONFIG_SCRIPT_PATH
+}
+
+# cordova-ios 8 resolves the plugin as a Swift package. Adding it with --link points that package
+# at this repo, whose Package.swift depends on apache/cordova-ios rather than the app's own
+# CordovaLib, so it doesn't build. Adding the repo path directly is no better: this app lives
+# inside the repo, so cordova copies the repo into itself. Pack a tarball outside it instead.
+pack_plugin() {
+  PACK_DIR=$(mktemp -d)
+  PLUGIN_DIR="${PACK_DIR}/plugin"
+  mkdir -p "$PLUGIN_DIR"
+  (cd $REPO_ROOT && npm pack --pack-destination "$PACK_DIR" >/dev/null)
+  tar -xzf "$PACK_DIR"/*.tgz -C "$PLUGIN_DIR" --strip-components=1
+  # `cordova plugin add` runs npm install, which re-runs `prepare` (tsc). The tarball ships no
+  # tsconfig.json, so drop the scripts the way a registry install does.
+  (cd "$PLUGIN_DIR" && npm pkg delete scripts)
 }
 
 common_configure() {
@@ -48,11 +73,11 @@ common_configure() {
     cordova platform add android@11
   fi
 
-  cordova plugin remove cordova-plugin-purchases
-  cordova plugin add ../../../ --link --save
+  (cd $REPO_ROOT && npm install)
 
-  cd ../../../
-  npm install
+  pack_plugin
+  cordova plugin remove cordova-plugin-purchases
+  cordova plugin add "$PLUGIN_DIR" --nosave
 
   if [ $PLATFORM == "ios" ]; then
     post_ios_setup

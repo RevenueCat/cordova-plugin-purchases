@@ -32,8 +32,17 @@ post_android_setup() {
   echo "distributionUrl=https\://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip">gradle-wrapper.properties
 }
 
+# cordova builds the plugin from its own copy, so point that copy's Swift sources back at the
+# repo to keep edits made in Xcode.
+link_ios_sources() {
+  PACKAGE_SOURCES=platforms/ios/packages/cordova-plugin-purchases/src/ios
+  rm -rf "$PACKAGE_SOURCES"
+  ln -s "$(cd $REPO_ROOT && pwd)/src/ios" "$PACKAGE_SOURCES"
+}
+
 post_ios_setup() {
   cd $OG_DIR
+  link_ios_sources
   SK_CONFIG_SCRIPT_PATH=bin/sk_config_setup.rb
   echo "Running ${SK_CONFIG_SCRIPT_PATH}"
   bundle exec ruby $SK_CONFIG_SCRIPT_PATH

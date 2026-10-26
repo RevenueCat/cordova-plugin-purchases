@@ -40,7 +40,7 @@ You're ready to go!
 
 ##### In Swift code:
 
-Make the edits in the repo's `src/ios`, then run `sh bin/setup.sh <your_api_key> ios` again to reinstall the plugin. The Swift files Xcode shows under the plugin's package are a copy, so edits made there don't reach the repo and are lost on the next reinstall.
+You can just make the edits straight from Xcode or AppCode, then build and you're good. `setup.sh` links the plugin's Swift sources in the app to the repo's `src/ios`, so the edits land in the repo.
 
 #### In Javascript code, but not the javascript code for the plugin: 
 

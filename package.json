@@ -1,7 +1,7 @@
 {
   "name": "cordova-plugin-purchases",
   "type": "commonjs",
-  "version": "8.2.3",
+  "version": "8.2.6",
   "description": "Purchases Cordova Plugin",
   "types": "./www/plugin.d.ts",
   "cordova": {
@@ -28,7 +28,7 @@
     "tslint": "tslint -c tslint.json 'src/plugin/*.ts'",
     "prepare": "tsc",
     "test": "jest",
-    "test:android": "cordova-paramedic --verbose --platform android@11 --plugin . --args=\"-- --gradleArg=-PcdvMinSdkVersion=23\"",
+    "test:android": "cordova-paramedic --verbose --platform android@14 --plugin . --args=\"-- --gradleArg=-PcdvMinSdkVersion=23\"",
     "test:ios": "cordova-paramedic --verbose --platform ios --plugin . --target \"iPhone-15\""
   },
   "author": "RevenueCat, Inc.",

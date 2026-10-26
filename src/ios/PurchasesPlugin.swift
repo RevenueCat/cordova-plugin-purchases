@@ -28,6 +28,7 @@ import Cordova
         let pluginResult: CDVPluginResult = CDVPluginResult(status: .noResult)
         pluginResult.setKeepCallbackAs(true)
         self.commandDelegate.send(pluginResult, callbackId: command.callbackId)
+        self.purchases?.delegate = self
     }
 
     @objc(configure:)
@@ -51,7 +52,6 @@ import Cordova
                                              storeKitVersion: storeKitVersion,
                                              dangerousSettings: nil,
                                              shouldShowInAppMessagesAutomatically: shouldShowInAppMessagesAutomatically)
-        self.purchases.delegate = self
         self.sendOKFor(command: command)
     }
 
@@ -104,7 +104,7 @@ extension CDVPurchasesPlugin {
     }
 
     var platformFlavorVersion: String {
-        return "8.2.3"
+        return "8.2.6"
     }
 
 }

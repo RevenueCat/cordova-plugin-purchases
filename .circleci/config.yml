@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   macos: circleci/macos@2.3.6
   android: circleci/android@2.5.0
-  revenuecat: revenuecat/sdks-common-config@4.6.2
+  revenuecat: revenuecat/sdks-common-config@4.7.0
 
 aliases:
   base-mac-job: &base-mac-job
@@ -48,26 +48,23 @@ commands:
       - restore_cache:
           keys:
             # This cache key should be updated whenever we change the Ruby version
-            - v4-gem-cache-{{ arch }}-ruby-3.2.0
-      # CircleCI images fail on Ruby 3.3
-      # https://github.com/fastlane/fastlane/issues/21794#issuecomment-2021331335
-      # Also, not using macos/switch-ruby because its broken
+            - v4-gem-cache-{{ arch }}-ruby-3.3.0
+      # Not using macos/switch-ruby because its broken
       - run:
-          # We're using Ruby 3.2.0 here to avoid an issue that caused a crash with Fastlane and Ruby 3.2.2.
-          name: Set Ruby 3.2.0
+          name: Set Ruby 3.3.0
           command: |
             eval "$(rbenv init -)"
-            rbenv install -s 3.2.0  # Replace with your required Ruby version
-            rbenv global 3.2.0
+            rbenv install -s 3.3.0
+            rbenv global 3.3.0
             rbenv rehash
       - run:
           name: Verify Ruby version
           command: ruby -v
       - save_cache:
           # This cache key should be updated whenever we change the Ruby version
-          key: v4-gem-cache-{{ arch }}-ruby-3.2.0
+          key: v4-gem-cache-{{ arch }}-ruby-3.3.0
           paths:
-            - ~/.rbenv/versions/3.2.0
+            - ~/.rbenv/versions/3.3.0
 
   api-tester-dependencies:
     description: "Install API Tester dependencies"
@@ -192,7 +189,8 @@ jobs:
       - npm-dependencies
       - npm-install-cordova-paramedic
       - replace-api-key-linux
-      - run: sdk install gradle 7.5
+      - run: sdk install gradle 8.7
+      - run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
       - run: rm -rf ~/.gradle/caches/
       - run: npm run test:android
     environment:
@@ -236,7 +234,7 @@ jobs:
 
   runtest:
     docker:
-      - image: cimg/ruby:3.2
+      - image: cimg/ruby:3.3
 
     steps:
       - checkout
@@ -250,7 +248,7 @@ jobs:
 
   api-tester:
     docker:
-      - image: cimg/ruby:3.2
+      - image: cimg/ruby:3.3
 
     steps:
       - checkout
@@ -267,7 +265,7 @@ jobs:
 
   docs-deploy:
     docker:
-      - image: cimg/ruby:3.2
+      - image: cimg/ruby:3.3
 
     steps:
       - checkout
@@ -298,7 +296,7 @@ jobs:
   run-maestro-e2e-tests-ios:
     <<: *base-mac-job
     macos:
-      xcode: '26.3.0'
+      xcode: '26.6'
     steps:
       - checkout
       - install-ruby
@@ -329,8 +327,8 @@ jobs:
       - run:
           name: Install Ruby and Bundler
           command: |
-            rbenv install 3.2.0 --skip-existing
-            rbenv global 3.2.0
+            rbenv install 3.3.0 --skip-existing
+            rbenv global 3.3.0
             gem install bundler --no-document
             bundle install
       - npm-dependencies
@@ -492,7 +490,7 @@ workflows:
       - wait-for-pr-approval:
           type: approval
       - revenuecat/tag-current-branch:
-          ruby_version: "3.2"
+          ruby_version: "3.3.0"
           requires:
             - wait-for-pr-approval
             - all-tests-succeeded
@@ -506,6 +504,7 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - make-release:
+          context: npm-publishing
           <<: *release-tags
       - docs-deploy:
           requires:
@@ -525,7 +524,7 @@ workflows:
         - equal: [ build, << pipeline.parameters.action >> ]
     jobs:
       - revenuecat/danger:
-          ruby_version: "3.2"
+          ruby_version: "3.3.0"
           filters:
             branches:
               ignore:
@@ -540,14 +539,14 @@ workflows:
         - equal: [ "release-train", << pipeline.schedule.name >> ]
     jobs:
       - revenuecat/automatic-bump:
-          ruby_version: "3.2"
+          ruby_version: "3.3.0"
 
   manual-trigger-bump:
     when:
       equal: [ bump, << pipeline.parameters.action >> ]
     jobs:
       - revenuecat/automatic-bump:
-          ruby_version: "3.2"
+          ruby_version: "3.3.0"
 
   update-hybrid-common-versions:
     when:

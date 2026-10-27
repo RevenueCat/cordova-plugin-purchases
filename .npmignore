@@ -10,6 +10,8 @@ src/ios/.framework_version
 RELEASING.md
 jest.config.js
 examples/
+e2e-tests/
+build/
 apiTester/
 Dangerfile
 .version

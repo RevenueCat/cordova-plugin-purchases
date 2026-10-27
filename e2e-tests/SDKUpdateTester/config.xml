@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Created by Antonio Pallares. Copyright (c) 2026 RevenueCat, Inc. -->
+<widget id="com.revenuecat.SDKUpdateTester" version="1.0.0" android-versionCode="1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>SDKUpdateTester</name>
+    <author>Antonio Pallares</author>
+    <content src="index.html" />
+    <access origin="*" />
+    <platform name="ios">
+        <preference name="deployment-target" value="16.0" />
+    </platform>
+</widget>

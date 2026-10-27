@@ -12,6 +12,11 @@ public class CDVLaunchArgs extends CordovaPlugin {
             callbackContext.success(testFlow != null ? testFlow : "");
             return true;
         }
+        if ("getArgument".equals(action)) {
+            String value = cordova.getActivity().getIntent().getStringExtra(args.optString(0));
+            callbackContext.success(value != null ? value : "");
+            return true;
+        }
         return false;
     }
 }

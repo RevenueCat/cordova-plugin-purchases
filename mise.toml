@@ -1,6 +1,11 @@
 [settings]
 lockfile = true
 
+[settings.ruby]
+compile = false
+
 [tools]
 java = "liberica-17.0.6"
 node = "22.23.4"
+ruby = "3.3.0"
+gradle = "8.13"

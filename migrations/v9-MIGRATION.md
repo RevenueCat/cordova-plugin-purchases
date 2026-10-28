@@ -12,7 +12,7 @@ If your app also adds RevenueCat through Swift Package Manager itself, for examp
 
 ### Upgrading your project
 
-cordova-ios 8 requires iOS 13.0 or newer, Xcode 15 or newer, and Node.js 20.17 or newer. The plugin already required iOS 13.0 and Xcode 15, so the deployment target of your app does not change.
+cordova-ios 8 requires iOS 13.0 or newer, Xcode 15 or newer, and Node.js 20.17 or newer.
 
 Run the following commands from your Cordova app's root.
 

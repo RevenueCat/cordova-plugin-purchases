@@ -1,9 +1,9 @@
 ## 9.0.0
 ## RevenueCat SDK
 ### 💥 Breaking Changes
-This release requires cordova-ios 8+ and cordova-android 13+. On older platform versions cordova skips the plugin for that platform instead of installing it; stay on 8.x if you cannot upgrade. The plugin no longer installs `cordova-plugin-add-swift-support`, since cordova-ios 8 compiles Swift natively.
+This release requires cordova-ios 8+ and cordova-android 13+. On older platform versions cordova skips the plugin for that platform instead of installing it; stay on cordova-plugin-purchases 8.x if you cannot upgrade. The plugin no longer installs `cordova-plugin-add-swift-support`, since cordova-ios 8 compiles Swift natively.
 
-On iOS, the plugin and `PurchasesHybridCommon` now resolve through Swift Package Manager instead of CocoaPods. Installing the plugin removes the old `PurchasesHybridCommon` pod entry. Existing projects may keep a Podfile that makes Cordova run `pod install`; keep CocoaPods installed while it does. Upgrading from cordova-ios 7 or earlier regenerates `platforms/ios/`, so back up native changes first (see the migration guide).
+On iOS, the plugin and `PurchasesHybridCommon` now resolve through Swift Package Manager instead of CocoaPods. Installing the plugin removes the old `PurchasesHybridCommon` pod entry. Existing projects may keep a Podfile that makes Cordova run `pod install`; keep CocoaPods installed while it does. Upgrading from cordova-ios 7 or earlier regenerates `platforms/ios/`, so back up native changes first (see the [v9 migration guide](https://github.com/RevenueCat/cordova-plugin-purchases/blob/main/migrations/v9-MIGRATION.md)).
 
 The Android SDK dependency moves to v11, which uses Google Play Billing Library 9.1.0. Apps must compile against API 35 (cordova-android 14 default; on 13 set `android-compileSdkVersion` to 35 in `config.xml`) and, if they compile their own Kotlin, use Kotlin 2.1.0 or newer. A blocked Play Store now reports `PurchaseNotAllowedError` (code 3) instead of `StoreProblemError` (code 2).
 

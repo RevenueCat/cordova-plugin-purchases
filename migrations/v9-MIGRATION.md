@@ -6,22 +6,63 @@ The plugin now requires cordova-ios 8 or newer.
 
 ### Swift Package Manager replaces CocoaPods
 
-The plugin no longer declares any pod, so nothing needs to be done on your side: `cordova plugin add` resolves everything through SwiftPM. New projects end up without a Podfile at all.
+The plugin no longer declares any pod: `cordova plugin add` resolves its iOS dependencies through Swift Package Manager. Installation also removes the old `PurchasesHybridCommon` pod entry left by previous plugin versions. New projects end up without a Podfile at all.
 
 If your app also adds RevenueCat through Swift Package Manager itself, for example for a widget, use `https://github.com/RevenueCat/purchases-ios-spm` at the iOS version listed for your plugin version in [VERSIONS.md](../VERSIONS.md). SwiftPM fails to resolve the packages if RevenueCat comes from another package URL or at another version.
 
-Projects upgrading from 8.x keep the Podfile CocoaPods created for them. cordova runs `pod install` on every prepare for as long as that file is there, so CocoaPods still has to be installed even once nothing declares a pod. `cordova platform rm ios && cordova platform add ios@8` gets rid of it, although cordova writes an empty one again the next time any plugin is uninstalled.
-
 ### Upgrading your project
 
-If your app is on an older platform version, update it before upgrading the plugin:
+cordova-ios 8 requires iOS 13.0 or newer, Xcode 15 or newer, and Node.js 20.17 or newer. The plugin already required iOS 13.0 and Xcode 15, so the deployment target of your app does not change.
+
+Run the following commands from your Cordova app's root.
+
+#### 1. Check the iOS platform
+
+Check the installed platform version:
 
 ```bash
-cordova platform rm ios
+cordova platform ls
+```
+
+If you already use **cordova-ios 8 or later**, skip step 2 and keep your existing native project.
+
+#### 2. Upgrade to Cordova iOS 8
+
+For cordova-ios 7 or earlier, follow the [upgrade pattern documented by Cordova](https://cordova.apache.org/announcements/2025/11/23/cordova-ios-8.0.0.html).
+
+**The removal command deletes `platforms/ios/`, including manual native changes.** Back up the entire folder outside your project before continuing. This folder is often ignored by Git, so committing your project may not preserve those changes.
+
+```bash
+cordova platform remove ios
 cordova platform add ios@8
 ```
 
-cordova-ios 8 requires iOS 13.0 or newer, Xcode 15 or newer, and Node.js 20.17 or newer. The plugin already required iOS 13.0 and Xcode 15, so the deployment target of your app does not change.
+Reapply required signing settings, entitlements, capabilities, native code, and build customizations to the regenerated project. Use `config.xml` or Cordova hooks where possible so future builds reproduce them.
+
+cordova-ios 8 names the project `App`. Update scripts and CI to use `platforms/ios/App.xcworkspace`.
+
+#### 3. Update the RevenueCat plugin
+
+```bash
+cordova plugin rm cordova-plugin-purchases
+cordova plugin add cordova-plugin-purchases@9
+```
+
+#### 4. Build and verify
+
+```bash
+cordova build ios
+```
+
+Confirm that:
+
+- `platforms/ios/ios.json` lists `cordova-plugin-purchases` under `installed_plugins`, and `platforms/ios/packages/cordova-plugin-purchases/` exists.
+- Any remaining Podfile has no `PurchasesHybridCommon` entry.
+- Your app builds in Debug and archives for release. Run your existing purchase flow in your test environment.
+
+Existing projects may retain a Podfile that makes Cordova run `pod install`, even after RevenueCat moves to SPM. Keep CocoaPods installed while Cordova still uses that file. Other plugins may also require it.
+
+Commit `package.json`, its lockfile, `config.xml`, and any hooks used to preserve native changes. Verify that CI can restore the plugins and platform from a fresh checkout.
 
 ### What happens if you don't upgrade
 

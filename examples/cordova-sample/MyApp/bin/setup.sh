@@ -23,15 +23,6 @@ else
   PLATFORM="all"
 fi
 
-post_android_setup() {
-  cd $OG_DIR
-  mkdir -p platforms/android/gradle/wrapper
-  cd platforms/android/gradle/wrapper
-  GRADLE_VERSION=7.3.3
-  echo "Setting gradle to ${GRADLE_VERSION}"
-  echo "distributionUrl=https\://services.gradle.org/distributions/gradle-${GRADLE_VERSION}-bin.zip">gradle-wrapper.properties
-}
-
 # cordova builds the plugin from its own copy, so point that copy's Swift sources back at the
 # repo to keep edits made in Xcode.
 link_ios_sources() {
@@ -67,10 +58,10 @@ common_configure() {
   if [ $PLATFORM == "ios" ]; then
     cordova platform add ios
   elif [ $PLATFORM == "android" ]; then
-    cordova platform add android@11
+    cordova platform add android@14
   else
     cordova platform add ios
-    cordova platform add android@11
+    cordova platform add android@14
   fi
 
   (cd $REPO_ROOT && npm install)
@@ -79,12 +70,7 @@ common_configure() {
   cordova plugin remove cordova-plugin-purchases
   cordova plugin add "$PLUGIN_DIR" --nosave
 
-  if [ $PLATFORM == "ios" ]; then
-    post_ios_setup
-  elif [ $PLATFORM == "android" ]; then
-    post_android_setup
-  else
-    post_android_setup
+  if [ $PLATFORM != "android" ]; then
     post_ios_setup
   fi
 

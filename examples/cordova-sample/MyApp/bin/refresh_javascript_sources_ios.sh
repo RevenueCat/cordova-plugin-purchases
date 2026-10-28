@@ -15,6 +15,7 @@ fi
 # in case this script is run from another directory, cd into the directory of the script
 SCRIPT_DIRECTORY="$(dirname "$(realpath "$0")")"
 
-# run the transpiling step
-cd $SCRIPT_DIRECTORY/../plugins/cordova-plugin-purchases
+# Transpile in the repo rather than in the installed plugin: the app now gets a packed copy
+# instead of a symlink, and that copy ships no tsconfig.json to build against.
+cd "$SCRIPT_DIRECTORY/../../../.."
 npm run build

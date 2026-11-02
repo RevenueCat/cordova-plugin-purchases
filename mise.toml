@@ -1,6 +1,7 @@
 [settings]
 lockfile = true
+idiomatic_version_file_enable_tools = ["node"]
+minimum_release_age = "1d"
 
 [tools]
 java = "liberica-17.0.6"
-node = "22.23.4"

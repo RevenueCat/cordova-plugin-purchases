@@ -13,7 +13,6 @@ examples/
 apiTester/
 Dangerfile
 .version
-.npmrc.SAMPLE
 fastlane/
 
 # CircleCI folders

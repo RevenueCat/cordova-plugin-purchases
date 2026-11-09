@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   macos: circleci/macos@2.3.6
   android: circleci/android@2.5.0
-  revenuecat: revenuecat/sdks-common-config@4.7.1
+  revenuecat: revenuecat/sdks-common-config@4.8.0
 
 aliases:
   base-mac-job: &base-mac-job
@@ -478,6 +478,7 @@ workflows:
       - wait-for-pr-approval:
           type: approval
       - revenuecat/tag-current-branch:
+          context: github-bot-public
           ruby_version: "3.3.0"
           requires:
             - wait-for-pr-approval
@@ -492,13 +493,16 @@ workflows:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - make-release:
-          context: npm-publishing
+          context:
+            - npm-publishing
+            - github-bot-public
           <<: *release-tags
       - docs-deploy:
           requires:
             - make-release
           <<: *release-tags
       - revenuecat/merge-release-pr:
+          context: github-bot-public
           repo_name: cordova-plugin-purchases
           requires:
             - docs-deploy
@@ -512,6 +516,7 @@ workflows:
         - equal: [ build, << pipeline.parameters.action >> ]
     jobs:
       - revenuecat/danger:
+          context: danger-bot
           ruby_version: "3.3.0"
           filters:
             branches:
@@ -527,6 +532,7 @@ workflows:
         - equal: [ "release-train", << pipeline.schedule.name >> ]
     jobs:
       - revenuecat/automatic-bump:
+          context: github-bot-public
           ruby_version: "3.3.0"
 
   manual-trigger-bump:
@@ -534,10 +540,12 @@ workflows:
       equal: [ bump, << pipeline.parameters.action >> ]
     jobs:
       - revenuecat/automatic-bump:
+          context: github-bot-public
           ruby_version: "3.3.0"
 
   update-hybrid-common-versions:
     when:
       equal: [ upgrade-hybrid-common, << pipeline.parameters.action >> ]
     jobs:
-      - update-hybrid-common-versions
+      - update-hybrid-common-versions:
+          context: github-bot-public

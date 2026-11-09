@@ -1075,6 +1075,29 @@ let shouldPurchasePromoProductListeners: ShouldPurchasePromoProductListener[] = 
 
 export type LogHandler = (logLevel: LOG_LEVEL, message: string) => void;
 
+type PurchaseCallback = (result: { productIdentifier: string; customerInfo: CustomerInfo }) => void;
+type PurchaseErrorCallback = (result: { error: PurchasesError; userCancelled: boolean }) => void;
+
+function purchaseWithIntroductoryOfferEligibilityJWS(
+  options: { [key: string]: any }, token: string,
+  callback: PurchaseCallback, errorCallback: PurchaseErrorCallback
+): void {
+  if (typeof token !== "string" || token.length === 0) {
+    errorCallback({ error: { code: 4, message: "introductoryOfferEligibilityJWS must be a non-empty string.",
+      readableErrorCode: "PURCHASE_INVALID_ERROR" }, userCancelled: false });
+    return;
+  }
+  if (window.cordova.platformId !== "ios") {
+    errorCallback({ error: { code: 24, message: "Introductory offer eligibility JWS requires Apple StoreKit 2.",
+      readableErrorCode: "UNSUPPORTED_ERROR" }, userCancelled: false });
+    return;
+  }
+  window.cordova.exec(callback, (response: { [key: string]: any }) => {
+    const {userCancelled = false, ...error} = response;
+    errorCallback({ error: error as PurchasesError, userCancelled });
+  }, PLUGIN_NAME, "purchaseWithIntroductoryOfferEligibilityJWS", [{ ...options, introductoryOfferEligibilityJWS: token }]);
+}
+
 class Purchases {
 
   /**
@@ -1398,14 +1421,22 @@ class Purchases {
    * @param {UpgradeInfo} upgradeInfo Android only. Optional UpgradeInfo you wish to upgrade from containing the oldSKU
    * and the optional prorationMode.
    * @param {PURCHASE_TYPE} type Optional type of product, can be inapp or subs. Subs by default
+   * @param {string | null} introductoryOfferEligibilityJWS Apple StoreKit 2 only. Server-signed eligibility JWS.
+   * Requires iOS 15+ and a supporting PHC release. Unsupported paths reject rather than discard it.
+   * Null/undefined preserves store eligibility. Never retry a denied token purchase without the token automatically.
    */
   public static purchaseProduct(
     productIdentifier: string,
     callback: ({productIdentifier, customerInfo,}: { productIdentifier: string; customerInfo: CustomerInfo; }) => void,
     errorCallback: ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => void,
     upgradeInfo?: UpgradeInfo | null,
-    type: PURCHASE_TYPE = PURCHASE_TYPE.SUBS
+    type: PURCHASE_TYPE = PURCHASE_TYPE.SUBS,
+    introductoryOfferEligibilityJWS?: string | null
   ) {
+    if (introductoryOfferEligibilityJWS != null) {
+      purchaseWithIntroductoryOfferEligibilityJWS({ productIdentifier }, introductoryOfferEligibilityJWS, callback, errorCallback);
+      return;
+    }
     window.cordova.exec(
       callback,
       (response: { [key: string]: any }) => {
@@ -1442,14 +1473,22 @@ class Purchases {
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
    * For compliance with EU regulations. User will see "This price has been customized for you" in the purchase dialog when true.
    * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
+   * @param {string | null} introductoryOfferEligibilityJWS Apple StoreKit 2 only. Server-signed eligibility JWS.
+   * Requires iOS 15+ and a supporting PHC release. Unsupported paths reject rather than discard it.
+   * Null/undefined preserves store eligibility. Never retry a denied token purchase without the token automatically.
    */
   public static purchaseStoreProduct(
     product: PurchasesStoreProduct,
     callback: ({productIdentifier, customerInfo,}: { productIdentifier: string; customerInfo: CustomerInfo; }) => void,
     errorCallback: ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => void,
     googleProductChangeInfo?: GoogleProductChangeInfo | null,
-    googleIsPersonalizedPrice: boolean = false
+    googleIsPersonalizedPrice: boolean = false,
+    introductoryOfferEligibilityJWS?: string | null
   ) {
+    if (introductoryOfferEligibilityJWS != null) {
+      purchaseWithIntroductoryOfferEligibilityJWS({ productIdentifier: product.identifier }, introductoryOfferEligibilityJWS, callback, errorCallback);
+      return;
+    }
     window.cordova.exec(
       callback,
       (response: { [key: string]: any }) => {
@@ -1487,6 +1526,9 @@ class Purchases {
    * @param {boolean} googleIsPersonalizedPrice Android and Google only. Optional boolean indicates personalized pricing on products available for purchase in the EU.
    * For compliance with EU regulations. User will see "This price has been customized for you" in the purchase dialog when true.
    * See https://developer.android.com/google/play/billing/integrate#personalized-price for more info.
+   * @param {string | null} introductoryOfferEligibilityJWS Apple StoreKit 2 only. Server-signed eligibility JWS.
+   * Requires iOS 15+ and a supporting PHC release. Unsupported paths reject rather than discard it.
+   * Null/undefined preserves store eligibility. Never retry a denied token purchase without the token automatically.
    */
   public static purchasePackage(
     aPackage: PurchasesPackage,
@@ -1494,8 +1536,13 @@ class Purchases {
     errorCallback: ({error, userCancelled,}: { error: PurchasesError; userCancelled: boolean; }) => void,
     upgradeInfo?: UpgradeInfo | null,
     googleProductChangeInfo?: GoogleProductChangeInfo | null,
-    googleIsPersonalizedPrice: boolean = false
+    googleIsPersonalizedPrice: boolean = false,
+    introductoryOfferEligibilityJWS?: string | null
   ) {
+    if (introductoryOfferEligibilityJWS != null) {
+      purchaseWithIntroductoryOfferEligibilityJWS({ packageIdentifier: aPackage.identifier, presentedOfferingContext: { offeringIdentifier: aPackage.offeringIdentifier } }, introductoryOfferEligibilityJWS, callback, errorCallback);
+      return;
+    }
     let oldProductIdentifier = null;
     let prorationMode = null;
     if (googleProductChangeInfo !== undefined && googleProductChangeInfo !== null) {

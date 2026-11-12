@@ -1,0 +1,15 @@
+name: Accept external PR
+
+on:
+  issue_comment:
+    types: [created]
+
+permissions: {}
+
+jobs:
+  accept:
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    uses: revenuecat/sdk-github-workflows/.github/workflows/accept-external-pr.yml@28c0e4353661b4a5d16d64327b79ee1bfbc4407b

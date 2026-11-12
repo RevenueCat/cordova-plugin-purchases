@@ -5,7 +5,7 @@
 
 <h3 align="center">😻 In-app Subscriptions Made Easy 😻</h1>
 
-TEST CHANGE
+TEST CHANGE AGAIN
 
 [![Version](https://img.shields.io/npm/v/cordova-plugin-purchases.svg?style=flat)](https://www.npmjs.com/package/cordova-plugin-purchases)
 [![License](https://img.shields.io/npm/l/cordova-plugin-purchases.svg?style=flat)](https://www.npmjs.com/package/cordova-plugin-purchases)

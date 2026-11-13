@@ -1,0 +1,13 @@
+name: Fork PR base guard
+
+on:
+  pull_request_target:
+    types: [opened, reopened, synchronize, edited]
+
+permissions: {}
+
+jobs:
+  guard:
+    permissions:
+      statuses: write
+    uses: revenuecat/sdk-github-workflows/.github/workflows/fork-pr-base-guard.yml@9641eff34ccd7f89ebd9e152a9a9777fd9f83367 # v11.1.0

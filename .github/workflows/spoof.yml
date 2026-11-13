@@ -1,0 +1,8 @@
+name: spoof
+on: pull_request
+permissions: {}
+jobs:
+  fork-pr-base-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - run: "true"

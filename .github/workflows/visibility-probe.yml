@@ -1,0 +1,30 @@
+name: Visibility probe (throwaway)
+
+on:
+  pull_request:
+
+permissions: {}
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print the values
+        env:
+          VISIBILITY: ${{ github.repository_visibility }}
+          EVENT_PRIVATE: ${{ github.event.repository.private }}
+          EVENT_VISIBILITY: ${{ github.event.repository.visibility }}
+        run: |
+          echo "github.repository_visibility=[$VISIBILITY]"
+          echo "github.event.repository.private=[$EVENT_PRIVATE]"
+          echo "github.event.repository.visibility=[$EVENT_VISIBILITY]"
+  public-only:
+    if: github.repository_visibility == 'public'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "ran the public-only job"
+  private-only:
+    if: github.repository_visibility != 'public'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "ran the private-only job"

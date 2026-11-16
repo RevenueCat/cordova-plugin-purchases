@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   macos: circleci/macos@2.3.6
   android: circleci/android@2.5.0
-  revenuecat: revenuecat/sdks-common-config@4.8.0
+  revenuecat: revenuecat/sdks-common-config@4.9.0
 
 aliases:
   base-mac-job: &base-mac-job
@@ -356,46 +356,6 @@ jobs:
             open_pr:true \
             automatic_release:<< pipeline.parameters.automatic >>
 
-  mirror-to-public:
-    description: "Pushes the release tag on tag builds, and main otherwise, to the public repo"
-    docker:
-      - image: cimg/base:stable
-    resource_class: small
-    steps:
-      - checkout:
-          method: full
-      - run:
-          name: Mirror the tag, or main, to the public repo
-          command: |
-            : "${PUBLIC_MIRROR_APP_ID:?is not set. It comes from the sdk-public-mirror context}"
-            : "${PUBLIC_MIRROR_APP_PRIVATE_KEY_BASE64:?is not set. It comes from the sdk-public-mirror context}"
-            public_repo_name=cordova-plugin-purchases
-
-            base64url() { openssl base64 -A | tr '+/' '-_' | tr -d '='; }
-            # GitHub rejects app JWTs that expire more than 10 minutes out; iat is backdated for clock drift.
-            now="$(date +%s)"
-            header="$(printf '{"alg":"RS256","typ":"JWT"}' | base64url)"
-            payload="$(printf '{"iat":%s,"exp":%s,"iss":"%s"}' "$((now - 60))" "$((now + 540))" "$PUBLIC_MIRROR_APP_ID" | base64url)"
-            signature="$(printf '%s.%s' "$header" "$payload" \
-              | openssl dgst -sha256 -sign <(echo "$PUBLIC_MIRROR_APP_PRIVATE_KEY_BASE64" | base64 --decode) | base64url)"
-            curl_as_app() { curl -sSf -H "Authorization: Bearer $header.$payload.$signature" -H "Accept: application/vnd.github+json" "$@"; }
-            installation_id="$(curl_as_app "https://api.github.com/repos/RevenueCat/$public_repo_name/installation" | jq -r .id)"
-            MIRROR_TOKEN="$(curl_as_app -X POST \
-              -d "{\"repositories\":[\"$public_repo_name\"],\"permissions\":{\"contents\":\"write\",\"workflows\":\"write\"}}" \
-              "https://api.github.com/app/installations/$installation_id/access_tokens" | jq -r .token)"
-            export MIRROR_TOKEN
-
-            if [ -n "${CIRCLE_TAG:-}" ]; then
-              refspec="refs/tags/$CIRCLE_TAG"
-            else
-              git fetch origin main
-              refspec="origin/main:refs/heads/main"
-            fi
-            # An empty credential.helper clears the helpers git already has, so only the one below answers.
-            git -c credential.helper= \
-              -c credential.helper='!f() { echo username=x-access-token; echo "password=$MIRROR_TOKEN"; }; f' \
-              push "https://github.com/RevenueCat/$public_repo_name.git" "$refspec"
-
   all-tests-succeeded:
     description: "Gate job: required status check for merging PRs"
     docker:
@@ -528,7 +488,8 @@ workflows:
       not:
         equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
-      - mirror-to-public:
+      - revenuecat/mirror-to-public:
+          public_repo_name: cordova-plugin-purchases
           context: sdk-public-mirror
           <<: *release-tags
       - make-release:
@@ -536,7 +497,7 @@ workflows:
             - npm-publishing
             - github-bot-public-release
           requires:
-            - mirror-to-public
+            - revenuecat/mirror-to-public
           <<: *release-tags
       - docs-deploy:
           requires:
@@ -556,7 +517,8 @@ workflows:
             equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
         - equal: [ build, << pipeline.parameters.action >> ]
     jobs:
-      - mirror-to-public:
+      - revenuecat/mirror-to-public:
+          public_repo_name: cordova-plugin-purchases
           context: sdk-public-mirror
           filters:
             branches:

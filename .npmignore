@@ -27,7 +27,6 @@ Gemfile
 Gemfile.lock
 
 .prettierrc
-.sdkmanrc
 
 # Swift Package Manager
 .build/

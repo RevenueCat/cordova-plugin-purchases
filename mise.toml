@@ -3,5 +3,10 @@ lockfile = true
 idiomatic_version_file_enable_tools = ["node"]
 minimum_release_age = "1d"
 
+[settings.ruby]
+compile = false
+
 [tools]
 java = "liberica-17.0.21.1+5"
+gradle = "8.7"
+ruby = "3.3.14"

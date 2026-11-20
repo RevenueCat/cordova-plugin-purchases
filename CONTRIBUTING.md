@@ -2,7 +2,7 @@
 
 ## Environment Setup
 
-We use [mise](https://mise.jdx.dev/) to manage the JDK. Install mise, then run `mise install` in the project root to get the pinned Java version. (sdkman via `sdk env install` is also supported.)
+We use [mise](https://mise.jdx.dev/) to manage the JDK, Gradle and Ruby. Install mise, then run `mise install` in the project root to get the pinned versions.
 
 #### 1. Create an issue to make sure its something that should be done.
 

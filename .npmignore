@@ -1,6 +1,7 @@
 src/plugin/
 .vscode
 .circleci
+copybara
 .github
 tests
 tsconfig.json

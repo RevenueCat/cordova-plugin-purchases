@@ -105,6 +105,22 @@ import Cordova
         }
     }
 
+    @objc(purchaseWithIntroductoryOfferEligibilityJWS:)
+    func purchaseWithIntroductoryOfferEligibilityJWS(command: CDVInvokedUrlCommand) {
+        guard let options = command.arguments.first as? [String: Any],
+              let token = options["introductoryOfferEligibilityJWS"] as? String, !token.isEmpty else {
+            self.sendBadParameterFor(command: command, parameterNamed: "introductoryOfferEligibilityJWS",
+                                     expectedType: String.self)
+            return
+        }
+        // Generic purchase options on older PHC versions silently discard unknown keys.
+        guard CommonFunctionality.responds(to: NSSelectorFromString("purchase:introductoryOfferEligibilityJWS:completionBlock:")) else {
+            self.sendUnsupportedErrorFor(command: command)
+            return
+        }
+        CommonFunctionality.purchase(options: options, completion: self.responseCompletion(forCommand: command))
+    }
+
     @objc(purchaseProduct:)
     func purchaseProduct(command: CDVInvokedUrlCommand) {
         guard let productIdentifier = command.arguments[0] as? String else {
